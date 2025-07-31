@@ -24,6 +24,14 @@
 					<div class="row gap-3">
 						<div class="col-md-7">
 							<div class="table-responsive">
+								<form action="{{ route('dashboard.bagian.index') }}" method="GET"
+									class="mb-4 col-md-6 d-flex gap-2">
+									<input type="text" name="q" id="q" placeholder="Pencarian..."
+										class="form-control"
+										value="{{ request()->q }}">
+									<button type="submit" class="btn btn-secondary">Cari</button>
+								</form>
+
 								<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 									<thead>
 										<tr>
@@ -58,9 +66,9 @@
 								</table>
 							</div>
 
-              <div class="d-flex justify-content-center">
-                {{ $data->links() }}
-              </div>
+							<div class="d-flex justify-content-center">
+								{{ $data->links() }}
+							</div>
 						</div>
 						<div class="col-md-4">
 							<h4>Form {{ $title }}</h4>
@@ -68,8 +76,8 @@
 
 							@php
 								$routeSubmit = isset($dataEdit)
-                  ? route('dashboard.bagian.update', $dataEdit->id)
-                  : route('dashboard.bagian.store');
+								    ? route('dashboard.bagian.update', $dataEdit->id)
+								    : route('dashboard.bagian.store');
 							@endphp
 							<form action="{{ $routeSubmit }}" method="post">
 								@csrf
@@ -85,7 +93,7 @@
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
 								</div>
-                {{-- <div class="form-group mb-3">
+								{{-- <div class="form-group mb-3">
 									<label for="unit_organisasi_id" class="form-label">Unit Organisasi</label>
 									<select name="unit_organisasi_id" class="form-select">
 										<option value="">Pilih...</option>

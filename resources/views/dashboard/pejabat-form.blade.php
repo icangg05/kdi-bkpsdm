@@ -66,6 +66,14 @@
 										</script>
 									@endpush
 								</div>
+
+								<div class="mb-3">
+									<label for="biografi" class="form-label">Biografi <span style="color: red">*</span></label>
+									<x-ckeditor5 name="biografi" :value="$data->biografi ?? ''" />
+									@error('biografi')
+										<small class="text-danger">{{ $message }}</small>
+									@enderror
+								</div>
 							</div>
 							<div class="col-md-5 mb-3">
 								<div class="form-group mb-3">

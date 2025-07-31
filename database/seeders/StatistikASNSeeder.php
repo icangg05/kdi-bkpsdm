@@ -113,7 +113,7 @@ class StatistikASNSeeder extends Seeder
         'value' => '591'
       ],
       [
-        'label' => 'SLTP',
+        'label' => 'S1/D4',
         'slug'  => 'pppk_s1_d4',
         'value' => '1369'
       ],

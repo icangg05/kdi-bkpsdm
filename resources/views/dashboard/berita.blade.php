@@ -24,7 +24,16 @@
 				<div class="card-header">
 					<h5>Data {{ $title }}</h5>
 				</div>
+
 				<div class="card-body table-responsive">
+					<form action="{{ route('dashboard.publikasi.index', $publikasi) }}" method="GET"
+						class="mb-4 col-md-4 d-flex gap-2">
+						<input type="text" name="q" id="q" placeholder="Pencarian..."
+							class="form-control"
+							value="{{ request()->q }}">
+						<button type="submit" class="btn btn-secondary">Cari</button>
+					</form>
+
 					<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 						<thead>
 							<tr>
@@ -41,10 +50,12 @@
 									<th scope="row">{{ $loop->iteration }}.</th>
 									<td>{{ $item->judul }}</td>
 									<td>{{ str()->words(strip_tags($item->isi), 25) }}</td>
-                  <td class="text-nowrap">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('j F Y') }}</td>
+									<td class="text-nowrap">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('j F Y') }}</td>
 									<td class="text-nowrap">
-										<a href="{{ route('dashboard.publikasi.edit', [$publikasi, $item->id]) }}" class="btn btn-sm btn-secondary badge">Edit</a>
-										<form class="d-inline" action="{{ route('dashboard.publikasi.destroy', [$publikasi, $item->id]) }}" method="post">
+										<a href="{{ route('dashboard.publikasi.edit', [$publikasi, $item->id]) }}"
+											class="btn btn-sm btn-secondary badge">Edit</a>
+										<form class="d-inline" action="{{ route('dashboard.publikasi.destroy', [$publikasi, $item->id]) }}"
+											method="post">
 											@method('delete')
 											@csrf
 											<button onclick="return confirm('Hapus data ini?')" type="submit"
@@ -59,6 +70,10 @@
 							@endforelse
 						</tbody>
 					</table>
+
+					<div class="d-flex justify-content-center">
+						{{ $data->links() }}
+					</div>
 				</div>
 			</div>
 			<!-- [ sample-page ] end -->

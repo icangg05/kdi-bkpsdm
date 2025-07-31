@@ -125,6 +125,15 @@
 						<span class="pc-mtext">Berita Duka</span>
 					</a>
 				</li>
+				<li @class([
+					'pc-item',
+					'active' => request()->segment(2) === 'berita-duka',
+				])>
+					<a href="{{ route('dashboard.statistik-asn.index') }}" class="pc-link">
+						<span class="pc-micon"><i class="ti ti-plant-2"></i></span>
+						<span class="pc-mtext">Statistik ASN</span>
+					</a>
+				</li>
 
 				{{-- MENU LAYANAN --}}
 				<li class="pc-item pc-caption">
@@ -148,7 +157,7 @@
 					<label>Regulasi</label>
 					<i class="ti ti-news"></i>
 				</li>
-				<li @class(['pc-item', 'active' => request()->is('/dashboard/regulasi*')])>
+				<li @class(['pc-item', 'active' => request()->is('dashboard/regulasi*')])>
 					<a class="pc-link" href="{{ route('dashboard.regulasi.index') }}">
 						<span class="pc-micon"><i class="ti ti-lock"></i></span>
 						<span class="pc-mtext">Regulasi</span>
@@ -181,6 +190,12 @@
 					<i class="ti ti-brand-chrome"></i>
 				</li>
 				<li class="pc-item">
+					<a href="{{ route('dashboard.user.index') }}" class="pc-link">
+						<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+						<span class="pc-mtext">Data User</span>
+					</a>
+				</li>
+				<li class="pc-item">
 					<a href="{{ route('dashboard.slider') }}" class="pc-link">
 						<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
 						<span class="pc-mtext">Slider Beranda</span>
@@ -197,7 +212,8 @@
 							class="pc-mtext">Struktur Jabatan</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
 					<ul class="pc-submenu">
 						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.bagian.index') }}">Bagian</a></li>
-						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.unit-organisasi.index') }}">Unit Organisasi</a></li>
+						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.unit-organisasi.index') }}">Unit
+								Organisasi</a></li>
 						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.jabatan.index') }}">Jabatan</a></li>
 						{{-- <li class="pc-item pc-hasmenu">
               <a href="#!" class="pc-link">Level 2.2<span class="pc-arrow"><i

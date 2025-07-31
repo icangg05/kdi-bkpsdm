@@ -28,12 +28,17 @@ class BagianController extends Controller
   public function index()
   {
     $title = 'Daftar Bagian';
-    $data  = Bagian::latest()->paginate(15);
+    $data  = Bagian::latest();
 
     $dataEdit = null;
     if (request()->id) {
       $dataEdit = Bagian::findOrFail(request()->id);
     }
+
+    if (request()->q)
+      $data = $data->where('nama', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.bagian', compact('title', 'data', 'dataEdit'));
   }

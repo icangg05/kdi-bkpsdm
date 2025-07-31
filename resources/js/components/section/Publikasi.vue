@@ -27,20 +27,20 @@ const props = defineProps([
 
 const publikasiData = {
   Berita: {
-    utama: props.berita[0],
-    lainnya: props.berita.slice(1)
+    utama: props.berita[0] ?? null,
+    lainnya: props.berita.slice(1) ?? []
   },
   Pengumuman: {
-    utama: props.pengumuman[0],
-    lainnya: props.pengumuman.slice(1)
+    utama: props.pengumuman[0] ?? null,
+    lainnya: props.pengumuman.slice(1) ?? []
   },
   'Ucapan Selamat': {
-    utama: props.ucapanSelamat[0],
-    lainnya: props.ucapanSelamat.slice(1)
+    utama: props.ucapanSelamat[0] ?? null,
+    lainnya: props.ucapanSelamat.slice(1) ?? []
   },
   'Berita Duka': {
-    utama: props.beritaDuka[0],
-    lainnya: props.beritaDuka.slice(1)
+    utama: props.beritaDuka[0] ?? null,
+    lainnya: props.beritaDuka.slice(1) ?? []
   },
 }
 
@@ -75,22 +75,26 @@ const publikasiLain = computed(() => publikasiData[activeCategory.value].lainnya
       <Transition name="fade-content" mode="out-in">
         <div :key="activeCategory" class="grid md:grid-cols-2 gap-6 items-start">
           <!-- Konten Utama -->
-          <div class="rounded-xl overflow-hidden shadow-lg">
-            <img :src="publikasiUtama.sampul ? `/storage/${publikasiUtama.sampul}` : '/img/default-publikasi.png'" class="w-full aspect-[3/1.7] object-cover" />
+          <div class="rounded-xl overflow-hidden shadow-lg" v-if="publikasiUtama">
+            <img :src="publikasiUtama.sampul ? `/storage/${publikasiUtama.sampul}` : '/img/default-publikasi.png'"
+              class="w-full aspect-[3/1.7] object-cover" />
             <div class="bg-sky-600 text-white px-6 py-4">
-              <Link :href="route('berita.show', publikasiUtama.slug)" class="hover:underline font-semibold text-base lg:text-lg leading-tight line-clamp-1">{{ publikasiUtama.judul }}</Link>
+              <Link :href="route('berita.show', publikasiUtama.slug)"
+                class="hover:underline font-semibold text-base lg:text-lg leading-tight line-clamp-1">{{
+                  publikasiUtama.judul }}</Link>
               <p class="mt-1 text-sm opacity-80">{{ publikasiUtama.tanggal }}</p>
             </div>
           </div>
 
           <!-- Konten Lainnya -->
-          <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-4" v-if="publikasiLain.length > 0">
             <div v-for="item in publikasiLain" :key="item.id"
               class="flex items-start gap-3 p-4 bg-white border-l-4 border-sky-500 rounded-lg shadow-sm hover:shadow-md transition">
               <Newspaper class="w-5 h-5 text-sky-500 mt-1" />
               <div>
-                <Link :href="route('berita.show', item.slug)" class="hover:underline font-medium text-gray-800 leading-tight text-sm lg:text-base line-clamp-1">
-                  {{ item.judul }}
+                <Link :href="route('berita.show', item.slug)"
+                  class="hover:underline font-medium text-gray-800 leading-tight text-sm lg:text-base line-clamp-1">
+                {{ item.judul }}
                 </Link>
                 <p class="text-sm text-gray-500">{{ item.tanggal }}</p>
               </div>

@@ -3,16 +3,14 @@
 		<div class="row">
 			<div class="col-sm-6 my-1">
 				<p class="m-0">
-					Berry &#9829; crafted by Team
-					<a href="https://codedthemes.com/" target="_blank">CodedThemes</a>
+					© {{ date('Y') }} BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.
 				</p>
 			</div>
 			<div class="col-sm-6 ms-auto my-1">
 				<ul class="list-inline footer-link mb-0 justify-content-sm-end d-flex">
-					<li class="list-inline-item"><a href="/index.html">Home</a></li>
-					<li class="list-inline-item"><a href="https://codedthemes.gitbook.io/berry-bootstrap/"
-							target="_blank">Documentation</a></li>
-					<li class="list-inline-item"><a href="https://codedthemes.support-hub.io/" target="_blank">Support</a></li>
+					<li class="list-inline-item">
+						Dikembangkan oleh Dinas Kominfo Kota Kendari
+					</li>
 				</ul>
 			</div>
 		</div>

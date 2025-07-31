@@ -27,7 +27,14 @@ class VideoController extends Controller
   public function index()
   {
     $title = 'Galeri Video';
-    $data  = Video::latest()->paginate(10);
+    $data  = Video::latest();
+
+    if (request()->q)
+      $data = $data->where('judul', 'like', '%' . request()->q . '%')
+        ->orWhere('deskripsi', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
+
     return view('dashboard.galeri-video', compact('title', 'data'));
   }
 

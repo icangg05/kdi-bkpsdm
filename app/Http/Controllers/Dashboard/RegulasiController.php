@@ -27,7 +27,13 @@ class RegulasiController extends Controller
   public function index()
   {
     $title = 'Regulasi';
-    $data  = Regulasi::with('kategori_regulasi')->paginate(10);
+    $data  = Regulasi::with('kategori_regulasi');
+
+    if (request()->q)
+      $data = $data->where('judul', 'like', '%' . request()->q . '%')
+        ->orWhere('deskripsi', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.regulasi', compact('title', 'data'));
   }

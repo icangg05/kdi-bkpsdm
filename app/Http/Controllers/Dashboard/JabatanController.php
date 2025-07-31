@@ -44,12 +44,17 @@ class JabatanController extends Controller
   public function index()
   {
     $title = 'Daftar Jabatan';
-    $data  = Jabatan::latest()->paginate(15);
+    $data  = Jabatan::latest();
 
     $dataEdit = null;
     if (request()->id) {
       $dataEdit = Jabatan::with(['unit_organisasi.bagian'])->findOrFail(request()->id);
     }
+
+    if (request()->q)
+      $data = $data->where('nama', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.jabatan', compact('title', 'data', 'dataEdit'));
   }

@@ -25,6 +25,14 @@
 					<h5>Data {{ $title }}</h5>
 				</div>
 				<div class="card-body table-responsive">
+					<form action="{{ route('dashboard.galeri.foto.index') }}" method="GET"
+						class="mb-4 col-md-4 d-flex gap-2">
+						<input type="text" name="q" id="q" placeholder="Pencarian..."
+							class="form-control"
+							value="{{ request()->q }}">
+						<button type="submit" class="btn btn-secondary">Cari</button>
+					</form>
+
 					<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 						<thead>
 							<tr>
@@ -43,8 +51,8 @@
 									<td>{{ $item->judul }}</td>
 									<td>{{ $item->deskripsi }}</td>
 									<td>
-                    <img class="img-thumbnail" width="200" src="{{ asset("storage/$item->gambar") }}" alt="{{ $item->gambar }}">
-                  </td>
+										<img class="img-thumbnail" width="200" src="{{ asset("storage/$item->gambar") }}" alt="{{ $item->gambar }}">
+									</td>
 									<td class="text-nowrap">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('j F Y') }}</td>
 									<td class="text-nowrap">
 										<a href="{{ route('dashboard.galeri.foto.edit', $item->id) }}"
@@ -65,6 +73,10 @@
 							@endforelse
 						</tbody>
 					</table>
+
+					<div class="d-flex justify-content-center">
+						{{ $data->links() }}
+					</div>
 				</div>
 			</div>
 			<!-- [ sample-page ] end -->

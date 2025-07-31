@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\BagianController;
 use App\Http\Controllers\Dashboard\BeritaController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\GaleriController;
 use App\Http\Controllers\Dashboard\HalamanController;
 use App\Http\Controllers\Dashboard\JabatanController;
@@ -9,8 +10,10 @@ use App\Http\Controllers\Dashboard\KategoriRegulasiController;
 use App\Http\Controllers\Dashboard\PejabatController;
 use App\Http\Controllers\Dashboard\RegulasiController;
 use App\Http\Controllers\Dashboard\SliderController;
+use App\Http\Controllers\Dashboard\StatistikASNController;
 use App\Http\Controllers\Dashboard\UnitOranisasiController;
 use App\Http\Controllers\Dashboard\UploadController;
+use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\VideoController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +26,7 @@ Route::middleware(['auth'])
   ->group(function () {
 
     // DASHBOARD HOME
-    Route::get('/', fn() => view('dashboard.index'))->name('home');
+    Route::get('/', [DashboardController::class, 'index'])->name('home');
 
     // SLIDER
     Route::get('/slider', [SliderController::class, 'index'])->name('slider');
@@ -32,6 +35,10 @@ Route::middleware(['auth'])
     // PROFIL, LAYANAN, HUBUNGI KAMI
     Route::get('/halaman/{kategori}', [HalamanController::class, 'index'])->name('halaman');
     Route::patch('/halaman/{kategori}/update', [HalamanController::class, 'update'])->name('halaman.update');
+
+    // STATISTIK ASN
+    Route::get('/statistik-asn', [StatistikASNController::class, 'index'])->name('statistik-asn.index');
+    Route::patch('/statistik-asn/update', [StatistikASNController::class, 'update'])->name('statistik-asn.update');
 
     // PROFIL PEJABAT
     Route::resource('/pejabat', PejabatController::class)->except(['show']);
@@ -81,4 +88,6 @@ Route::middleware(['auth'])
     Route::resource('/bagian', BagianController::class)->except(['show', 'put']);
     // DATA UNIT ORGANISASI
     Route::resource('/unit-organisasi', UnitOranisasiController::class)->except(['show', 'put']);
+
+    Route::resource('/user', UserController::class)->except(['show']);
   });

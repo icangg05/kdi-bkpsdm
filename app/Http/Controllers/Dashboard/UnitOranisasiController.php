@@ -31,12 +31,17 @@ class UnitOranisasiController extends Controller
   public function index()
   {
     $title = 'Daftar Unit Organisasi';
-    $data  = UnitOrganisasi::with('bagian')->latest()->paginate(15);
+    $data  = UnitOrganisasi::with('bagian')->latest();
 
     $dataEdit = null;
     if (request()->id) {
       $dataEdit = UnitOrganisasi::findOrFail(request()->id);
     }
+
+    if (request()->q)
+      $data = $data->where('nama', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.unit-organisasi', compact('title', 'data', 'dataEdit'));
   }

@@ -27,6 +27,14 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
+							<form action="{{ route('dashboard.pejabat.index') }}" method="GET"
+								class="mb-4 col-md-4 d-flex gap-2">
+								<input type="text" name="q" id="q" placeholder="Pencarian..."
+									class="form-control"
+									value="{{ request()->q }}">
+								<button type="submit" class="btn btn-secondary">Cari</button>
+							</form>
+
 							<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 								<thead>
 									<tr>
@@ -80,6 +88,10 @@
 									@endforelse
 								</tbody>
 							</table>
+
+							<div class="d-flex justify-content-center">
+								{{ $data->links() }}
+							</div>
 						</div>
 					</div>
 				</div>

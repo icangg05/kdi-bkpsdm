@@ -26,7 +26,12 @@ class PejabatController extends Controller
   public function index()
   {
     $title = 'Profil Pejabat';
-    $data  = Pejabat::with('jabatan.unit_organisasi.bagian')->latest()->paginate(10);
+    $data  = Pejabat::with('jabatan.unit_organisasi.bagian')->latest();
+
+    if (request()->q)
+      $data = $data->where('nama', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.pejabat', compact('title', 'data'));
   }
@@ -54,6 +59,7 @@ class PejabatController extends Controller
       'nama'       => trim($request->nama),
       'jabatan_id' => $request->jabatan_id,
       'foto'       => $foto ?? null,
+      'biografi'   => $request->biografi
     ]);
 
     return redirect()->route('dashboard.pejabat.index')->with('success', 'Data berhasil ditambahkan.');
@@ -86,6 +92,7 @@ class PejabatController extends Controller
       'nama'       => trim($request->nama),
       'jabatan_id' => $request->jabatan_id,
       'foto'       => $foto ?? $data->foto,
+      'biografi'   => $request->biografi
     ]);
 
     return redirect()->route('dashboard.pejabat.index')->with('success', 'Data berhasil diperbarui.');

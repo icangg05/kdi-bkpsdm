@@ -28,12 +28,17 @@ class KategoriRegulasiController extends Controller
   public function index()
   {
     $title = 'Kategori Regulasi';
-    $data  = KategoriRegulasi::latest()->paginate(10);
+    $data  = KategoriRegulasi::latest();
 
     $dataEdit = null;
     if (request()->id) {
       $dataEdit = KategoriRegulasi::findOrFail(request()->id);
     }
+
+    if (request()->q)
+      $data = $data->where('nama', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.kategori-regulasi', compact('title', 'data', 'dataEdit'));
   }

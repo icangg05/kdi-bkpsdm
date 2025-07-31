@@ -37,7 +37,13 @@ class BeritaController extends Controller
   public function index($publikasi)
   {
     $title = $this->slugToTitle($publikasi);
-    $data  = Berita::latest()->where('kategori', $publikasi)->paginate(10);
+    $data  = Berita::latest()->where('kategori', $publikasi);
+
+    if (request()->q)
+      $data = $data->where('judul', 'like', '%' . request()->q . '%')
+        ->orWhere('isi', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.berita', compact('title', 'data', 'publikasi'));
   }

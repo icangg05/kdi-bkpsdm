@@ -25,6 +25,14 @@
 					<h5>Data {{ $title }}</h5>
 				</div>
 				<div class="card-body table-responsive">
+					<form action="{{ route('dashboard.regulasi.index') }}" method="GET"
+						class="mb-4 col-md-4 d-flex gap-2">
+						<input type="text" name="q" id="q" placeholder="Pencarian..."
+							class="form-control"
+							value="{{ request()->q }}">
+						<button type="submit" class="btn btn-secondary">Cari</button>
+					</form>
+
 					<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 						<thead>
 							<tr>
@@ -45,12 +53,11 @@
 									<td>{{ $item->kategori_regulasi->nama }}</td>
 									<td>
 										<a href="{{ asset("storage/$item->lampiran") }}"
-											class="btn btn-primary badge"
+											class="badge text-bg-dark"
 											onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
 											Lampiran
 										</a>
 									</td>
-									<td class="text-nowrap">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('j F Y') }}</td>
 									<td class="text-nowrap">
 										<a href="{{ route('dashboard.regulasi.edit', $item->id) }}"
 											class="btn btn-sm btn-secondary badge">Edit</a>
@@ -70,6 +77,10 @@
 							@endforelse
 						</tbody>
 					</table>
+
+					<div class="d-flex justify-content-center">
+						{{ $data->links() }}
+					</div>
 				</div>
 			</div>
 			<!-- [ sample-page ] end -->

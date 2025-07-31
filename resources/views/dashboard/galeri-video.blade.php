@@ -25,6 +25,14 @@
 					<h5>Data {{ $title }}</h5>
 				</div>
 				<div class="card-body table-responsive">
+					<form action="{{ route('dashboard.video.index') }}" method="GET"
+						class="mb-4 col-md-4 d-flex gap-2">
+						<input type="text" name="q" id="q" placeholder="Pencarian..."
+							class="form-control"
+							value="{{ request()->q }}">
+						<button type="submit" class="btn btn-secondary">Cari</button>
+					</form>
+
 					<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 						<thead>
 							<tr>
@@ -40,8 +48,8 @@
 							@php
 								function getYoutubeId($url)
 								{
-                  preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $url, $matches);
-                  return $matches[1] ?? null;
+								    preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $url, $matches);
+								    return $matches[1] ?? null;
 								}
 							@endphp
 
@@ -79,6 +87,10 @@
 							@endforelse
 						</tbody>
 					</table>
+
+					<div class="d-flex justify-content-center">
+						{{ $data->links() }}
+					</div>
 				</div>
 			</div>
 			<!-- [ sample-page ] end -->

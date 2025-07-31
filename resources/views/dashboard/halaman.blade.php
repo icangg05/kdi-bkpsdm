@@ -46,7 +46,7 @@
 										@if (isset($data) && $data->gambar)
 											<img class="img-fluid" src="{{ asset("storage/$data->gambar") }}" alt="{{ $data->gambar }}">
 										@else
-											<p class="text-muted">Struktur organisasi belum diunggah.</p>
+											<x-alert message="Struktur organisasi belum diunggah." color="warning" />
 										@endif
 									</div>
 								@else

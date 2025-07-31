@@ -27,7 +27,13 @@ class GaleriController extends Controller
   public function galeriIndex()
   {
     $title = 'Galeri Foto';
-    $data  = Foto::latest()->paginate(10);
+    $data  = Foto::latest();
+
+    if (request()->q)
+      $data = $data->where('judul', 'like', '%' . request()->q . '%')
+        ->orWhere('deskripsi', 'like', '%' . request()->q . '%');
+
+    $data = $data->paginate(15);
 
     return view('dashboard.galeri-foto', compact('title', 'data'));
   }
@@ -101,5 +107,4 @@ class GaleriController extends Controller
 
     return redirect()->route('dashboard.galeri.foto.index')->with('success', 'Data berhasil dihapus.');
   }
-
 }

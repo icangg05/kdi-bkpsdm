@@ -24,6 +24,14 @@
 					<div class="row gap-3">
 						<div class="col-md-7">
 							<div class="table-responsive">
+								<form action="{{ route('dashboard.unit-organisasi.index') }}" method="GET"
+									class="mb-4 col-md-6 d-flex gap-2">
+									<input type="text" name="q" id="q" placeholder="Pencarian..."
+										class="form-control"
+										value="{{ request()->q }}">
+									<button type="submit" class="btn btn-secondary">Cari</button>
+								</form>
+
 								<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 									<thead>
 										<tr>

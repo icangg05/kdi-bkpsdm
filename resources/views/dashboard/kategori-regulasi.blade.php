@@ -28,18 +28,26 @@
 					<div class="row gap-3">
 						<div class="col-md-7">
 							<div class="table-responsive">
+								<form action="{{ route('dashboard.kategori-regulasi.index') }}" method="GET"
+									class="mb-4 col-md-6 d-flex gap-2">
+									<input type="text" name="q" id="q" placeholder="Pencarian..."
+										class="form-control"
+										value="{{ request()->q }}">
+									<button type="submit" class="btn btn-secondary">Cari</button>
+								</form>
+
 								<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
 									<thead>
 										<tr>
 											<th scope="col">#</th>
-											<th scope="col">Nama Regulasi</th>
+											<th scope="col">Nama Kategori Regulasi</th>
 											<th scope="col">Aksi</th>
 										</tr>
 									</thead>
 									<tbody>
 										@forelse ($data as $item)
 											<tr>
-												<th scope="row">{{ $loop->iteration }}.</th>
+												<th scope="row">{{ $loop->iteration + $data->firstItem() - 1 }}.</th>
 												<td>{{ $item->nama }}</td>
 												<td class="text-nowrap">
 													<a href="{{ route('dashboard.kategori-regulasi.index', ['id' => $item->id]) }}"
@@ -60,6 +68,10 @@
 										@endforelse
 									</tbody>
 								</table>
+
+								<div class="d-flex justify-content-center">
+									{{ $data->links() }}
+								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -68,8 +80,8 @@
 
 							@php
 								$routeSubmit = isset($dataEdit)
-                  ? route('dashboard.kategori-regulasi.update', $dataEdit->id)
-                  : route('dashboard.kategori-regulasi.store');
+								    ? route('dashboard.kategori-regulasi.update', $dataEdit->id)
+								    : route('dashboard.kategori-regulasi.store');
 							@endphp
 							<form action="{{ $routeSubmit }}" method="post">
 								@csrf
@@ -78,7 +90,7 @@
 								@endif
 
 								<div class="form-group">
-									<label for="nama" class="form-label">Nama Regulasi</label>
+									<label for="nama" class="form-label">Nama Kategori Regulasi</label>
 									<input type="text" name="nama" id="nama" class="form-control @error('nama') is-invalid @enderror"
 										value="{{ old('nama', $dataEdit->nama ?? '') }}" required>
 									@error('nama')
