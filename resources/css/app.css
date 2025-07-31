@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+@import 'tw-animate-css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-roboto: "Roboto", sans-serif;
+}
+
+@utility container {
+  padding-inline: 14px;
+  margin-inline: auto;
+
+  @variant lg {
+    padding-inline: 30px;
+    width: 1200px;
+  }
+}
+
+@layer base {
+  .bline {
+    @apply !border !border-red-500;
+  }
+
+  .shadow-1 {
+    @apply shadow-[0px_0px_4px_0px_rgba(0,_0,_0,_0.1)];
+  }
+
+}
