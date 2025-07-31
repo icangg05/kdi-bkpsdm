@@ -100,7 +100,7 @@
 									<select name="bagian_id" class="form-select" id="tom-select">
 										<option value="">Pilih...</option>
 										@foreach (App\Models\Bagian::orderBy('nama')->get() as $item)
-											<option @selected($item->id == old('bagian_id', $data->bagian_id ?? '')) value="{{ $item->id }}">{{ $item->nama }}</option>
+											<option @selected($item->id == old('bagian_id', $dataEdit->bagian_id ?? '')) value="{{ $item->id }}">{{ $item->nama }}</option>
 										@endforeach
 									</select>
 									@error('bagian_id')
@@ -125,7 +125,7 @@
 										{{ request()->id ? 'Update' : 'Tambah' }}
 									</button>
 									@if (request()->id)
-										<a href="{{ route('dashboard.bagian.index') }}" class="btn btn-light">Batal</a>
+										<a href="{{ route('dashboard.unit-organisasi.index') }}" class="btn btn-light">Batal</a>
 									@endif
 								</div>
 							</form>

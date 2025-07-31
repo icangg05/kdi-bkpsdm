@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pengaturan', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pengaturan');
+            $table->string('label');
             $table->string('value');
             $table->timestamps();
         });

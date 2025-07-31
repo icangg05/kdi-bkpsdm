@@ -185,37 +185,38 @@
 					</a>
 				</li>
 
-				<li class="pc-item pc-caption">
-					<label>Data Lainnya</label>
-					<i class="ti ti-brand-chrome"></i>
-				</li>
-				<li class="pc-item">
-					<a href="{{ route('dashboard.user.index') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
-						<span class="pc-mtext">Data User</span>
-					</a>
-				</li>
-				<li class="pc-item">
-					<a href="{{ route('dashboard.slider') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
-						<span class="pc-mtext">Slider Beranda</span>
-					</a>
-				</li>
-				<li @class([
-					'pc-item pc-hasmenu',
-					'active' =>
-						request()->is('/dashboard/jabatan*') ||
-						request()->is('/dashboard/unit-organisasi*') ||
-						request()->is('/dashboard/bagian*'),
-				])>
-					<a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-menu"></i></span><span
-							class="pc-mtext">Struktur Jabatan</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-					<ul class="pc-submenu">
-						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.bagian.index') }}">Bagian</a></li>
-						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.unit-organisasi.index') }}">Unit
-								Organisasi</a></li>
-						<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.jabatan.index') }}">Jabatan</a></li>
-						{{-- <li class="pc-item pc-hasmenu">
+				@can('admin')
+					<li class="pc-item pc-caption">
+						<label>Data Lainnya</label>
+						<i class="ti ti-brand-chrome"></i>
+					</li>
+					<li class="pc-item">
+						<a href="{{ route('dashboard.user.index') }}" class="pc-link">
+							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-mtext">Data User</span>
+						</a>
+					</li>
+					<li class="pc-item">
+						<a href="{{ route('dashboard.slider') }}" class="pc-link">
+							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-mtext">Slider Beranda</span>
+						</a>
+					</li>
+					<li @class([
+						'pc-item pc-hasmenu',
+						'active' =>
+							request()->is('/dashboard/jabatan*') ||
+							request()->is('/dashboard/unit-organisasi*') ||
+							request()->is('/dashboard/bagian*'),
+					])>
+						<a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-menu"></i></span><span
+								class="pc-mtext">Struktur Jabatan</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
+						<ul class="pc-submenu">
+							<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.bagian.index') }}">Bagian</a></li>
+							<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.unit-organisasi.index') }}">Unit
+									Organisasi</a></li>
+							<li class="pc-item"><a class="pc-link" href="{{ route('dashboard.jabatan.index') }}">Jabatan</a></li>
+							{{-- <li class="pc-item pc-hasmenu">
               <a href="#!" class="pc-link">Level 2.2<span class="pc-arrow"><i
                     data-feather="chevron-right"></i></span></a>
               <ul class="pc-submenu">
@@ -231,7 +232,7 @@
                 </li>
               </ul>
             </li> --}}
-						{{-- <li class="pc-item pc-hasmenu">
+							{{-- <li class="pc-item pc-hasmenu">
               <a href="#!" class="pc-link">Level 2.3<span class="pc-arrow"><i
                     data-feather="chevron-right"></i></span></a>
               <ul class="pc-submenu">
@@ -247,18 +248,18 @@
                 </li>
               </ul>
             </li> --}}
-					</ul>
-				</li>
-				<li @class([
-					'pc-item',
-					'active' => request()->is('/dashboard/kategori-regulasi*'),
-				])>
-					<a href="{{ route('dashboard.kategori-regulasi.index') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
-						<span class="pc-mtext">Kategori Regulasi</span>
-					</a>
-				</li>
-
+						</ul>
+					</li>
+					<li @class([
+						'pc-item',
+						'active' => request()->is('/dashboard/kategori-regulasi*'),
+					])>
+						<a href="{{ route('dashboard.kategori-regulasi.index') }}" class="pc-link">
+							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-mtext">Kategori Regulasi</span>
+						</a>
+					</li>
+				@endcan
 			</ul>
 			<div class="w-100 text-center">
 				<div class="badge theme-version badge rounded-pill bg-light text-dark f-12"></div>

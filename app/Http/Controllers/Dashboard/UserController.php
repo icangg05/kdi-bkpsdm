@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -95,7 +96,10 @@ class UserController extends Controller
 
     $user->save();
 
-    return redirect()->route('dashboard.user.index')->with('success', 'User berhasil diperbarui.');
+    // if (Auth::user()->role == 'admin')
+    // return redirect()->route('dashboard.user.index')->with('success', 'User berhasil diperbarui.');
+    // else
+    return redirect()->route('dashboard.user.edit', $user->id)->with('success', 'Profil berhasil diperbarui.');
   }
 
   /**

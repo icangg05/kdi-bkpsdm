@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +24,12 @@ class AppServiceProvider extends ServiceProvider
   {
     Paginator::useBootstrapFive();
     Paginator::useBootstrapFour();
+
+    Gate::define('admin', function (User $user) {
+      return $user->role == 'admin';
+    });
+    Gate::define('pengelola-konten', function (User $user) {
+      return $user->role == 'pengelola-konten';
+    });
   }
 }

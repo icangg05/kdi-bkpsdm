@@ -62,7 +62,7 @@
 													method="post">
 													@method('delete')
 													@csrf
-													<button onclick="return confirm('Hapus data ini?')" type="submit"
+													<button @disabled(auth()->user()->id == $item->id) onclick="return confirm('Hapus data ini?')" type="submit"
 														class="btn btn-sm btn-danger badge">Hapus</button>
 												</form>
 											</td>

@@ -27,6 +27,8 @@ Route::middleware(['auth'])
 
     // DASHBOARD HOME
     Route::get('/', [DashboardController::class, 'index'])->name('home');
+    Route::get('/pengaturan', [DashboardController::class, 'pengaturan'])->name('pengaturan');
+    Route::patch('/pengaturan/update', [DashboardController::class, 'pengaturanUpdate'])->name('pengaturan.update');
 
     // SLIDER
     Route::get('/slider', [SliderController::class, 'index'])->name('slider');

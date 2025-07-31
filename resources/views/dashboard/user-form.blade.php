@@ -8,7 +8,13 @@
 	<!-- [ breadcrumb ] start -->
 	<x-breadcrumb
 		:title="$title"
-		:list="[[$title, route('dashboard.user.index')], ['Form']]" />
+		:list="[
+		    [
+		        auth()->user()->can('admin') ? $title : 'Profil',
+		        auth()->user()->can('admin') ? route('dashboard.user.index') : '#',
+		    ],
+		    ['Form'],
+		]" />
 	<!-- [ breadcrumb ] end -->
 
 
@@ -16,9 +22,16 @@
 	<div class="row">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
-			<div class="mb-3">
-				<a href="{{ route('dashboard.user.index') }}" class="btn btn-secondary">Kembali</a>
-			</div>
+			@can('admin')
+				<div class="mb-3">
+					<a href="{{ route('dashboard.user.index') }}" class="btn btn-secondary">Kembali</a>
+				</div>
+			@endcan
+
+			@if (session('success'))
+				<x-alert :message="session('success')" color="success" />
+			@endif
+
 			<div class="card">
 				<div class="card-header">
 					<h5>Data {{ $title }}</h5>
@@ -64,17 +77,22 @@
 							</div>
 							<div class="col-md-6 mb-3">
 								<div class="form-group mb-3">
+									@can('pengelola-konten')
+										<input type="hidden" name="role" value="{{ $data->role }}">
+									@endcan
 									<label for="role" class="form-label">Role</label>
-									<select name="role" class="form-select" id="tom-select" required>
+									<select name="role" class="form-select" id="tom-select" required @disabled(auth()->user()->role == 'pengelola-konten')>
 										<option value="">Pilih...</option>
 										@php
 											$roles = [
-                        ['label' => 'Admin', 'value' => 'admin'],
-                        ['label' => 'Pengelola Konten', 'value' => 'pengelola-konten'],
+											    ['label' => 'Admin', 'value' => 'admin'],
+											    ['label' => 'Pengelola Konten', 'value' => 'pengelola-konten'],
 											];
 										@endphp
 										@foreach ($roles as $item)
-											<option @selected($item['value'] == old('role', $item['role'] ?? '')) value="{{ $item['value'] }}">
+											<option
+												@selected($item['value'] == old('role', $data->role ?? ''))
+												value="{{ $item['value'] }}">
 												{{ $item['label'] }}
 											</option>
 										@endforeach
@@ -100,7 +118,7 @@
 								<div class="form-group mb-3">
 									<label for="password" class="form-label">Password</label>
 									<input type="password" name="password" id="password"
-										class="form-control @error('password') is-invalid @enderror" required>
+										class="form-control @error('password') is-invalid @enderror" @required(!isset($data))>
 									@error('password')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
@@ -111,7 +129,7 @@
 									<label for="password_confirmation" class="form-label">Konfirmasi Password</label>
 									<input type="password" name="password_confirmation" id="password_confirmation"
 										class="form-control @error('password_confirmation') is-invalid @enderror"
-										required>
+										@required(!isset($data))>
 									@error('password_confirmation')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror

@@ -105,7 +105,7 @@
 									<select name="unit_organisasi_id" class="form-select" id="tom-select">
 										<option value="">Pilih...</option>
 										@foreach (App\Models\UnitOrganisasi::orderBy('nama')->get()->pluck('id', 'nama') as $label => $value)
-											<option @selected($value == old('unit_organisasi_id', $data->unit_organisasi_id ?? '')) value="{{ $value }}">{{ $label }}</option>
+											<option @selected($value == old('unit_organisasi_id', $dataEdit->unit_organisasi_id ?? '')) value="{{ $value }}">{{ $label }}</option>
 										@endforeach
 									</select>
 									@error('unit_organisasi_id')

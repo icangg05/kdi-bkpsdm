@@ -117,24 +117,20 @@
 								Selamat Datang,
 								<span class="small text-muted">{{ auth()->user()->name }}</span>
 							</h4>
-							<p class="text-muted">Role : <span style="font-weight: 500">{{ str_replace('-', ' ', str()->title(auth()->user()->role)) }}</span></p>
+							<p class="text-muted">Role : <span
+									style="font-weight: 500">{{ str_replace('-', ' ', str()->title(auth()->user()->role)) }}</span></p>
 							<hr />
 							<div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-								{{-- <div class="upgradeplan-block bg-light-warning rounded">
-									<h4>Explore full code</h4>
-									<p class="text-muted">Buy now to get full access of code files</p>
-									<a href="https://codedthemes.com/item/berry-bootstrap-5-admin-template/" target="_blank"
-										class="btn btn-warning">Buy Now</a>
-								</div>
-								<hr /> --}}
-								<a href="#" class="dropdown-item">
+								<a href="{{ route('dashboard.user.edit', auth()->user()->id) }}" class="dropdown-item">
 									<i class="ti ti-user"></i>
 									<span>Profil Saya</span>
 								</a>
-								<a href="#" class="dropdown-item">
-									<i class="ti ti-settings"></i>
-									<span>Pengaturan</span>
-								</a>
+								@can('admin')
+									<a href="{{ route('dashboard.pengaturan') }}" class="dropdown-item">
+										<i class="ti ti-settings"></i>
+										<span>Pengaturan</span>
+									</a>
+								@endcan
 								<a href="{{ route('logout') }}" class="dropdown-item">
 									<i class="ti ti-logout"></i>
 									<span>Logout</span>
