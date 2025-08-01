@@ -35,12 +35,12 @@
 	];
 @endphp
 
-<nav class="pc-sidebar">
+<nav class="pc-sidebar" style="user-select: none">
 	<div class="navbar-wrapper">
 		<div class="m-header">
-			<a href="{{ route('dashboard.home') }}" class="b-brand text-primary d-flex justify-items-center gap-1">
+			<a href="{{ route('dashboard.home') }}" class="b-brand text-primary d-flex justify-items-center gap-2">
 				<!-- ========   Change your logo from here   ============ -->
-				<img src="{{ asset('img/logo.png') }}" alt="logo" width="50" />
+				<img src="{{ asset('img/logo-kendari.png') }}" alt="logo" width="50" />
 				<div class="mt-2" style="font-weight: bold; font-size: 1.2rem; line-height: 17px">
 					BKPSDM <br> <span class="text-dark" style="font-size: 0.8rem">KOTA KENDARI</span>
 				</div>
@@ -80,7 +80,7 @@
 						<span class="pc-mtext">Struktur Organisasi</span>
 					</a>
 				</li>
-				<li @class(['pc-item', 'active' => request()->is('/dashboard/pejabat*')])>
+				<li @class(['pc-item', 'active' => request()->is('dashboard/pejabat*')])>
 					<a href="{{ route('dashboard.pejabat.index') }}" class="pc-link">
 						<span class="pc-micon"><i class="ti ti-user-plus"></i></span>
 						<span class="pc-mtext">Profil Pejabat</span>

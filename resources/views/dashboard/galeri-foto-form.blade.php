@@ -61,7 +61,8 @@
 								<div class="form-group mb-3">
 									<label for="gambar" class="form-label">Upload Foto</label>
 									<input accept="image/*" type="file" name="gambar" id="gambar" class="form-control @error('gambar') is-invalid @enderror"
-										value="{{ old('gambar', $data->gambar ?? date('Y-m-d')) }}" required>
+										value="{{ old('gambar', $data->gambar ?? date('Y-m-d')) }}" @required(!isset($data))>
+									<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
 									@error('gambar')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror

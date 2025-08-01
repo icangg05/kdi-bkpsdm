@@ -17,7 +17,7 @@ class RegulasiController extends Controller
       'judul'                => ['required'],
       'deskripsi'            => ['required'],
       'kategori_regulasi_id' => ['required'],
-      'lampiran'             => ['nullable', 'max:10240'],
+      'lampiran'             => ['nullable', 'max:'. config('app.size_file')],
     ]);
   }
 

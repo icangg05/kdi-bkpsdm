@@ -80,6 +80,7 @@
 									<label for="foto" class="form-label">Upload Foto</label>
 									<input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror"
 										accept="image/*">
+									<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
 									@error('foto')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror

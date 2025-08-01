@@ -37,6 +37,7 @@ Route::middleware(['auth'])
     // PROFIL, LAYANAN, HUBUNGI KAMI
     Route::get('/halaman/{kategori}', [HalamanController::class, 'index'])->name('halaman');
     Route::patch('/halaman/{kategori}/update', [HalamanController::class, 'update'])->name('halaman.update');
+    Route::get('/halaman/{id}/delete-lampiran', [HalamanController::class, 'deleteLampiran'])->name('halaman.delete-lampiran');
 
     // STATISTIK ASN
     Route::get('/statistik-asn', [StatistikASNController::class, 'index'])->name('statistik-asn.index');

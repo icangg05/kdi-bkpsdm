@@ -27,7 +27,7 @@ const closeModal = () => {
 
 <template>
   <section>
-    <div class="text-center mb-8">
+    <div class="text-center mb-8 select-none">
       <h2 class="mb-3 text-2xl lg:text-3xl font-bold">Galeri Kegiatan</h2>
       <p class="max-w-xl mx-auto text-sm lg:text-base text-gray-500">
         Dokumentasi kegiatan dan momen penting BKPSDM Kota Kendari untuk mendukung tata kelola kepegawaian yang

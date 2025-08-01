@@ -94,7 +94,7 @@ function toPage(link, isBlank) {
 </script>
 
 <template>
-  <section id="layanan" class="relative bg-black/70">
+  <section id="layanan" class="relative bg-black/70 select-none">
     <!-- Gambar background dengan filter grayscale -->
     <div class="absolute inset-0">
       <img

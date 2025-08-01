@@ -19,7 +19,7 @@
 
 
 	<!-- [ Main Content ] start -->
-	<div class="row">
+	<div class="row" style="user-select: none">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
 			@can('admin')

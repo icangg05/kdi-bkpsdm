@@ -110,7 +110,7 @@ class JabatanController extends Controller
   public function tugasIndex($id)
   {
     $title = 'Daftar Tugas';
-    $data  = Jabatan::findOrFail($id);
+    $data  = Jabatan::with('unit_organisasi.bagian')->findOrFail($id);
     $tugas = $data->tugas;
     // dd($tugas);
 

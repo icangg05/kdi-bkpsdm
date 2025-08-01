@@ -4,6 +4,7 @@ import { Facebook, Instagram, Twitter, Youtube } from 'lucide-vue-next';
 
 const page = usePage()
 const pengaturan = page.props.pengaturan as any
+const logo = page.props.logo
 
 const alamat = pengaturan.find((item: any) => item.nama_pengaturan == 'alamat')?.value
 const fb = pengaturan.find((item: any) => item.nama_pengaturan == 'fb')?.value
@@ -13,14 +14,14 @@ const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
 </script>
 
 <template>
-  <footer class="bg-gray-900 text-gray-400 pt-12">
+  <footer class="bg-gray-900 text-gray-400 pt-12 select-none">
     <!-- Bagian Atas -->
     <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 border-b border-gray-700">
       <!-- Logo dan Deskripsi -->
       <div class="flex flex-col items-start gap-4">
         <div class="flex items-center gap-2">
           <!-- Ganti dengan logo asli -->
-          <img src="/img/logo.png" alt="Logo" class="size-17 w-auto" />
+          <img :src="`/storage/${logo}`" alt="Logo" class="size-17 w-auto" />
           <div class="leading-0">
             <h1 class="font-bold text-white text-2xl">BKP<span class="text-sky-400">SDM</span></h1>
             <span class="text-sm text-white/60">Kota Kendari</span>

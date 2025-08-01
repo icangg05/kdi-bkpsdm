@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Halaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HalamanController extends Controller
 {
@@ -77,6 +78,7 @@ class HalamanController extends Controller
   {
     $title = $this->validPages($halaman);
     $data = Halaman::where('kategori', $halaman)->first();
+    // dd($data->kategori);
 
     return view('dashboard.halaman', compact('title', 'data', 'halaman'));
   }
@@ -88,18 +90,19 @@ class HalamanController extends Controller
   {
     $request->validate([
       'isi'      => ['nullable'],
-      'gambar'   => ['nullable', 'image', 'max:2048'],
-      'lampiran' => ['nullable'],
+      'gambar'   => ['nullable', 'image', 'max:' . config('app.size_img')],
+      'lampiran' => ['nullable', 'max:' . config('app.size_file')],
     ]);
 
     $data = Halaman::where('kategori', $halaman)->first();
-    if ($request->file('gambar'))
-      $gambar = $request->file('gambar')->store('gambar');
+    if ($request->file('gambar')) {
+      $imgFile = $request->file('gambar');
+      $gambar  = $imgFile->storeAs('gambar', generate_filename($imgFile));
+    }
 
     if ($request->file('lampiran')) {
       $file     = $request->file('lampiran');
-      $filename = $file->getClientOriginalName();
-      $lampiran = $file->storeAs('lampiran', $filename);
+      $lampiran = $file->storeAs('lampiran', generate_filename($file));
     }
 
     $dataUpdate = [
@@ -109,7 +112,7 @@ class HalamanController extends Controller
 
     // UPDATE OR
     if ($data) {
-      $dataUpdate['gambar']   = $gambar ?? $data->gambar;
+      $dataUpdate['gambar']   = $gambar;
       $dataUpdate['lampiran'] = $lampiran ?? $data->lampiran;
       $data->update($dataUpdate);
     }
@@ -121,5 +124,19 @@ class HalamanController extends Controller
     }
 
     return back()->with('success', 'Data berhasil diperbarui.');
+  }
+
+  /**
+   * DELETE LAMPIRAN
+   */
+  public function deleteLampiran($id)
+  {
+    $data = Halaman::findOrFail($id);
+    Storage::delete($data->lampiran);
+    $data->update([
+      'lampiran' => null,
+    ]);
+
+    return back()->with('success', 'Lampiran berhasil diperbarui.');
   }
 }

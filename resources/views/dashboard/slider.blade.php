@@ -35,7 +35,7 @@
 										@error('slider_' . $item->id)
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
-                    <small class="text-muted">Ukuran gambar maksimal 2Mb.</small>
+										<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
 									</div>
 									<input type="hidden" name="slider_ids[]" value="{{ $item->id }}">
 								@endforeach

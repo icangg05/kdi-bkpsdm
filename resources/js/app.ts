@@ -10,7 +10,7 @@ import { initializeTheme } from './composables/useAppearance';
 // ✅ Import ApexCharts
 import VueApexCharts from 'vue3-apexcharts';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'BKPSDM';
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),

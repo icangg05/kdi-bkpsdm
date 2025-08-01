@@ -4,6 +4,7 @@ import { ChevronDown, Facebook, Info, Instagram, Menu, Phone, TwitterIcon, Youtu
 
 const page = usePage()
 const pengaturan = page.props.pengaturan as any
+const logo = page.props.logo
 
 const no_hp = pengaturan.find((item: any) => item.nama_pengaturan == 'no_hp')?.value
 const jam_operasional = pengaturan.find((item: any) => item.nama_pengaturan == 'jam_operasional')?.value
@@ -96,7 +97,7 @@ const menu = [
 </script>
 
 <template>
-  <div class="container absolute top-0 left-0 right-0 z-[990] text-white/85">
+  <div class="container absolute top-0 left-0 right-0 z-[990] text-white/85 select-none">
     <!-- Top nav -->
     <div class="py-2 hidden lg:block">
       <div class="flex justify-between items-center">
@@ -138,14 +139,14 @@ const menu = [
     <nav class="mt-3 lg:mt-0 bg-white/5 backdrop-blur-md text-white/90">
       <div class="px-5 py-2 lg:py-0 lg:px-6 flex items-center justify-between">
         <!-- Logo -->
-        <div class="flex items-center gap-2">
+        <Link :href="route('beranda')" class="flex items-center gap-2">
           <!-- Ganti dengan logo asli -->
-          <img src="/img/logo.png" alt="Logo" class="size-10 w-auto" />
+          <img :src="`/storage/${logo}`" alt="Logo" class="size-10 w-auto" />
           <div class="leading-0">
             <h1 class="font-bold text-white text-xl">BKP<span class="text-sky-400">SDM</span></h1>
             <span class="text-xs text-white/60">Kota Kendari</span>
           </div>
-        </div>
+        </Link>
 
         <!-- Navigation Menu -->
         <ul class="hidden lg:flex items-center gap-8 uppercase text-sm font-medium">

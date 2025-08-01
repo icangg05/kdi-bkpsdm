@@ -41,10 +41,24 @@ export function getYoutubeEmbedUrl(url: string) {
 }
 
 
-export function getFileName(path: any) {
-  const filename = path.split('/').pop();
-  return filename.replace(/\.[^/.]+$/, "");
+export function getOriginalFilename(path: any) {
+  // Ambil nama file saja dari path
+  const filenameWithExt = path.split('/').pop(); // misal: data-harian-52-30-07-2025.pdf
+
+  // Ambil nama tanpa ekstensi
+  const filename = filenameWithExt.replace(/\.[^/.]+$/, ""); // hasil: data-harian-52-30-07-2025
+
+  // Gunakan regex untuk hilangkan -ss-dd-mm-yyyy di akhir
+  const match = filename.match(/^(.*)-\d{2}-\d{2}-\d{2}-\d{4}$/);
+
+  if (match) {
+    return match[1]; // nama file asli tanpa timestamp
+  }
+
+  // fallback jika format tidak sesuai
+  return filename;
 }
+
 
 export function formatTanggalIndo(tanggalString: string) {
   const tanggal = new Date(tanggalString);

@@ -16,7 +16,7 @@ const props = defineProps(['statistik_asn'])
 </script>
 
 <template>
-  <section class="bg-gray-50 pt-16 pb-20 -mt-20 -mb-20">
+  <section class="bg-gray-50 pt-16 pb-20 -mt-20 -mb-20 select-none">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-14">
         <h2 class="text-2xl md:text-4xl font-extrabold text-gray-800 mb-2">

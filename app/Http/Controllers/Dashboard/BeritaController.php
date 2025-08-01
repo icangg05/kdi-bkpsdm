@@ -17,7 +17,7 @@ class BeritaController extends Controller
       'judul'   => ['required'],
       'tanggal' => ['required', 'date'],
       'isi'     => ['required'],
-      'sampul'  => ['nullable', 'image', 'max:2048'],
+      'sampul'  => ['nullable', 'image', 'max:' . config('app.size_img')],
     ]);
   }
 

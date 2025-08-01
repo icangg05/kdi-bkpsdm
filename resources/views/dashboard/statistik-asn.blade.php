@@ -43,7 +43,7 @@
 							<h5 class="mb-3 font-semibold">👮‍♂️ Data PNS</h5>
 							<div class="row">
 								@foreach ($pns as $item)
-									<div class="col-md-4">
+									<div class="col-md-2">
 										<div class="form-group mb-3">
 											<label for="{{ $item['slug'] }}" class="form-label">{{ $item['label'] }}</label>
 											<input required type="number" min="0" name="{{ $item['slug'] }}" id="{{ $item['slug'] }}"
@@ -63,7 +63,7 @@
 							<h5 class="mb-3 font-semibold">🧑‍🏫 Data PPPK</h5>
 							<div class="row">
 								@foreach ($pppk as $item)
-									<div class="col-md-4">
+									<div class="col-md-2">
 										<div class="form-group mb-3">
 											<label for="{{ $item['slug'] }}" class="form-label">{{ $item['label'] }}</label>
 											<input required type="number" min="0" name="{{ $item['slug'] }}" id="{{ $item['slug'] }}"

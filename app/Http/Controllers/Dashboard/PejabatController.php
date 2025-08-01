@@ -16,7 +16,7 @@ class PejabatController extends Controller
     $request->validate([
       'nama'       => ['required'],
       'jabatan_id' => ['required'],
-      'foto'       => ['nullable', 'image', 'max:1024'],
+      'foto'       => ['nullable', 'image', 'max:' . config('app.size_img')],
     ]);
   }
 

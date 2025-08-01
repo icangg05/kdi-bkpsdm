@@ -25,7 +25,7 @@ const slider = props.slider as any
 </script>
 
 <template>
-  <Carousel class="relative w-full" :plugins="[Autoplay({
+  <Carousel class="relative w-full select-none" :plugins="[Autoplay({
     delay: 5000,
   })]">
     <CarouselContent>

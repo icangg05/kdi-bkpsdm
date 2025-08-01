@@ -1,4 +1,4 @@
-<div class="page-header">
+<div class="page-header" style="user-select: none">
 	<div class="page-block">
 		<div class="row align-items-center">
 			<div class="col">

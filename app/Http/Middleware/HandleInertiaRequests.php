@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Halaman;
 use App\Models\Pengaturan;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $logo = Halaman::where('kategori', 'logo')->first();
 
         return [
             ...parent::share($request),
@@ -54,6 +56,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'pengaturan' => DB::table('pengaturan')->select('id', 'nama_pengaturan', 'value')->get(),
+            'logo' => $logo && $logo->gambar ? $logo->gambar : null,
         ];
     }
 }

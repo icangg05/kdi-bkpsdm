@@ -41,21 +41,33 @@
 									@enderror
 								</div>
 								<div class="form-group mb-3">
-									<label for="kategori_regulasi_id" class="form-label">Kategori Regulasi</label>
-									<select name="kategori_regulasi_id" class="form-select" required>
+									<label for="kategori_regulasi_id" class="form-label">Unit Organisasi</label>
+									<select name="kategori_regulasi_id" class="form-select" id="tom-select">
 										<option value="">Pilih...</option>
 										@foreach (App\Models\KategoriRegulasi::orderBy('nama')->get()->pluck('id', 'nama') as $label => $value)
-											<option @selected($value == old('kategori_regulasi', $data->kategori_regulasi_id ?? '')) value="{{ $value }}">{{ $label }}</option>
+											<option @selected($value == old('kategori_regulasi_id', $data->kategori_regulasi_id ?? '')) value="{{ $value }}">{{ $label }}</option>
 										@endforeach
 									</select>
 									@error('kategori_regulasi_id')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
+
+									@push('footer')
+										<script>
+											new TomSelect("#tom-select", {
+												create: true,
+												sortField: {
+													field: "text",
+													direction: "asc"
+												}
+											});
+										</script>
+									@endpush
 								</div>
 								<div class="form-group mb-3">
 									<label for="deskripsi" class="form-label">Deskripsi</label>
 									<textarea rows="4" name="deskripsi" id="deskripsi"
-                    class="form-control @error('deskripsi') is-invalid @enderror" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
+                  class="form-control @error('deskripsi') is-invalid @enderror" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
 									@error('deskripsi')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
@@ -66,16 +78,20 @@
 									<label for="lampiran" class="form-label">Upload Lampiran</label>
 									<input type="file" name="lampiran" id="lampiran"
 										class="form-control @error('lampiran') is-invalid @enderror"
-										value="{{ old('lampiran', $data->lampiran ?? date('Y-m-d')) }}" required>
+										value="{{ old('lampiran', $data->lampiran ?? date('Y-m-d')) }}" @required(!isset($data))>
+									<small>Maksimal {{ config('app.size_file') / 1024 }} MB.</small>
 									@error('lampiran')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
 
 									@if (isset($data) && $data->lampiran)
-                    <div class="mt-2">
-                      <a href="{{ asset("storage/$data->lampiran") }}" class="btn btn-secondary">Lihat</a>
-                    </div>
-                  @endif
+										<div class="mt-2">
+											<a href="{{ asset("storage/$data->lampiran") }}" class="btn btn-secondary"
+												onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
+												{{ get_original_filename($data->lampiran) }}
+											</a>
+										</div>
+									@endif
 								</div>
 							</div>
 						</div>

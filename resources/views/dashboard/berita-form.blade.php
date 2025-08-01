@@ -2,7 +2,9 @@
 
 @section('content')
 	@php
-		$routeSubmit = isset($data) ? route('dashboard.publikasi.update', [$publikasi, $data->id]) : route('dashboard.publikasi.store', $publikasi);
+		$routeSubmit = isset($data)
+		    ? route('dashboard.publikasi.update', [$publikasi, $data->id])
+		    : route('dashboard.publikasi.store', $publikasi);
 	@endphp
 
 	<!-- [ breadcrumb ] start -->
@@ -67,6 +69,7 @@
 									<label for="sampul" class="form-label">Sampul</label>
 									<input type="file" name="sampul" id="sampul" class="form-control @error('sampul') is-invalid @enderror"
 										accept="image/*">
+									<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
 									@error('sampul')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror

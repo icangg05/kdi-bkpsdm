@@ -1,4 +1,4 @@
-<header class="pc-header">
+<header class="pc-header" style="user-select: none">
 	<div class="header-wrapper"><!-- [Mobile Media Block] start -->
 		<div class="me-auto pc-mob-drp">
 			<ul class="list-unstyled">

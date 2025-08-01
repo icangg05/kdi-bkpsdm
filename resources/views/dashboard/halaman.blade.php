@@ -23,7 +23,7 @@
 
 
 	<!-- [ Main Content ] start -->
-	<div class="row">
+	<div class="row" style="user-select: none">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
 			@if (session('success'))
@@ -65,13 +65,14 @@
 										<label for="gambar" class="form-label">Upload {{ $title }}</label>
 										<input type="file" name="gambar" id="gambar" class="form-control @error('gambar') is-invalid @enderror"
 											accept="image/*">
+										<small>Maksimal {{ config('app.size_img')/1024 }} MB.</small>
 										@error('gambar')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
 
 										@if (isset($data) && $data->gambar && request()->segment(3) !== 'struktur-organisasi')
 											<div class="mt-2">
-												<img src="{{ asset("storage/$data->gambar") }}" alt="Preview Sampul" class="border img-thumbnail"
+												<img src="{{ asset("storage/$data->gambar") }}" alt="{{ get_original_filename($data->gambar) }}" class="border img-thumbnail"
 													width="250">
 											</div>
 										@endif
@@ -83,13 +84,18 @@
 										<label for="lampiran" class="form-label">Lampiran</label>
 										<input type="file" name="lampiran" id="lampiran"
 											class="form-control @error('lampiran') is-invalid @enderror">
+										<small>Maksimal {{ config('app.size_file')/1024 }} MB.</small>
 										@error('lampiran')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
 
 										@if (isset($data) && $data->lampiran)
-											<div class="mt-2">
-												<a href="{{ asset("storage/$data->lampiran") }}" class="btn btn-secondary">Lihat</a>
+											<div class="mt-2 d-flex align-items-center gap-2">
+												<a href="{{ asset("storage/$data->lampiran") }}" class="btn btn-secondary"
+													onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
+													{{ get_original_filename($data->lampiran) }}
+												</a>
+												<a onclick="return confirm('Hapus lampiran?')" href="{{ route('dashboard.halaman.delete-lampiran', $data->id) }}" class="text-danger">Hapus</a>
 											</div>
 										@endif
 									</div>

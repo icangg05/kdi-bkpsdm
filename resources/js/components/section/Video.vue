@@ -17,7 +17,7 @@ defineProps(['data'])
 </script>
 
 <template>
-  <section class="relative overflow-hidden bg-fixed bg-cover bg-center"
+  <section class="relative overflow-hidden bg-fixed bg-cover bg-center select-none"
     style="background-image: url('img/bg-galeri.jpg')">
     <div class="bg-black/60 backdrop-brightness-50 py-20 px-4">
       <!-- Heading -->

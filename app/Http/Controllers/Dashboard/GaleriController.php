@@ -17,7 +17,7 @@ class GaleriController extends Controller
       'judul'     => ['required'],
       'tanggal'   => ['required'],
       'deskripsi' => ['required'],
-      'gambar'    => ['required', 'image', 'max:2048']
+      'gambar'    => ['nullable', 'image', 'max:' . config('app.size_img')]
     ]);
   }
 

@@ -12,7 +12,7 @@
 <meta name="author" content="codedthemes" />
 
 <!-- [Favicon] icon -->
-<link rel="icon" href="{{ asset('') }}/assets/images/favicon.svg" type="image/x-icon" />
+<link rel="icon" href="{{ asset('img/logo-kendari.png') }}" type="image/x-icon" />
 
 
 <!-- [Google Font] Family -->

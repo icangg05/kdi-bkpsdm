@@ -22,7 +22,10 @@
 
 			<div class="card">
 				<div class="card-header">
-					<h5>Data {{ $title }} : <span class="text-primary">{{ $data->nama }}</span></h5>
+					<h5>Data {{ $title }} :
+            <span class="text-primary">
+            {{ $data->nama }} | {{ $data->unit_organisasi->nama ?? '-' }} | {{ $data->unit_organisasi->bagian->nama ?? '' }}
+          </span></h5>
 				</div>
 				<div class="card-body">
 					<div class="row gap-3">
