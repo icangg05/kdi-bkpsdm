@@ -47,7 +47,7 @@ const props = defineProps(['statistik_asn'])
 
         <div class="col-span-1 lg:col-span-2">
           <Tabs default-value="pns" class="w-full">
-            <TabsList class="grid w-full grid-cols-2 gap-6">
+            <TabsList class="grid w-full grid-cols-2 gap-2 lg:gap-6">
               <TabsTrigger value="pns">
                 PNS
               </TabsTrigger>

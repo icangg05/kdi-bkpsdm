@@ -18,7 +18,7 @@ import Pagination from '@/components/Pagination.vue';
 
 const page = usePage()
 const props = page.props as any
-console.log(props.pengaturan)
+// console.log(props.pengaturan)
 
 const title = props.title as string
 const publikasi = props.publikasi as string
@@ -105,7 +105,7 @@ function submitSearch() {
             </button>
           </form>
 
-          <div v-if="data.length > 0" class="grid grid-cols-2 gap-6">
+          <div v-if="data.length > 0" class="grid grid-cols-2 gap-4">
             <div v-for="(item, i) in data" :key="i">
               <CardBerita :data="item" />
             </div>

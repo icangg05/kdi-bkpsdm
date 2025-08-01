@@ -5,7 +5,7 @@ defineProps < {
 </script>
 
 <template>
-  <div class="select-none relative h-[45dvh] lg:h-[65dvh] bg-cover bg-center text-white flex items-center justify-center"
+  <div class="select-none relative h-[22rem] lg:h-[30rem] bg-cover bg-center text-white flex items-center justify-center"
     :style="`background-image: url(${src ?? '/img/bg-video.jpg'})`">
     <!-- Overlay hitam -->
     <div class="absolute inset-0 bg-black/55 z-10"></div>

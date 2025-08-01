@@ -90,7 +90,7 @@ function copyLink() {
 
             <!-- Judul -->
             <h3
-              class="mt-2 lg:mt-4 text-base lg:text-2xl font-semibold hover:underline cursor-pointer leading-tight line-clamp-2">
+              class="mt-2 lg:mt-4 text-xl lg:text-2xl font-semibold hover:underline cursor-pointer leading-tight line-clamp-2">
               {{ data.judul }}
             </h3>
 

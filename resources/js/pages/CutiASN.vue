@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { convertOembed, getFileName } from '@/lib/utils';
+import { convertOembed, getOriginalFilename } from '@/lib/utils';
 
 const page = usePage();
 const title = page.props.title as string;
@@ -75,7 +75,7 @@ const data = props.data as any
         <div v-if="data.lampiran" class="flex flex-wrap gap-2">
           <a :href="`/storage/${data.lampiran}`" target="_blank"
             class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
-            {{ getFileName(data.lampiran) }}
+            {{ getOriginalFilename(data.lampiran) }}
           </a>
         </div>
       </div>

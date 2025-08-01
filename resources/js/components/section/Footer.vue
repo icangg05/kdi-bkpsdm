@@ -21,7 +21,7 @@ const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
       <div class="flex flex-col items-start gap-4">
         <div class="flex items-center gap-2">
           <!-- Ganti dengan logo asli -->
-          <img :src="`/storage/${logo}`" alt="Logo" class="size-17 w-auto" />
+          <img :src="logo ? `/storage/${logo} ` : ''" alt="Logo" class="size-17 w-auto" />
           <div class="leading-0">
             <h1 class="font-bold text-white text-2xl">BKP<span class="text-sky-400">SDM</span></h1>
             <span class="text-sm text-white/60">Kota Kendari</span>

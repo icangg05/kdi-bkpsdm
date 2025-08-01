@@ -7,18 +7,6 @@ import {
 import { Link, usePage } from '@inertiajs/vue3'
 import Autoplay from 'embla-carousel-autoplay'
 
-const slides = [
-  {
-    image: '/img/bg-hero1.jpg', // kota/metropolitan look
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1462556791646-c201b8241a94?q=80&w=1165&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1557908612-fdf0b3b2e68e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // gedung tinggi, nuansa resmi
-  },
-]
-
 const props = usePage().props
 const slider = props.slider as any
 // console.log(slider)
@@ -30,7 +18,7 @@ const slider = props.slider as any
   })]">
     <CarouselContent>
       <CarouselItem v-for="(slide, index) in slider" :key="index">
-        <div class="relative h-[80dvh] lg:h-[100dvh] bg-cover bg-center text-white flex items-center justify-center"
+        <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center text-white flex items-center justify-center"
           :style="`background-image: url(storage/${slide})`">
           <!-- Overlay hitam -->
           <div class="absolute inset-0 bg-black/55 z-10"></div>

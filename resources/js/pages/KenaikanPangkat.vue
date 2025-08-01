@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Check, ChevronRight } from 'lucide-vue-next';
-import { convertOembed, getFileName } from '@/lib/utils';
+import { convertOembed, getOriginalFilename } from '@/lib/utils';
 
 const page = usePage()
 const title = page.props.title as string
@@ -103,7 +103,7 @@ const selectCategory = (layanan: string) => {
       <div class="lg:container pt-[4rem] pb-[5rem]">
         <div class="grid grid-cols-3 gap-12 lg:gap-10">
           <!-- Sidebar -->
-          <div class="col-span-3 lg:col-span-1 bg-white shadow-1">
+          <div class="col-span-3 lg:col-span-1 bg-white shadow-1 select-none">
             <!-- Categories List -->
             <div class="px-4 py-7 lg:p-6">
               <nav class="space-y-2">
@@ -140,7 +140,7 @@ const selectCategory = (layanan: string) => {
               <div v-if="data && data.lampiran" class="mt-8 flex flex-wrap gap-2">
                 <a :href="`/storage/${data.lampiran}`" target="_blank"
                   class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
-                  {{ getFileName(data.lampiran) }}
+                  {{ getOriginalFilename(data.lampiran) }}
                 </a>
               </div>
             </div>
