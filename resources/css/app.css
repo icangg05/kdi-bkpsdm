@@ -32,6 +32,9 @@
     @apply shadow-[0px_0px_4px_0px_rgba(0,_0,_0,_0.1)];
   }
 
+  .custom-prose {
+    @apply prose prose-sm lg:prose lg:max-w-none prose-li:my-0 [&>p>a]:text-blue-500 [&>p>a]:no-underline [&>p>a]:hover:underline [&>figure.image>img]:mx-auto [&>figure.image>img]:block [&>figure.image>img]:border [&>figure.image>img]:border-gray-200 !text-gray-800 [&>p>span.text-tiny]:text-[10px] [&>p>span.text-small]:text-xs [&>p>span.text-big]:text-lg [&>p>span.text-huge]:text-xl [&>p>span.text-tiny]:lg:text-xs [&>p>span.text-small]:lg:text-sm [&>p>span.text-big]:lg:text-xl [&>p>span.text-huge]:lg:text-2xl;
+  }
 }
 
 @theme inline {

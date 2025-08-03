@@ -18,7 +18,6 @@
 
 	@include('layouts.app.partials.footer')
 	@stack('footer')
-
 </body>
 
 </html>

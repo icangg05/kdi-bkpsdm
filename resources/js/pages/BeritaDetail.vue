@@ -7,7 +7,7 @@ import CardKategori from '@/components/CardKategori.vue'
 import CardKontak from '@/components/CardKontak.vue'
 import BgOverlay from '@/components/BgOverlay.vue'
 import { Calendar, Database, Eye } from 'lucide-vue-next'
-import { convertOembed } from '@/lib/utils'
+import { convertOembed, getOriginalFilename } from '@/lib/utils'
 
 // Props dari Inertia
 const props = defineProps<{
@@ -96,6 +96,14 @@ function copyLink() {
 
             <!-- Isi -->
             <div class="mt-5 lg:mt-4 prose-sm lg:prose lg:max-w-none !text-gray-800" v-html="convertOembed(data.isi)" />
+
+            <div v-if="data.lampiran" class="mt-6">
+              <a :href="`/storage/${data.lampiran}`" target="_blank"
+                class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800"
+                onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
+                {{ getOriginalFilename(data.lampiran) }}
+              </a>
+            </div>
 
             <!-- Share This -->
             <div class="flex flex-wrap justify-end items-center gap-2 mt-10 text-sm">

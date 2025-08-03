@@ -44,7 +44,7 @@
 								@if (request()->segment(3) === 'struktur-organisasi')
 									<div>
 										@if (isset($data) && $data->gambar)
-											<img class="img-fluid" src="{{ asset("storage/$data->gambar") }}" alt="{{ $data->gambar }}">
+											<img class="img-fluid border" src="{{ asset("storage/$data->gambar") }}" alt="{{ $data->gambar }}">
 										@else
 											<x-alert message="Struktur organisasi belum diunggah." color="warning" />
 										@endif

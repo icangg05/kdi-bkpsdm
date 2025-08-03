@@ -20,11 +20,22 @@ class Berita extends Model
           Storage::delete($sampulLama);
         }
       }
+
+        if ($data->isDirty('lampiran')) {
+        $lampiranLama = $data->getOriginal('lampiran');
+
+        if ($lampiranLama && Storage::disk('public')->exists($lampiranLama)) {
+          Storage::delete($lampiranLama);
+        }
+      }
     });
 
     static::deleting(function ($data) {
       if ($data->sampul && Storage::exists($data->sampul)) {
         Storage::delete($data->sampul);
+      }
+      if ($data->lampiran && Storage::exists($data->lampiran)) {
+        Storage::delete($data->lampiran);
       }
     });
   }

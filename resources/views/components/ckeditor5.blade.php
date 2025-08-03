@@ -3,7 +3,7 @@
 	<style>
 		.ck-editor__editable {
 			min-height: 300px !important;
-			max-height: 600px !important;
+			max-height: 550px !important;
 			overflow-y: auto !important;
 		}
 	</style>

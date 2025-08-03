@@ -42,6 +42,7 @@
 										<th scope="col">Role</th>
 										<th scope="col">Username</th>
 										<th scope="col">Email</th>
+										<th scope="col">Status</th>
 										<th scope="col">Aksi</th>
 									</tr>
 								</thead>
@@ -55,6 +56,13 @@
 											</td>
 											<td>{{ $item->username }}</td>
 											<td>{{ $item->email }}</td>
+											<td>
+												@if ($item->email_verified_at)
+													<span class="badge text-bg-success">Verified</span>
+												@else
+													<span class="badge text-bg-warning">Pending</span>
+												@endif
+											</td>
 											<td class="text-nowrap">
 												<a href="{{ route('dashboard.user.edit', $item->id) }}"
 													class="btn btn-sm btn-secondary badge">Edit</a>

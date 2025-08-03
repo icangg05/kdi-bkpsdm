@@ -103,7 +103,7 @@ const selectCategory = (layanan: string) => {
       <div class="lg:container pt-[4rem] pb-[5rem]">
         <div class="grid grid-cols-3 gap-12 lg:gap-10">
           <!-- Sidebar -->
-          <div class="col-span-3 lg:col-span-1 bg-white shadow-1 select-none">
+          <div class="col-span-3 lg:col-span-1 bg-white shadow-1 select-none h-fit">
             <!-- Categories List -->
             <div class="px-4 py-7 lg:p-6">
               <nav class="space-y-2">
@@ -126,19 +126,20 @@ const selectCategory = (layanan: string) => {
           </div>
 
           <!-- Main Content -->
-          <div class="col-span-3 lg:col-span-2">
+          <div class="col-span-3 lg:col-span-2 h-fit">
             <!-- Content Area -->
             <div class="bg-white rounded-xl shadow-1 px-4 py-7 lg:p-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ title }}</h2>
+              <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-4">{{ title }}</h2>
 
               <!-- Additional Content -->
-              <div v-if="data" class="mt-8 prose-sm lg:prose lg:max-w-none !text-gray-800" v-html="convertOembed(data.isi)" />
-              <div v-else class="mt-8 prose-sm lg:prose lg:max-w-none !text-gray-800">
+              <div v-if="data" class="mt-8 custom-prose" v-html="convertOembed(data.isi)" />
+              <div v-else class="mt-8 custom-prose">
                 <p class="text-gray-600 text-center">Belum ada data.</p>
               </div>
 
-              <div v-if="data && data.lampiran" class="mt-8 flex flex-wrap gap-2">
+              <div v-if="data && data.lampiran" class="mt-6 flex flex-wrap gap-2">
                 <a :href="`/storage/${data.lampiran}`" target="_blank"
+                  onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;"
                   class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
                   {{ getOriginalFilename(data.lampiran) }}
                 </a>

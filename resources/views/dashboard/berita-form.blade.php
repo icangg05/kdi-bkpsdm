@@ -65,22 +65,45 @@
 							</div>
 
 							<div class="col-md-5 mb-3">
-								<div class="form-group">
-									<label for="sampul" class="form-label">Sampul</label>
-									<input type="file" name="sampul" id="sampul" class="form-control @error('sampul') is-invalid @enderror"
-										accept="image/*">
-									<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
-									@error('sampul')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
+								<div class="mb-3">
+									<div class="form-group">
+										<label for="sampul" class="form-label">Sampul</label>
+										<input type="file" name="sampul" id="sampul" class="form-control @error('sampul') is-invalid @enderror"
+											accept="image/*">
+										<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
+										@error('sampul')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+
+									@if (isset($data) && $data->sampul)
+										<div class="mt-2">
+											<img src="{{ asset("storage/$data->sampul") }}" alt="Preview Sampul" class="border img-thumbnail"
+												width="250">
+										</div>
+									@endif
 								</div>
 
-								@if (isset($data) && $data->sampul)
-									<div class="mt-2">
-										<img src="{{ asset("storage/$data->sampul") }}" alt="Preview Sampul" class="border img-thumbnail"
-											width="250">
-									</div>
-								@endif
+								<div class="form-group mb-3">
+									<label for="lampiran" class="form-label">Lampiran</label>
+									<input type="file" name="lampiran" id="lampiran"
+										class="form-control @error('lampiran') is-invalid @enderror">
+									<small>Maksimal {{ config('app.size_file') / 1024 }} MB.</small>
+									@error('lampiran')
+										<small class="text-danger">{{ $message }}</small>
+									@enderror
+
+									@if (isset($data) && $data->lampiran)
+										<div class="mt-2 d-flex align-items-center gap-2">
+											<a href="{{ asset("storage/$data->lampiran") }}" class="btn btn-secondary"
+												onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
+												{{ get_original_filename($data->lampiran) }}
+											</a>
+											<a onclick="return confirm('Hapus lampiran?')"
+												href="{{ route('dashboard.publikasi.delete-lampiran', $data->id) }}" class="text-danger">Hapus</a>
+										</div>
+									@endif
+								</div>
 							</div>
 						</div>
 

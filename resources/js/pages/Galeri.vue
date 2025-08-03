@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { ref } from 'vue';
 import { ZoomIn, X } from 'lucide-vue-next';
+import Pagination from '@/components/Pagination.vue';
 
 const breadcrumbItems = [
   { label: 'Beranda', link: route('beranda') },
@@ -72,6 +73,8 @@ function closeImage() {
           </button>
         </div>
       </div>
+
+      <Pagination :data="data" />
 
       <!-- Modal -->
       <div v-if="selected" class="z-[9999] fixed inset-0 bg-black/80 flex items-center justify-center px-4">

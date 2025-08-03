@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\ProfilController;
 use App\Http\Controllers\GaleriController as ControllersGaleriController;
 use App\Http\Controllers\RegulasiController as ControllersRegulasiController;
 use App\Http\Controllers\StatistikASNController;
+use App\Models\Halaman;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,8 +30,8 @@ Route::get('/layanan', [FrontendHalamanController::class, 'index'])->name('layan
 Route::get('/layanan/{halaman}', [FrontendHalamanController::class, 'show'])->name('layanan.detail');
 
 // REGULASI
-Route::get('/regulasi/{kategori}', [ControllersRegulasiController::class,'index'])->name('regulasi');
-Route::get('/regulasi/{id}/download', [ControllersRegulasiController::class,'download'])->name('regulasi.download');
+Route::get('/regulasi/{kategori}', [ControllersRegulasiController::class, 'index'])->name('regulasi');
+Route::get('/regulasi/{id}/download', [ControllersRegulasiController::class, 'download'])->name('regulasi.download');
 
 // GALERI
 Route::get('/galeri/foto', [ControllersGaleriController::class, 'fotoIndex'])->name('galeri-foto');
@@ -40,7 +41,10 @@ Route::get('/galeri/video', [ControllersGaleriController::class, 'videoIndex'])-
 Route::get('/hubungi-kami', function () {
   $title   = 'Hubungi Kami';
   $halaman = 'hubungi-kami';
-  return Inertia::render('CutiASN', compact('title', 'halaman'));
+
+  $data = Halaman::where('kategori', $halaman)->first();
+
+  return Inertia::render('CutiASN', compact('title', 'halaman', 'data'));
 })->name('hubungi-kami');
 
 

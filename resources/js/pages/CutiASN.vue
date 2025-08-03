@@ -70,10 +70,11 @@ const data = props.data as any
     <section v-if="data" class="py-12 px-4 max-w-6xl mx-auto">
       <div class="bg-white shadow-lg rounded-xl p-6">
         <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-center uppercase">{{ title }}</h3>
-        <div class="mb-4 prose-sm lg:prose lg:max-w-none !text-gray-800" v-html="convertOembed(data.isi)" />
+        <div class="mb-6 custom-prose" v-html="convertOembed(data.isi)" />
 
         <div v-if="data.lampiran" class="flex flex-wrap gap-2">
           <a :href="`/storage/${data.lampiran}`" target="_blank"
+            onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;"
             class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
             {{ getOriginalFilename(data.lampiran) }}
           </a>
@@ -83,7 +84,7 @@ const data = props.data as any
     <section v-else class="py-12 px-4 max-w-6xl mx-auto">
       <div class="bg-white shadow-lg rounded-xl p-6">
         <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-center uppercase">{{ title }}</h3>
-        <div class="mb-4 prose-sm lg:prose lg:max-w-none !text-gray-800">
+        <div class="mb-4 custom-prose">
           <p class="text-center text-gray-600">Belum ada data</p>
         </div>
       </div>

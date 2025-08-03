@@ -37,8 +37,7 @@ const breadcrumbItems = [
   <Head :title="title" />
 
   <AppLayout>
-    <BgOverlay
-      src="/img/bg-profil.jpg">
+    <BgOverlay src="/img/bg-profil.jpg">
       <div class="relative">
         <h2 class="z-0 text-3xl lg:text-[36px] font-bold leading-tight tracking-wide text-white">
           {{ title }}
@@ -69,16 +68,24 @@ const breadcrumbItems = [
         <img :src="`/storage/${data.gambar}`" alt="Logo BKN" class="w-50 lg:w-60 mx-auto mb-6" />
         <div v-if="data.lampiran" class="text-center">
           <a :href="`/storage/${data.lampiran}`" target="_blank"
-            class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
+            class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800"
+            onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
             {{ getOriginalFilename(data.lampiran) }}
           </a>
         </div>
-        <div class="mt-6 prose-sm lg:prose lg:max-w-none" v-html="convertOembed(data.isi ?? '')" />
+        <div class="mt-6 custom-prose" v-html="convertOembed(data.isi ?? '')" />
       </div>
 
       <div v-else-if="slug === 'sejarah'" class="bg-white shadow-lg rounded-xl p-6">
         <h3 class="text-xl font-semibold mb-4 border-b pb-2 uppercase">SEJARAH BKPSDM</h3>
-        <div class="mt-6 prose-sm lg:prose lg:max-w-none" v-html="convertOembed(data.isi ?? '')" />
+        <div class="mt-6 custom-prose" v-html="convertOembed(data.isi ?? '')" />
+        <div v-if="data.lampiran" class="mt-8">
+          <a :href="`/storage/${data.lampiran}`" target="_blank"
+            class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800"
+            onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
+            {{ getOriginalFilename(data.lampiran) }}
+          </a>
+        </div>
       </div>
 
       <div v-else-if="slug === 'struktur-organisasi'" class="bg-white shadow-lg rounded-xl p-6">

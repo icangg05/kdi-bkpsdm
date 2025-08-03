@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 // CKEDITOR UPLOAD IMAGE
 Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload-image');
+Route::get('/clear-unused-image', [UploadController::class, 'clearUnusedImage'])->name('clear-unused-image');
 
 Route::middleware(['auth'])
   ->prefix('dashboard')
@@ -55,6 +56,7 @@ Route::middleware(['auth'])
       Route::patch('/{id}/update', [BeritaController::class, 'update'])->name('update');
       Route::delete('/{id}/destroy', [BeritaController::class, 'destroy'])->name('destroy');
     });
+    Route::get('/delete-lampiran/{id}', [BeritaController::class, 'deleteLampiran'])->name('publikasi.delete-lampiran');
 
     // GALERI FOTO
     Route::get('/galeri/foto', [GaleriController::class, 'galeriIndex'])->name('galeri.foto.index');

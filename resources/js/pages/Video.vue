@@ -12,6 +12,7 @@ import {
 import { ref } from 'vue';
 import { Play, X } from 'lucide-vue-next';
 import { getYoutubeEmbedUrl, getYoutubeId } from '@/lib/utils';
+import Pagination from '@/components/Pagination.vue';
 
 const breadcrumbItems = [
   { label: 'Beranda', link: route('beranda') },
@@ -75,6 +76,8 @@ function closeVideo() {
           </button>
         </div>
       </div>
+
+      <Pagination :data="data" />
 
       <!-- Modal -->
       <div v-if="selected" class="z-[9999] fixed inset-0 bg-black/80 flex items-center justify-center px-4">

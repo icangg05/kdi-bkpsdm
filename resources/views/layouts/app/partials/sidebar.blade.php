@@ -185,6 +185,17 @@
 					</a>
 				</li>
 
+				<li class="pc-item pc-caption">
+					<label>Hubungi Kami</label>
+					<i class="ti ti-news"></i>
+				</li>
+				<li class="pc-item">
+					<a class="pc-link" href="{{ route('dashboard.halaman', 'hubungi-kami') }}">
+						<span class="pc-micon"><i class="ti ti-lock"></i></span>
+						<span class="pc-mtext">Hubungi Kami</span>
+					</a>
+				</li>
+
 				@can('admin')
 					<li class="pc-item pc-caption">
 						<label>Data Lainnya</label>

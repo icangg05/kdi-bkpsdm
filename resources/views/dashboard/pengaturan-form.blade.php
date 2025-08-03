@@ -21,8 +21,9 @@
 			@endif
 
 			<div class="card">
-				<div class="card-header">
+				<div class="card-header d-flex justify-content-between">
 					<h5>Data {{ $title }}</h5>
+          <a href="{{ route('clear-unused-image') }}" class="btn btn-dark">Delete Unused Image</a>
 				</div>
 				<div class="card-body">
 					<form action="{{ $routeSubmit }}" method="POST">

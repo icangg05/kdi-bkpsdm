@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
 {
@@ -75,9 +76,14 @@ class BeritaController extends Controller
   {
     $this->rules($request);
 
-    $sampul = $request->file('sampul');
+    $sampul   = $request->file('sampul');
+    $lampiran = $request->file('lampiran');
+
     if ($sampul)
-      $sampul = $sampul->store($publikasi);
+      $sampul = $sampul->storeAs($publikasi, generate_filename($sampul));
+
+    if ($lampiran)
+      $lampiran = $lampiran->storeAs('lampiran', generate_filename($lampiran));
 
     Berita::create([
       'judul'    => ucfirst($request->judul),
@@ -85,6 +91,7 @@ class BeritaController extends Controller
       'tanggal'  => $request->tanggal,
       'isi'      => $request->isi,
       'sampul'   => $sampul ?? null,
+      'lampiran' => $lampiran ?? null,
       'kategori' => $publikasi
     ]);
 
@@ -100,19 +107,26 @@ class BeritaController extends Controller
 
     $data = Berita::findOrFail($id);
 
-    $sampul = $request->file('sampul');
+    $sampul   = $request->file('sampul');
+    $lampiran = $request->file('lampiran');
+
     if ($sampul)
-      $sampul = $sampul->store($publikasi);
+      $sampul = $sampul->storeAs($publikasi, generate_filename($sampul));
+
+    if ($lampiran)
+      $lampiran = $lampiran->storeAs('lampiran', generate_filename($lampiran));
 
     $data->update([
-      'judul'   => ucfirst($request->judul),
-      'slug'    => str()->slug($request->judul),
-      'tanggal' => $request->tanggal,
-      'isi'     => $request->isi,
-      'sampul'  => $sampul ?? $data->sampul,
+      'judul'    => ucfirst($request->judul),
+      'slug'     => str()->slug($request->judul),
+      'tanggal'  => $request->tanggal,
+      'isi'      => $request->isi,
+      'sampul'   => $sampul ?? $data->sampul,
+      'lampiran' => $lampiran ?? $data->lampiran,
     ]);
 
-    return redirect()->route('dashboard.publikasi.index', $publikasi)->with('success', 'Data berhasil diperbarui.');
+    // return redirect()->route('dashboard.publikasi.index', $publikasi)->with('success', 'Data berhasil diperbarui.');
+    return back()->with('success', 'Data berhasil diperbarui.');
   }
 
   /**
@@ -124,5 +138,19 @@ class BeritaController extends Controller
     $data->delete();
 
     return redirect()->route('dashboard.publikasi.index', $publikasi)->with('success', 'Data berhasil dihapus.');
+  }
+
+  /**
+   * DELETE LAMPIRAN
+   */
+  public function deleteLampiran($id)
+  {
+    $data = Berita::findOrFail($id);
+    Storage::delete($data->lampiran);
+    $data->update([
+      'lampiran' => null,
+    ]);
+
+    return back()->with('success', 'Lampiran berhasil dihapus.');
   }
 }

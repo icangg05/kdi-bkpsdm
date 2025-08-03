@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->text('isi');
             $table->string('sampul')->nullable();
+            $table->string('lampiran')->nullable();
             $table->string('kategori');
             $table->integer('total_view')->default(0);
             $table->timestamps();
