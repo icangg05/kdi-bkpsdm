@@ -3,34 +3,42 @@
 	    [
 	        'title' => 'Cuti ASN',
 	        'halaman' => 'cuti-asn',
+	        'icon' => 'ti ti-file',
 	    ],
 	    [
 	        'title' => 'Cerai',
 	        'halaman' => 'cerai',
+	        'icon' => 'ti ti-parachute',
 	    ],
 	    [
 	        'title' => 'Kenaikan Pangkat',
 	        'halaman' => 'kenaikan-pangkat',
+	        'icon' => 'ti ti-trending-up',
 	    ],
 	    [
 	        'title' => 'Jabatan Fungsional',
 	        'halaman' => 'jabatan-fungsional',
+	        'icon' => 'ti ti-layout-bottombar',
 	    ],
 	    [
 	        'title' => 'Mutasi Pegawai',
 	        'halaman' => 'mutasi-pegawai',
+	        'icon' => 'ti ti-arrow-ramp-right',
 	    ],
 	    [
 	        'title' => 'Tugas Belajar',
 	        'halaman' => 'tugas-belajar',
+	        'icon' => 'ti ti-school',
 	    ],
 	    [
 	        'title' => 'Konsultasi Kinerja',
 	        'halaman' => 'konsultasi-kinerja',
+	        'icon' => 'ti ti-clipboard-list',
 	    ],
 	    [
 	        'title' => 'COC Manajemen ASN',
 	        'halaman' => 'coc-manajemen-asn',
+	        'icon' => 'ti ti-vocabulary',
 	    ],
 	];
 @endphp
@@ -54,7 +62,7 @@
 				</li>
 				<li @class(['pc-item', 'active' => request()->is('dashboard')])>
 					<a href="{{ route('dashboard.home') }}" class="pc-link"><span class="pc-micon"><i
-								class="ti ti-dashboard"></i></span><span class="pc-mtext">Dashboard</span></a>
+								class="ti ti-home"></i></span><span class="pc-mtext">Dashboard</span></a>
 				</li>
 
 				{{-- MENU PROFIL --}}
@@ -64,25 +72,25 @@
 				</li>
 				<li class="pc-item">
 					<a class="pc-link" href="{{ route('dashboard.halaman', 'logo') }}">
-						<span class="pc-micon"><i class="ti ti-lock"></i></span>
+						<span class="pc-micon"><i class="ti ti-layout-rows"></i></span>
 						<span class="pc-mtext">Logo BKPSDM</span>
 					</a>
 				</li>
 				<li class="pc-item">
 					<a href="{{ route('dashboard.halaman', 'sejarah') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+						<span class="pc-micon"><i class="ti ti-access-point"></i></span>
 						<span class="pc-mtext">Sejarah BKPSDM</span>
 					</a>
 				</li>
 				<li class="pc-item">
 					<a href="{{ route('dashboard.halaman', 'struktur-organisasi') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+						<span class="pc-micon"><i class="ti ti-building-bank"></i></span>
 						<span class="pc-mtext">Struktur Organisasi</span>
 					</a>
 				</li>
 				<li @class(['pc-item', 'active' => request()->is('dashboard/pejabat*')])>
 					<a href="{{ route('dashboard.pejabat.index') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+						<span class="pc-micon"><i class="ti ti-layout-2"></i></span>
 						<span class="pc-mtext">Profil Pejabat</span>
 					</a>
 				</li>
@@ -103,7 +111,7 @@
 					'active' => request()->segment(2) === 'pengumuman',
 				])>
 					<a href="{{ route('dashboard.publikasi.index', 'pengumuman') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-color-swatch"></i></span>
+						<span class="pc-micon"><i class="ti ti-bell-ringing"></i></span>
 						<span class="pc-mtext">Pengumuman</span>
 					</a>
 				</li>
@@ -121,7 +129,7 @@
 					'active' => request()->segment(2) === 'berita-duka',
 				])>
 					<a href="{{ route('dashboard.publikasi.index', 'berita-duka') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-plant-2"></i></span>
+						<span class="pc-micon"><i class="ti ti-ad-2"></i></span>
 						<span class="pc-mtext">Berita Duka</span>
 					</a>
 				</li>
@@ -130,7 +138,7 @@
 					'active' => request()->segment(2) === 'berita-duka',
 				])>
 					<a href="{{ route('dashboard.statistik-asn.index') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-plant-2"></i></span>
+						<span class="pc-micon"><i class="ti ti-chart-bar"></i></span>
 						<span class="pc-mtext">Statistik ASN</span>
 					</a>
 				</li>
@@ -146,7 +154,7 @@
 						'active' => request()->segment(2) === $item['halaman'],
 					])>
 						<a class="pc-link" href="{{ route('dashboard.halaman', $item['halaman']) }}">
-							<span class="pc-micon"><i class="ti ti-lock"></i></span>
+							<span class="pc-micon"><i class="{{ $item['icon'] }}"></i></span>
 							<span class="pc-mtext">{{ $item['title'] }}</span>
 						</a>
 					</li>
@@ -159,7 +167,7 @@
 				</li>
 				<li @class(['pc-item', 'active' => request()->is('dashboard/regulasi*')])>
 					<a class="pc-link" href="{{ route('dashboard.regulasi.index') }}">
-						<span class="pc-micon"><i class="ti ti-lock"></i></span>
+						<span class="pc-micon"><i class="ti ti-file-text"></i></span>
 						<span class="pc-mtext">Regulasi</span>
 					</a>
 				</li>
@@ -174,13 +182,13 @@
 					'active' => request()->is('/dashboard/galeri/foto*'),
 				])>
 					<a class="pc-link" href="{{ route('dashboard.galeri.foto.index') }}">
-						<span class="pc-micon"><i class="ti ti-lock"></i></span>
+						<span class="pc-micon"><i class="ti ti-photo"></i></span>
 						<span class="pc-mtext">Foto</span>
 					</a>
 				</li>
 				<li @class(['pc-item', 'active' => request()->is('/dashboard/video*')])>
 					<a href="{{ route('dashboard.video.index') }}" class="pc-link">
-						<span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+						<span class="pc-micon"><i class="ti ti-player-play"></i></span>
 						<span class="pc-mtext">Video</span>
 					</a>
 				</li>
@@ -191,7 +199,7 @@
 				</li>
 				<li class="pc-item">
 					<a class="pc-link" href="{{ route('dashboard.halaman', 'hubungi-kami') }}">
-						<span class="pc-micon"><i class="ti ti-lock"></i></span>
+						<span class="pc-micon"><i class="ti ti-phone"></i></span>
 						<span class="pc-mtext">Hubungi Kami</span>
 					</a>
 				</li>
@@ -203,13 +211,13 @@
 					</li>
 					<li class="pc-item">
 						<a href="{{ route('dashboard.user.index') }}" class="pc-link">
-							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-micon"><i class="ti ti-users"></i></span>
 							<span class="pc-mtext">Data User</span>
 						</a>
 					</li>
 					<li class="pc-item">
 						<a href="{{ route('dashboard.slider') }}" class="pc-link">
-							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-micon"><i class="ti ti-table"></i></span>
 							<span class="pc-mtext">Slider Beranda</span>
 						</a>
 					</li>
@@ -266,7 +274,7 @@
 						'active' => request()->is('/dashboard/kategori-regulasi*'),
 					])>
 						<a href="{{ route('dashboard.kategori-regulasi.index') }}" class="pc-link">
-							<span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+							<span class="pc-micon"><i class="ti ti-files"></i></span>
 							<span class="pc-mtext">Kategori Regulasi</span>
 						</a>
 					</li>

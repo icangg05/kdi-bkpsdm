@@ -26,7 +26,8 @@ class FotoSeeder extends Seeder
         'judul'     => 'Pelatihan Dasar Calon ASN',
         'tanggal'   => '2025-03-05',
         'deskripsi' => 'Pelatihan dasar (Latsar) bagi ASN baru untuk meningkatkan integritas dan pelayanan.',
-        'gambar'    => null      ],
+        'gambar'    => null
+      ],
       [
         'judul'     => 'Sosialisasi e-Kinerja',
         'tanggal'   => '2025-03-22',
