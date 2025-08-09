@@ -76,6 +76,26 @@
 									</div>
 								@endforeach
 							</div>
+
+							<hr class="mt-3 mb-4">
+
+              <!-- Section Jenis Jabatan -->
+							<h5 class="mb-3 font-semibold">🧑‍🏫 Jenis Jabatan</h5>
+							<div class="row">
+								@foreach ($jenis_jabatan as $item)
+									<div class="col-md-2">
+										<div class="form-group mb-3">
+											<label for="{{ $item['slug'] }}" class="form-label">{{ $item['label'] }}</label>
+											<input required type="number" min="0" name="{{ $item['slug'] }}" id="{{ $item['slug'] }}"
+												value="{{ old($item['slug'], $item['value']) }}"
+												class="form-control @error($item['slug']) is-invalid @enderror">
+											@error($item['slug'])
+												<small class="text-danger">{{ $message }}</small>
+											@enderror
+										</div>
+									</div>
+								@endforeach
+							</div>
 						</div>
 
 						<hr class="mt-2 mb-4">

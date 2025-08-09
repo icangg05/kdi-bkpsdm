@@ -25,15 +25,20 @@ class StatistikASNController extends Controller
       str_starts_with($item['slug'], 'pppk')
     )->values();
 
-    return view('dashboard.statistik-asn', compact('title', 'tanggalUpdate', 'pns', 'pppk'));
+    $jenis_jabatan = collect($data)->filter(
+      fn($item) =>
+      str_starts_with($item['slug'], 'jenis_jabatan')
+    )->values();
+    // dd($jenis_jabatan);
+
+    return view('dashboard.statistik-asn', compact('title', 'tanggalUpdate', 'pns', 'pppk', 'jenis_jabatan'));
   }
 
   public function update(Request $request)
   {
     $data = $request->except(['_token', '_method']);
 
-    foreach ($data as $key => $value)
-    {
+    foreach ($data as $key => $value) {
       $dataUpdate = StatistikASN::where('slug', $key);
       $dataUpdate->update(['value' => $value]);
     }

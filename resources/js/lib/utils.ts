@@ -68,3 +68,16 @@ export function formatTanggalIndo(tanggalString: string) {
     year: 'numeric',
   }).format(tanggal);
 }
+
+
+export function refactorFormat(value: string) {
+  const currentOrigin = window.location.origin;
+
+  value = value.replace(
+    /src="https?:\/\/[^\/]+/gi,
+    `src="${currentOrigin}`
+  );
+
+  return value;
+}
+

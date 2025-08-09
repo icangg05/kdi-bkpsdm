@@ -17,6 +17,14 @@ class HalamanController extends Controller
   public function show($halaman)
   {
     switch ($halaman) {
+      case 'pensiun':
+        $title = 'Pensiun';
+        $view  = 'KenaikanPangkat';
+        break;
+      case 'penghargaan':
+        $title = 'Penghargaan';
+        $view  = 'KenaikanPangkat';
+        break;
       case 'cuti-asn':
         $title = 'Cuti ASN';
         $view  = 'CutiASN';
@@ -45,6 +53,14 @@ class HalamanController extends Controller
         $title = 'Konsultasi Kinerja';
         $view  = 'KenaikanPangkat';
         break;
+      case 'disiplin':
+        $title = 'Disiplin';
+        $view  = 'KenaikanPangkat';
+        break;
+      case 'disiplin':
+        $title = 'Disiplin';
+        $view  = 'KenaikanPangkat';
+        break;
       case 'kenaikan-pangkat':
         $title = 'Kenaikan Pangkat ASN';
         $view  = 'KenaikanPangkat';
@@ -52,7 +68,11 @@ class HalamanController extends Controller
       default:
         abort(404);
     }
-    $data = Halaman::where('kategori', $halaman)->first();
+
+    if ($halaman == 'disiplin')
+      $data = Halaman::whereIn('kategori', ['informasi-kewajiban-dan-larangan', 'konsultasi-disiplin'])->get();
+    else
+      $data = Halaman::where('kategori', $halaman)->first();
 
     return Inertia::render($view, [
       'title'   => $title,

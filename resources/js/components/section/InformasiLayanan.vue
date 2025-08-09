@@ -1,25 +1,45 @@
 <script setup>
-import { Link, router } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 import {
-  LayoutGrid,
-  FileText,
-  HeartCrack,
-  TrendingUp,
-  Briefcase,
-  Shuffle,
-  BookOpen,
-  Clock,
-  FileBadge,
-  ClipboardList,
-  BadgePlus,
+  HeartCrack, TrendingUp, Briefcase, Shuffle, BookOpen,
+  Clock, FileBadge, ClipboardList, BadgePlus, Shield, Award,
+  CalendarCheck, Users, Home
 } from 'lucide-vue-next'
 
 const layanan = [
   {
+    label: 'My ASN',
+    desc: 'Portal ASN Digital BKN untuk data kepegawaian dan layanan personal',
+    link: 'https://asndigital.bkn.go.id/',
+    icon: Users,
+    is_blank: true
+  },
+  {
+    label: 'TAPERA',
+    desc: 'Tabungan Perumahan Rakyat untuk ASN',
+    link: 'https://sitara.tapera.go.id/peserta/login',
+    icon: Home,
+    is_blank: true
+  },
+  {
+    label: 'Pensiun',
+    desc: 'Informasi dan prosedur pengajuan pensiun ASN',
+    link: route('layanan.detail', 'pensiun'),
+    icon: CalendarCheck,
+    is_blank: false
+  },
+  {
+    label: 'Penghargaan',
+    desc: 'Pengajuan dan informasi penghargaan untuk ASN',
+    link: route('layanan.detail', 'penghargaan'),
+    icon: Award,
+    is_blank: false
+  },
+  {
     label: 'Cuti ASN',
-    desc: 'Alur Pengajuan cuti bagi PNS dan PPPK',
+    desc: 'Alur pengajuan cuti bagi PNS dan PPPK',
     link: route('layanan.detail', 'cuti-asn'),
-    icon: FileText,
+    icon: CalendarCheck,
     is_blank: false
   },
   {
@@ -65,8 +85,8 @@ const layanan = [
     is_blank: true
   },
   {
-    label: 'TPPNS',
-    desc: 'Tambahan Penghasilan Pegawai (TPP) bagi ASN Kota Kendari',
+    label: 'SI-TPPNS',
+    desc: 'Sistem Tambahan Penghasilan Pegawai ASN Kota Kendari',
     link: 'https://sitppns.kendarikota.go.id',
     icon: FileBadge,
     is_blank: true
@@ -76,12 +96,21 @@ const layanan = [
     desc: 'Evaluasi dan penyusunan SKP ASN yang efektif',
     link: route('layanan.detail', 'konsultasi-kinerja'),
     icon: ClipboardList,
+    is_blank: false
+  },
+  {
+    label: 'Disiplin',
+    desc: 'Informasi kewajiban, larangan, dan konsultasi disiplin ASN',
+    link: route('layanan.detail', 'disiplin'),
+    icon: Shield,
+    is_blank: false
   },
   {
     label: 'COC Manajemen ASN',
     desc: 'Manajemen kode etik dan perilaku ASN (COC)',
     link: route('layanan.detail', 'coc-manajemen-asn'),
     icon: BadgePlus,
+    is_blank: false
   },
 ]
 
@@ -100,7 +129,7 @@ function toPage(link, isBlank) {
       <img
         src="https://images.unsplash.com/photo-1669295384050-a1d4357bd1d7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         class="w-full h-full object-cover filter grayscale" alt="Background" />
-      <div class="absolute inset-0 bg-black/70"></div>
+      <div class="absolute inset-0 bg-sky-700/40"></div>
     </div>
 
     <div class="relative z-10 container py-20 text-white/85">
@@ -115,7 +144,7 @@ function toPage(link, isBlank) {
 
       <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         <span v-for="(item, index) in layanan" :key="index" @click="toPage(item.link, item.is_blank)"
-          class="cursor-pointer text-center p-6 bg-white/5 backdrop-blur-md hover:bg-white/10 transition ease-in-out rounded-md">
+          class="cursor-pointer text-center p-6 bg-black/25 backdrop-blur-lg hover:bg-white/10 transition ease-in-out rounded-md">
           <div class="flex justify-center mb-2">
             <component :is="item.icon" class="text-sky-500 size-10" />
           </div>

@@ -122,6 +122,21 @@ class StatistikASNSeeder extends Seeder
         'slug'  => 'pppk_s2',
         'value' => '201'
       ],
+      [
+        'label' => 'Struktural',
+        'slug'  => 'jenis_jabatan_struktural',
+        'value' => '512'
+      ],
+      [
+        'label' => 'Fungsional',
+        'slug'  => 'jenis_jabatan_fungsional',
+        'value' => '1643'
+      ],
+      [
+        'label' => 'Pelaksana',
+        'slug'  => 'jenis_jabatan_pelaksana',
+        'value' => '344'
+      ],
     ];
 
     foreach ($data as $item) {

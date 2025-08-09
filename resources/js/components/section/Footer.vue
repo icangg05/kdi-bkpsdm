@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import { Facebook, Instagram, Twitter, Youtube } from 'lucide-vue-next';
+import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from 'lucide-vue-next';
 
 const page = usePage()
 const pengaturan = page.props.pengaturan as any
 const logo = page.props.logo
 
+const email_dinas = pengaturan.find((item: any) => item.nama_pengaturan == 'email_dinas')?.value
+const no_hp = pengaturan.find((item: any) => item.nama_pengaturan == 'no_hp')?.value
 const alamat = pengaturan.find((item: any) => item.nama_pengaturan == 'alamat')?.value
 const fb = pengaturan.find((item: any) => item.nama_pengaturan == 'fb')?.value
 const ig = pengaturan.find((item: any) => item.nama_pengaturan == 'ig')?.value
@@ -59,12 +61,21 @@ const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
             <Instagram class="w-5 h-5" />
           </a>
         </div>
+
+        <div class="mt-5 text-sm">
+          <p class="inline-flex gap-1 items-center">
+            <Phone class="size-3.5" /> <span>Kontak: {{ no_hp }}</span>
+          </p> <br>
+          <p class="inline-flex gap-1 items-center">
+            <Mail class="size-3.5" /> <span>Email: <a :href="`mailto:${email_dinas}`" class="text-sky-400 hover:underline">{{ email_dinas }}</a></span>
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Bagian Bawah -->
     <div class="container text-center text-sm text-gray-400 py-6">
-      &copy; {{ new Date().getFullYear() }} BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.<br />
+      &copy; 2025 BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.<br />
       <span class="text-xs text-gray-500">Dikembangkan oleh Dinas Kominfo Kota Kendari</span>
     </div>
   </footer>

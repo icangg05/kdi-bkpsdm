@@ -9,12 +9,12 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { convertOembed, getOriginalFilename } from '@/lib/utils';
+import { convertOembed, getOriginalFilename, refactorFormat } from '@/lib/utils';
 
 const page = usePage();
 const title = page.props.title as string;
 const halaman = page.props.halaman
-console.log(halaman)
+// console.log(halaman)
 
 const breadcrumbItems = [
   {
@@ -70,7 +70,7 @@ const data = props.data as any
     <section v-if="data" class="py-12 px-4 max-w-6xl mx-auto">
       <div class="bg-white shadow-lg rounded-xl p-6">
         <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-center uppercase">{{ title }}</h3>
-        <div class="mb-6 custom-prose" v-html="convertOembed(data.isi)" />
+        <div class="mb-6 custom-prose" v-html="convertOembed(refactorFormat(data.isi))" />
 
         <div v-if="data.lampiran" class="flex flex-wrap gap-2">
           <a :href="`/storage/${data.lampiran}`" target="_blank"

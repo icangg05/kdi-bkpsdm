@@ -2,7 +2,7 @@
 import BgOverlay from '@/components/BgOverlay.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +11,13 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Check, ChevronRight } from 'lucide-vue-next';
-import { convertOembed, getOriginalFilename } from '@/lib/utils';
+import { convertOembed, getOriginalFilename, refactorFormat } from '@/lib/utils';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
 
 const page = usePage()
 const title = page.props.title as string
@@ -38,24 +44,32 @@ const breadcrumbItems = [
 // Categories data
 const categories = ref([
   {
-    id: 1,
+    title: 'Pensiun',
+    layanan: 'pensiun',
+  },
+  {
+    title: 'Penghargaan',
+    layanan: 'penghargaan',
+  },
+  {
     title: 'Kenaikan Pangkat',
     layanan: 'kenaikan-pangkat',
   },
   {
-    id: 2,
     title: 'Mutasi Pegawai',
     layanan: 'mutasi-pegawai',
   },
   {
-    id: 3,
     title: 'Tugas Belajar',
     layanan: 'tugas-belajar',
   },
   {
-    id: 4,
     title: 'Konsultasi Kinerja',
     layanan: 'konsultasi-kinerja'
+  },
+  {
+    title: 'Disiplin',
+    layanan: 'disiplin'
   },
 ])
 
@@ -107,7 +121,7 @@ const selectCategory = (layanan: string) => {
             <!-- Categories List -->
             <div class="px-4 py-7 lg:p-6">
               <nav class="space-y-2">
-                <div v-for="category in categories" :key="category.id" @click="selectCategory(category.layanan)" :class="[
+                <div v-for="(category, i) in categories" :key="i" @click="selectCategory(category.layanan)" :class="[
                   'flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-50',
                   category.layanan === layanan ? 'bg-sky-500 text-white border hover:bg-sky-600' : 'bg-white border border-gray-200'
                 ]">
@@ -129,10 +143,48 @@ const selectCategory = (layanan: string) => {
           <div class="col-span-3 lg:col-span-2 h-fit">
             <!-- Content Area -->
             <div class="bg-white rounded-xl shadow-1 px-4 py-7 lg:p-8">
-              <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-4">{{ title }}</h2>
+              <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
+                {{ layanan == 'informasi-kewajiban-dan-larangan' || layanan == 'konsultasi-disiplin' ? 'Disiplin' :
+                  title }}
+              </h2>
 
               <!-- Additional Content -->
-              <div v-if="data" class="mt-8 custom-prose" v-html="convertOembed(data.isi)" />
+              <div v-if="data" class="mt-8">
+                <div v-if="layanan == 'disiplin'">
+                  <Tabs default-value="1" class="w-full">
+                    <TabsList class="flex flex-col lg:flex-row w-full grid-cols-2 gap-2 lg:gap-3 select-none">
+                      <TabsTrigger value="1">
+                        Informasi Kewajiban dan Larangan
+                      </TabsTrigger>
+                      <TabsTrigger value="2">
+                        Konsultasi Disiplin
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="1">
+                      <div class="custom-prose" v-html="convertOembed(refactorFormat(data[0].isi))"></div>
+                      <div v-if="data[0] && data[0].lampiran" class="mt-6 flex flex-wrap gap-2">
+                        <a :href="`/storage/${data[0].lampiran}`" target="_blank"
+                          onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;"
+                          class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
+                          {{ getOriginalFilename(data[0].lampiran) }}
+                        </a>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="2">
+                      <div class="custom-prose" v-html="convertOembed(refactorFormat(data[1].isi))"></div>
+                      <div v-if="data[1] && data[1].lampiran" class="mt-6 flex flex-wrap gap-2">
+                        <a :href="`/storage/${data[1].lampiran}`" target="_blank"
+                          onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;"
+                          class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
+                          {{ getOriginalFilename(data[1].lampiran) }}
+                        </a>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+                <div v-else class="custom-prose" v-html="convertOembed(refactorFormat(data.isi))"></div>
+              </div>
               <div v-else class="mt-8 custom-prose">
                 <p class="text-gray-600 text-center">Belum ada data.</p>
               </div>

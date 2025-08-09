@@ -13,7 +13,7 @@ const slider = props.slider as any
 </script>
 
 <template>
-  <Carousel class="relative w-full select-none" :plugins="[Autoplay({
+  <Carousel class="relative w-full select-none pointer-events-none" :plugins="[Autoplay({
     delay: 5000,
   })]">
     <CarouselContent>
@@ -21,7 +21,7 @@ const slider = props.slider as any
         <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center text-white flex items-center justify-center"
           :style="`background-image: url(storage/${slide})`">
           <!-- Overlay hitam -->
-          <div class="absolute inset-0 bg-black/55 z-10"></div>
+          <div class="absolute inset-0 bg-sky-700/40 z-10"></div>
 
           <!-- Konten di atas overlay -->
           <div class="pt-[5.5rem] ml-5 lg:ml-auto lg:pt-[8rem] px-8 lg:px-0 relative container z-20 text-center">
@@ -37,7 +37,7 @@ const slider = props.slider as any
               Pemerintah Kota Kendari. Kami mendorong pengembangan kompetensi ASN melalui pelatihan dan pembinaan
               berkelanjutan.
             </p>
-            <div class="mt-10 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
+            <div class="pointer-events-auto mt-10 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
               <Link :href="route('profil', 'sejarah')"
                 class="rounded-3xl px-6 lg:px-8 py-3 lg:py-3.5 border border-sky-600 bg-sky-600 text-white text-sm lg:text-base font-semibold">
               Tentang

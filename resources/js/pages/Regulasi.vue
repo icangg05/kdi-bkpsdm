@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Search } from 'lucide-vue-next';
+import { Download, Search } from 'lucide-vue-next';
 import Pagination from '@/components/Pagination.vue';
 
 const breadcrumbItems = [
@@ -94,20 +94,27 @@ function toKategori(value: string) {
           </button>
         </form>
 
-        <div v-if="regulasiList.length > 0" v-for="(regulasi, i) in regulasiList" :key="i"
-          class="bg-white rounded-lg shadow-md p-5 space-y-3">
-          <div>
-            <h3 class="text-base font-semibold text-gray-800 leading-snug">{{ regulasi.judul }}</h3>
-            <p class="text-sky-600 text-xs font-semibold uppercase mt-1">{{ regulasi.kategori_regulasi.nama }}</p>
-            <p class="text-sm text-gray-600 mt-2">{{ regulasi.deskripsi }}</p>
-          </div>
+        <div v-if="regulasiList.length > 0" class="col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
+          <div v-for="(regulasi, i) in regulasiList" :key="i">
+            <div class="bg-white rounded-lg shadow-md p-5 h-full">
+              <div>
+                <h3 class="text-base font-semibold text-gray-800 leading-snug">{{ regulasi.judul }}</h3>
+                <p class="text-sky-600 text-xs font-semibold uppercase mt-1">{{ regulasi.kategori_regulasi.nama }}</p>
+                <p class="text-sm text-gray-600 mt-2">{{ regulasi.deskripsi }}</p>
+              </div>
 
-          <div class="flex items-center justify-between">
-            <a :href="route('regulasi.download', regulasi.id)"
-              class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-medium px-4 py-2 rounded transition ease-in-out">
-              Unduh PDF
-            </a>
-            <span class="text-xs text-gray-500">Total Unduh: {{ regulasi.total_unduh }}</span>
+              <div class="flex items-center justify-between mt-3">
+                <a :href="route('regulasi.download', regulasi.id)"
+                  class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-medium px-4 py-2 rounded transition ease-in-out flex items-center gap-2">
+                  <Download class="w-4 h-4" />
+                  <span>Unduh PDF</span>
+                </a>
+                <span class="text-xs text-gray-500 flex items-center gap-1">
+                  <Download class="w-3 h-3 text-gray-400" />
+                  <span>{{ regulasi.total_unduh }} kali</span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 

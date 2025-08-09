@@ -1,45 +1,70 @@
 @php
 	$layanan = [
-	    [
-	        'title' => 'Cuti ASN',
-	        'halaman' => 'cuti-asn',
-	        'icon' => 'ti ti-file',
-	    ],
-	    [
-	        'title' => 'Cerai',
-	        'halaman' => 'cerai',
-	        'icon' => 'ti ti-parachute',
-	    ],
-	    [
-	        'title' => 'Kenaikan Pangkat',
-	        'halaman' => 'kenaikan-pangkat',
-	        'icon' => 'ti ti-trending-up',
-	    ],
-	    [
-	        'title' => 'Jabatan Fungsional',
-	        'halaman' => 'jabatan-fungsional',
-	        'icon' => 'ti ti-layout-bottombar',
-	    ],
-	    [
-	        'title' => 'Mutasi Pegawai',
-	        'halaman' => 'mutasi-pegawai',
-	        'icon' => 'ti ti-arrow-ramp-right',
-	    ],
-	    [
-	        'title' => 'Tugas Belajar',
-	        'halaman' => 'tugas-belajar',
-	        'icon' => 'ti ti-school',
-	    ],
-	    [
-	        'title' => 'Konsultasi Kinerja',
-	        'halaman' => 'konsultasi-kinerja',
-	        'icon' => 'ti ti-clipboard-list',
-	    ],
-	    [
-	        'title' => 'COC Manajemen ASN',
-	        'halaman' => 'coc-manajemen-asn',
-	        'icon' => 'ti ti-vocabulary',
-	    ],
+    [
+      'title'   => 'Pensiun',
+      'halaman' => 'pensiun',
+      'icon'    => 'ti ti-calendar-event',
+    ],
+    [
+      'title'   => 'Penghargaan',
+      'halaman' => 'penghargaan',
+      'icon'    => 'ti ti-award',
+    ],
+    [
+      'title'   => 'Cuti ASN',
+      'halaman' => 'cuti-asn',
+      'icon'    => 'ti ti-file',
+    ],
+    [
+      'title'   => 'Cerai',
+      'halaman' => 'cerai',
+      'icon'    => 'ti ti-parachute',
+    ],
+    [
+      'title'   => 'Kenaikan Pangkat',
+      'halaman' => 'kenaikan-pangkat',
+      'icon'    => 'ti ti-trending-up',
+    ],
+    [
+      'title'   => 'Jabatan Fungsional',
+      'halaman' => 'jabatan-fungsional',
+      'icon'    => 'ti ti-layout-bottombar',
+    ],
+    [
+      'title'   => 'Mutasi Pegawai',
+      'halaman' => 'mutasi-pegawai',
+      'icon'    => 'ti ti-arrow-ramp-right',
+    ],
+    [
+      'title'   => 'Tugas Belajar',
+      'halaman' => 'tugas-belajar',
+      'icon'    => 'ti ti-school',
+    ],
+    [
+      'title'   => 'Konsultasi Kinerja',
+      'halaman' => 'konsultasi-kinerja',
+      'icon'    => 'ti ti-clipboard-list',
+    ],
+    [
+      'title'   => 'Disiplin',
+      'halaman' => 'konsultasi-kinerja',
+      'icon'    => 'ti ti-shield',
+      'items'   => [
+        [
+          'title'   => 'Informasi Kewajiban dan Larangan',
+          'halaman' => 'informasi-kewajiban-dan-larangan',
+        ],
+        [
+          'title'   => 'Konsultasi Disiplin',
+          'halaman' => 'konsultasi-disiplin',
+        ],
+      ],
+    ],
+    [
+      'title'   => 'COC Manajemen ASN',
+      'halaman' => 'coc-manajemen-asn',
+      'icon'    => 'ti ti-vocabulary',
+    ],
 	];
 @endphp
 
@@ -149,15 +174,29 @@
 					<i class="ti ti-news"></i>
 				</li>
 				@foreach ($layanan as $item)
-					<li @class([
-						'pc-item',
-						'active' => request()->segment(2) === $item['halaman'],
-					])>
-						<a class="pc-link" href="{{ route('dashboard.halaman', $item['halaman']) }}">
-							<span class="pc-micon"><i class="{{ $item['icon'] }}"></i></span>
-							<span class="pc-mtext">{{ $item['title'] }}</span>
-						</a>
-					</li>
+          @if (!isset($item['items']))
+            <li @class([
+              'pc-item',
+              'active' => request()->segment(2) === $item['halaman'],
+            ])>
+              <a class="pc-link" href="{{ route('dashboard.halaman', $item['halaman']) }}">
+                <span class="pc-micon"><i class="{{ $item['icon'] }}"></i></span>
+                <span class="pc-mtext">{{ $item['title'] }}</span>
+              </a>
+            </li>
+          @else
+            <li @class([
+              'pc-item pc-hasmenu',
+            ])>
+              <a href="#" class="pc-link"><span class="pc-micon"><i class="{{ $item['icon'] }}"></i></span><span
+                  class="pc-mtext">{{ $item['title'] }}</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
+              <ul class="pc-submenu">
+                @foreach ($item['items'] as $menu)
+                  <li class="pc-item"><a class="pc-link" href="{{ route('dashboard.halaman', $menu['halaman']) }}">{{ $menu['title'] }}</a></li>
+                @endforeach
+              </ul>
+            </li>
+          @endif
 				@endforeach
 
 				{{-- MENU REGULASI --}}

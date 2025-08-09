@@ -10,6 +10,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs'
 import { formatTanggalIndo } from '@/lib/utils'
+import GrafikJenisJabatan from '../GrafikJenisJabatan.vue'
 
 const props = defineProps(['statistik_asn'])
 // console.log(props.statistik_asn)
@@ -34,8 +35,9 @@ const props = defineProps(['statistik_asn'])
           </span> berdasarkan
           <br class="md:hidden">
           <span class="text-sky-600 font-semibold">jenis kepegawaian</span>,
-          <span class="text-emerald-600 font-semibold">pendidikan terakhir</span>, dan
-          <span class="text-pink-600 font-semibold">jenis kelamin</span>.
+          <span class="text-emerald-600 font-semibold">pendidikan terakhir</span>,
+          <span class="text-pink-600 font-semibold">jenis kelamin</span>, dan
+          <span class="text-purple-600 font-semibold">jenis jabatan</span>.
         </p>
       </div>
 
@@ -75,6 +77,10 @@ const props = defineProps(['statistik_asn'])
               </div>
             </TabsContent>
           </Tabs>
+        </div>
+
+        <div class="col-span-1 lg:col-span-2">
+          <GrafikJenisJabatan :data="statistik_asn" />
         </div>
       </div>
     </div>

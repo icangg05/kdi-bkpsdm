@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class HalamanController extends Controller
 {
-    /**
+  /**
    * VALID PAGES
    */
   public function validPages($halaman)
@@ -18,6 +18,14 @@ class HalamanController extends Controller
       [
         'title'   => 'Sejarah BKPSDM',
         'halaman' => 'sejarah',
+      ],
+      [
+        'title'   => 'Pensiun',
+        'halaman' => 'pensiun',
+      ],
+      [
+        'title'   => 'Penghargaan',
+        'halaman' => 'penghargaan',
       ],
       [
         'title'   => 'Cuti ASN',
@@ -48,6 +56,18 @@ class HalamanController extends Controller
         'halaman' => 'konsultasi-kinerja',
       ],
       [
+        'title'   => 'Informasi Kewajiban & Larangan',
+        'halaman' => 'informasi-kewajiban-dan-larangan',
+      ],
+      [
+        'title'   => 'Konsultasi Disiplin',
+        'halaman' => 'konsultasi-disiplin',
+      ],
+      [
+        'title'   => 'Disiplin',
+        'halaman' => 'disiplin',
+      ],
+      [
         'title'   => 'COC Manajemen ASN',
         'halaman' => 'coc-manajemen-asn',
       ],
@@ -75,19 +95,21 @@ class HalamanController extends Controller
   }
 
 
-    /**
+  /**
    * INDEX
    */
   public function index($halaman)
   {
     $title = $this->validPages($halaman);
     $data  = Halaman::where('kategori', $halaman)->first();
-      // dd($data->kategori);
+    if ($data && $data->isi)
+      $data->isi = refactor_format($data->isi);
+    // dd($data);
 
     return view('dashboard.halaman', compact('title', 'data', 'halaman'));
   }
 
-    /**
+  /**
    * UPDATE
    */
   public function update(Request $request, $halaman)
@@ -114,13 +136,13 @@ class HalamanController extends Controller
       'kategori' => $halaman,
     ];
 
-      // UPDATE OR
+    // UPDATE OR
     if ($data) {
       $dataUpdate['gambar']   = $gambar ?? $data->gambar;
       $dataUpdate['lampiran'] = $lampiran ?? $data->lampiran;
       $data->update($dataUpdate);
     }
-      // CREATE NEW
+    // CREATE NEW
     else {
       $dataUpdate['gambar']   = $gambar ?? null;
       $dataUpdate['lampiran'] = $lampiran ?? null;
@@ -130,7 +152,7 @@ class HalamanController extends Controller
     return back()->with('success', 'Data berhasil diperbarui.');
   }
 
-    /**
+  /**
    * DELETE LAMPIRAN
    */
   public function deleteLampiran($id)

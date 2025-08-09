@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-sm-6 my-1">
 				<p class="m-0">
-					© {{ date('Y') }} BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.
+					© 2025 BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.
 				</p>
 			</div>
 			<div class="col-sm-6 ms-auto my-1">

@@ -22,6 +22,7 @@ class PengaturanSeeder extends Seeder
       ['label' => 'Twitter', 'nama_pengaturan' => 'tt', 'value' => '#'],
       ['label' => 'Youtube', 'nama_pengaturan' => 'yt', 'value' => 'https://www.youtube.com/@bkpsdmkendari1551'],
       ['label' => 'Jam Operasional', 'nama_pengaturan' => 'jam_operasional', 'value' => 'Senin-Jumat 08:00 - 16:00'],
+      ['label' => 'Link Survei', 'nama_pengaturan' => 'link_survei', 'value' => 'https://docs.google.com/forms/d/e/1FAIpQLScPn-AA_nA0Agi8goUg0uUjSB6-OLD1B4eaxoAxdmWdayw5aw/viewform?usp=header'],
     ];
 
     foreach ($data as $item)

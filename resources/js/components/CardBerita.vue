@@ -12,13 +12,13 @@ const props = defineProps<{
     <img :src="data.sampul ? `/storage/${data.sampul}` : '/img/default-publikasi.png'" alt="Berita"
       class="aspect-[16/10] w-full rounded-lg shadow-md object-cover" />
     <div class="flex flex-col lg:flex-row justify-between mt-4 text-sm text-gray-500 uppercase">
-      <span class="">{{ data.kategori }}</span>
+      <!-- <span class="">{{ data.kategori }}</span> -->
       <span class="text-xs inline-flex gap-1">
         <Calendar class="size-3" /> {{ data.tanggal }}
       </span>
     </div>
     <Link :href="route('berita.show', data.slug)"
-      class="mt-2 lg:mt-4 text-base lg:text-lg font-semibold hover:text-sky-600 cursor-pointer leading-tight line-clamp-2 transition ease-in-out">
+      class=" mt-2 lg:mt-4 text-base lg:text-lg font-semibold hover:text-sky-600 cursor-pointer leading-tight line-clamp-2 transition ease-in-out">
     {{ data.judul }}
     </Link>
     <p class="mt-2 lg:mt-4 text-black/55 text-sm lg:text-[15px] leading-snug line-clamp-3">

@@ -36,3 +36,16 @@ if (! function_exists('get_original_filename')) {
     return $filename;
   }
 }
+
+if (! function_exists('refactor_format')) {
+  function refactor_format(string $value): string
+  {
+    $currentOrigin = request()->getSchemeAndHttpHost();
+
+    return preg_replace(
+      '/src="https?:\/\/[^\/]+/i',
+      'src="' . $currentOrigin,
+      $value
+    );
+  }
+}

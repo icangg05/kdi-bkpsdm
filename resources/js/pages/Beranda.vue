@@ -4,6 +4,7 @@ import Hero from '@/components/section/Hero.vue';
 import InformasiLayanan from '@/components/section/InformasiLayanan.vue';
 import PublikasiTabs from '@/components/section/Publikasi.vue';
 import StatistikPegawai from '@/components/section/StatistikPegawai.vue';
+import Survei from '@/components/section/Survei.vue';
 import Video from '@/components/section/Video.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, usePage } from '@inertiajs/vue3';
@@ -32,6 +33,7 @@ const statistik_asn = props.statistik_asn
       <StatistikPegawai :statistik_asn="statistik_asn" />
       <Video v-if="video.length > 0" :data="video" />
       <Galeri v-if="foto.length > 0" :data="foto" />
+      <Survei />
     </div>
   </AppLayout>
 </template>

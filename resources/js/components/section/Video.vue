@@ -19,7 +19,7 @@ defineProps(['data'])
 <template>
   <section class="relative overflow-hidden bg-fixed bg-cover bg-center select-none"
     style="background-image: url('img/bg-galeri.jpg')">
-    <div class="bg-black/60 backdrop-brightness-50 py-20 px-4">
+    <div class="bg-sky-700/40 backdrop-brightness-50 py-20 px-4">
       <!-- Heading -->
       <div class="text-center mb-12 text-white">
         <h2 class="text-3xl font-bold">Video Kegiatan</h2>
@@ -32,7 +32,7 @@ defineProps(['data'])
       <!-- Grid Video -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <div v-for="(video, index) in data" :key="index"
-          class="bg-white/10 rounded-lg backdrop-blur-sm p-5 text-white border border-white/20 hover:bg-white/20 transition-all duration-300">
+          class="bg-black/40 rounded-lg backdrop-blur-sm p-5 text-white border border-white/20 hover:bg-white/20 transition-all duration-300">
           <!-- Icon + Judul -->
           <div class="flex items-center gap-3 mb-4">
             <div class="flex flex-col items-center">
