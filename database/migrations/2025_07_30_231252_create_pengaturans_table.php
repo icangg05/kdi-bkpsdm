@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_pengaturan');
             $table->string('label');
-            $table->string('value');
+            $table->text('value');
             $table->timestamps();
         });
     }

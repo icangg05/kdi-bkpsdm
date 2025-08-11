@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use App\Models\Foto;
+use App\Models\Pengaturan;
 use App\Models\Slider;
 use App\Models\StatistikASN;
 use App\Models\Video;
@@ -54,6 +55,21 @@ class BerandaController extends Controller
 
     $statistik_asn = StatistikASN::get();
 
+    $teks_berjalan = Pengaturan::where('nama_pengaturan', 'teks_berjalan')->first()->value;
+    $teks_berjalan = json_decode($teks_berjalan ?? [], true);
+
+    // $x = [
+    //   'visibility' => true,
+    //   'duration' => 90,
+    //   'items' => ["📢 Selamat datang di Website Resmi BKPSDM Kota Kendari — Pusat Informasi Kepegawaian dan Pelayanan ASN yang Profesional, Transparan, dan Inovatif.", "📅 Jangan lewatkan jadwal pendaftaran dan ujian CPNS 2025, serta informasi mutasi dan promosi jabatan terbaru.", "💡 Kunjungi menu Layanan untuk mengakses berbagai informasi dan formulir online."]
+    // ];
+    // $x = json_encode($x, JSON_UNESCAPED_UNICODE);
+    // dd($x);
+    // $x = json_decode($x, true);
+    // dd($x);
+
+
+
     return Inertia::render('Beranda', compact(
       'slider',
       'berita',
@@ -62,7 +78,8 @@ class BerandaController extends Controller
       'beritaDuka',
       'foto',
       'video',
-      'statistik_asn'
+      'statistik_asn',
+      'teks_berjalan',
     ));
   }
 }
