@@ -58,6 +58,13 @@ class BerandaController extends Controller
     $teks_berjalan = Pengaturan::where('nama_pengaturan', 'teks_berjalan')->first()->value;
     $teks_berjalan = json_decode($teks_berjalan ?? [], true);
 
+    $beritaHero = Berita::orderBy('tanggal', 'desc')->limit(4)->get();
+    $beritaHero->transform(function ($item) {
+      $item->isi      = str()->limit(strip_tags($item->isi), 120);
+      $item->tanggal  = Carbon::parse($item->tanggal)->translatedFormat('j F Y');
+      $item->kategori = str_replace('-', ' ', str()->title($item->kategori));
+      return $item;
+    });
     // $x = [
     //   'visibility' => true,
     //   'duration' => 90,
@@ -80,6 +87,7 @@ class BerandaController extends Controller
       'video',
       'statistik_asn',
       'teks_berjalan',
+      'beritaHero',
     ));
   }
 }

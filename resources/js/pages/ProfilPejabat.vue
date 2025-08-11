@@ -80,7 +80,7 @@ const breadcrumbItems = [
           <!-- Foto profil -->
           <div class="size-32 rounded-full overflow-hidden border-4 border-sky-500 shadow mb-4">
             <img :src="item.foto ? `/storage/${item.foto}` : '/img/default-user.jpg'" alt="Foto Pejabat"
-              class="w-full h-full object-cover" />
+              class="w-full h-full object-cover object-top" />
           </div>
 
           <!-- Nama -->

@@ -67,51 +67,59 @@ const data = props.data as any
 
     <!-- Main konten -->
     <div class="lg:container mt-[3rem]">
-      <div class="grid items-start grid-cols-3 gap-8 bg-white rounded-xl shadow p-2.5 lg:p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-y-8 lg:gap-8">
         <!-- Kiri: Gambar dan info dasar -->
-        <div class="col-span-3 lg:col-span-1 rounded-xl overflow-hidden shadow-md">
+        <div
+          class="h-fit relative col-span-1 rounded-2xl overflow-hidden shadow-lg bg-white/60 backdrop-blur-sm border border-sky-100">
           <div class="relative">
-            <img :src="data.foto ? `/storage/${data.foto}` : '/img/default-user.jpg'" alt="Michael Rodriguez"
-              class="w-full h-80 object-cover" />
+            <img :src="data.foto ? `/storage/${data.foto}` : '/img/default-user.jpg'" alt="Foto {{ data.nama }}"
+              class="w-full h-80 object-cover object-top transition-transform duration-500 hover:scale-105" />
             <div
-              class="absolute top-4 left-4 bg-sky-500 text-white text-xs font-semibold flex items-end gap-1 px-3 py-1 rounded-full shadow">
+              class="absolute top-4 left-4 bg-gradient-to-r from-sky-500 to-sky-600 text-white text-xs font-semibold flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg">
               <UserRound class="w-4 h-4" />
               <span>Profil</span>
             </div>
           </div>
-          <div class="p-4 text-center">
+          <div class="p-5 text-center">
             <h3 class="text-lg font-bold text-gray-800 leading-tight">{{ data.nama }}</h3>
-            <div class="my-2 bg-gray-100 h-1" />
-            <div class="mt-2">
-              <p v-if="data.jabatan.nama" class="mt-0.5 text-sky-600 font-semibold text-sm leading-tight">{{
-                data.jabatan.nama }}</p>
-              <p v-if="data.jabatan.unit_organisasi.nama" class="mt-0.5 text-sky-600 font-semibold text-sm leading-tight">
-                {{ data.jabatan.unit_organisasi.nama }}</p>
-              <p v-if="data.jabatan.unit_organisasi.bagian.nama"
-                class="mt-0.5 text-sky-600 font-semibold text-sm leading-tight">{{
-                  data.jabatan.unit_organisasi.bagian.nama }}</p>
+            <div class="mt-3 space-y-1">
+              <p v-if="data.jabatan.nama" class="text-sky-600 font-semibold text-sm">{{ data.jabatan.nama }}</p>
+              <p v-if="data.jabatan.unit_organisasi.nama" class="text-gray-600 text-sm">{{
+                data.jabatan.unit_organisasi.nama }}</p>
+              <p v-if="data.jabatan.unit_organisasi.bagian.nama" class="text-gray-500 text-xs">{{
+                data.jabatan.unit_organisasi.bagian.nama }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Kanan: Kutipan dan biografi -->
-        <div class="col-span-3 lg:col-span-2 flex flex-col justify-center gap-6">
+        <!-- Kanan: Tugas dan Biografi -->
+        <div class="col-span-2 space-y-6">
           <!-- Tugas -->
-          <div v-if="data.jabatan?.tugas.length > 0" class="rounded-lg border border-blue-300 bg-blue-50 text-blue-900 p-5">
-            <h4 class="text-lg font-bold mb-2">Tugas</h4>
-            <div class="h-1 w-20 bg-blue-500 mb-3 rounded-full"></div>
-            <div v-for="(item, i) in data.jabatan.tugas" class="flex flex-col gap-2" :index="i">
-              <div class="flex items-center gap-3" v-for="(i) in 1" :key="i">
-                <Check class="size-5 text-blue-600" />
-                <p class="text-sm">{{ item }}</p>
+          <div v-if="data.jabatan?.tugas.length > 0"
+            class="rounded-2xl bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 border border-blue-200 shadow-sm p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-sky-500/10 p-2 rounded-full">
+                <Check class="size-5 text-sky-600" />
               </div>
+              <h4 class="text-lg font-bold text-blue-900">Tugas</h4>
             </div>
+            <ul class="space-y-2 mt-2">
+              <li v-for="(item, index) in data.jabatan.tugas" :key="index" class="grid grid-cols-12 gap-3">
+                <Check class="lg:translate-x-4 col-span-1 size-4 text-blue-500 mt-0.5" />
+                <p class="lg:-translate-x-3 col-span-11 text-sm text-blue-900">{{ item }}</p>
+              </li>
+            </ul>
           </div>
 
           <!-- Biografi -->
-          <div>
-            <h4 class="text-xl font-bold text-gray-900 border-b border-sky-500 inline-block pb-1 mb-3">Biografi</h4>
-            <div class="prose-sm lg:prose lg:max-w-none" v-html="convertOembed(data.biografi ?? '-')" />
+          <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="bg-sky-500/10 p-2 rounded-full">
+                <UserRound class="w-5 h-5 text-sky-600" />
+              </div>
+              <h4 class="text-lg font-bold text-gray-900">Biografi</h4>
+            </div>
+            <div class="prose-sm lg:prose lg:max-w-none text-gray-700" v-html="convertOembed(data.biografi ?? '-')" />
           </div>
         </div>
       </div>

@@ -9,50 +9,17 @@ import Autoplay from 'embla-carousel-autoplay'
 
 const props = usePage().props
 const slider = props.slider as any
+const beritaHero = props.beritaHero as any
 // console.log(slider)
-
-const latestNews = [
-  {
-    id: 1,
-    title: 'BKPSDM Tingkatkan Kompetensi ASN Lewat Pelatihan Modern',
-    date: '10 Agustus 2025',
-    category: 'Berita',
-    excerpt:
-      'BKPSDM Kota Kendari menggelar pelatihan untuk meningkatkan kompetensi ASN di era digitalisasi pemerintahan...',
-    image: 'berita-utama.jpg',
-  },
-  {
-    id: 2,
-    title: 'Pengumuman: Jadwal Pendaftaran CPNS 2025',
-    date: '9 Agustus 2025',
-    category: 'Pengumuman',
-    excerpt: '',
-    image: 'dummy2.jpg',
-  },
-  {
-    id: 3,
-    title: 'Ucapan Selamat Hari Jadi Kota Kendari',
-    date: '8 Agustus 2025',
-    category: 'Ucapan Selamat',
-    excerpt: '',
-    image: 'dummy3.jpg',
-  },
-  {
-    id: 4,
-    title: 'Berita Duka: Meninggalnya Tokoh ASN Kota Kendari',
-    date: '7 Agustus 2025',
-    category: 'Berita Duka',
-    excerpt: '',
-    image: 'dummy4.jpg',
-  },
-
-]
 
 </script>
 
 <template>
   <Carousel class="relative w-full select-none pointer-events-none" :plugins="[Autoplay({
     delay: 5000,
+    stopOnInteraction: false, // jangan berhenti saat interaksi
+    stopOnMouseEnter: false,  // jangan berhenti saat hover
+    stopOnFocusIn: false,     // jangan berhenti saat fokus
   })]">
     <CarouselContent>
       <!-- SLIDER KEDUA (Pejabat BKPSDM) -->
@@ -63,7 +30,7 @@ const latestNews = [
           <div class="absolute inset-0 bg-gradient-to-t from-sky-950/95 via-sky-900/75 to-sky-800/55 overlay-anim">
           </div>
 
-          <div class="pt-[5.5rem] ml-5 lg:ml-auto lg:pt-[8rem] px-8 lg:px-0 relative container z-20 text-center">
+          <div class="ml-3.5 lg:ml-auto pt-[5.5rem] lg:pt-[8rem] px-8 lg:px-0 relative container z-20 text-center">
             <div class="relative">
               <h2 class="z-0 text-3xl lg:text-[48px] text-white font-bold leading-tight tracking-wide">
                 Selamat Datang Di BKPSDM Kota Kendari
@@ -100,7 +67,7 @@ const latestNews = [
           </div>
 
           <!-- Konten -->
-          <div class="relative z-20 text-center text-white px-6">
+          <div class="ml-3.5 lg:ml-2 relative z-20 text-center text-white px-6">
             <h2 class="title-anim text-3xl lg:text-6xl font-extrabold tracking-wide drop-shadow-lg">
               Pejabat BKPSDM Kota Kendari
             </h2>
@@ -126,40 +93,43 @@ const latestNews = [
       </CarouselItem>
 
       <!-- SLIDER KETIGA (Berita Terbaru) -->
-      <CarouselItem>
-        <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center flex flex-col justify-center px-6 lg:px-0"
-          :style="`background-image: url(storage/${slider[2]})`">
+      <CarouselItem v-if="beritaHero.length > 0">
+        <div class="pt-20 relative h-[40rem] lg:h-[100dvh] bg-cover bg-center flex flex-col justify-center px-6 lg:px-0"
+          :style="`background-image: url(storage/${beritaHero[0].sampul ?? slider[2]})`">
           <div class="absolute inset-0 bg-sky-900/70 z-10"></div>
 
-          <div class="relative z-20 max-w-5xl mx-auto text-white">
+          <div class="ml-3.5 lg:ml-auto relative z-20 max-w-5xl mx-auto text-white">
             <!-- Judul besar berita utama -->
             <h2 class="text-4xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg line-clamp-2">
-              {{ latestNews[0].title }}
+              {{ beritaHero[0].judul }}
             </h2>
             <p class="text-sm lg:text-base mb-6 text-white/80 font-medium">
-              {{ latestNews[0].date }} — <span class="uppercase">{{ latestNews[0].category }}</span>
+              {{ beritaHero[0].tanggal }} — <span class="uppercase">{{ beritaHero[0].kategori }}</span>
             </p>
-            <p class="max-w-xl text-white/90 mb-8 line-clamp-2">
-              {{ latestNews[0].excerpt }}
+            <p class="max-w-xl text-white/90 mb-8 line-clamp-2 hidden lg:block">
+              {{ beritaHero[0].isi }}
             </p>
-            <Link :href="route('berita.show', latestNews[0].id)"
-              class="inline-block rounded-3xl px-6 py-3 border border-sky-600 bg-sky-600 font-semibold text-white hover:bg-sky-700 transition">
+            <Link :href="route('berita.show', beritaHero[0].slug)"
+              class="pointer-events-auto inline-block text-sm lg:text-base rounded-3xl px-6 py-3 border border-sky-600 bg-sky-600 font-semibold text-white hover:bg-sky-700 transition">
             Selengkapnya
             </Link>
 
             <!-- Daftar berita kecil -->
-            <div class="mt-16 hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div v-for="(news, i) in latestNews.slice(1, 4)" :key="news.id"
+            <div v-if="beritaHero.length > 1" class="mt-12 lg:mt-16 lg:grid grid-cols-1 lg:grid-cols-3 gap-6 space-y-2 lg:space-y-0">
+              <div v-for="(news, i) in beritaHero.slice(1, 4)" :key="news.id"
                 class="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                <h3 class="font-semibold text-lg text-white truncate mb-2">
-                  {{ news.title }}
+                <h3 class="font-semibold text-sm lg:text-lg text-white truncate mb-2 line-clamp-1">
+                  {{ news.judul }}
                 </h3>
-                <p class="text-xs text-white/70 mb-1">
-                  {{ news.date }} — {{ news.category }}
-                </p>
-                <Link :href="route('berita.show', news.id)" class="text-sky-400 hover:underline text-sm font-semibold">
-                Baca
-                </Link>
+                <div class="flex justify-between flex-row lg:flex-col gap-1.5">
+                  <p class="text-[10px] lg:text-xs text-white/70 mb-1">
+                    {{ news.tanggal }} — {{ news.kategori }}
+                  </p>
+                  <Link :href="route('berita.show', news.slug)"
+                    class="pointer-events-auto text-sky-400 hover:underline text-xs lg:text-sm font-semibold">
+                  Baca
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

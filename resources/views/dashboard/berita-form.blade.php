@@ -3,8 +3,8 @@
 @section('content')
 	@php
 		$routeSubmit = isset($data)
-		    ? route('dashboard.publikasi.update', [$publikasi, $data->id])
-		    : route('dashboard.publikasi.store', $publikasi);
+      ? route('dashboard.publikasi.update', [$publikasi, $data->id])
+      : route('dashboard.publikasi.store', $publikasi);
 	@endphp
 
 	<!-- [ breadcrumb ] start -->
@@ -18,6 +18,10 @@
 	<div class="row">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
+			@if (session('success'))
+				<x-alert :message="session('success')" color="success" />
+			@endif
+
 			<div class="mb-3">
 				<a href="{{ route('dashboard.publikasi.index', $publikasi) }}" class="btn btn-secondary">Kembali</a>
 			</div>
