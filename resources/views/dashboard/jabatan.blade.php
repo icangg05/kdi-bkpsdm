@@ -51,13 +51,17 @@
 												<td>{{ $item->unit_organisasi->bagian->nama ?? '-' }}</td>
 												<td>
 													<a href="{{ route('dashboard.jabatan.index', ['id' => $item->id]) }}"
-														class="btn btn-sm btn-secondary badge">Edit</a>
+														class="btn btn-sm btn-secondary badge mb-1">
+														<i class="ti ti-edit"></i>
+													</a>
 													<form class="d-inline" action="{{ route('dashboard.jabatan.destroy', $item->id) }}"
 														method="post">
 														@method('delete')
 														@csrf
 														<button onclick="return confirm('Hapus data ini?')" type="submit"
-															class="btn btn-sm btn-danger badge">Hapus</button>
+															class="btn btn-sm btn-danger badge mb-1">
+															<i class="ti ti-trash"></i>
+														</button>
 													</form>
 													{{-- <div style="width: 3px; height: 20px; background: #dbdbdb"></div> --}}
 													<a href="{{ route('dashboard.jabatan.tugas.index', $item->id) }}"

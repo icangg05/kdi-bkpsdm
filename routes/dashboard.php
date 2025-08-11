@@ -87,6 +87,7 @@ Route::middleware(['auth'])
     // DATA JABATAN - TUGAS
     Route::get('/jabatan/{id}/tugas', [JabatanController::class, 'tugasIndex'])->name('jabatan.tugas.index');
     Route::post('/jabatan/{id}/tugas-store', [JabatanController::class, 'tugasStore'])->name('jabatan.tugas.store');
+    Route::patch('/jabatan/{id}/tugas-update/{index}', [JabatanController::class, 'tugasUpdate'])->name('jabatan.tugas.update');
     Route::delete('/jabatan/{id}/tugas-destroy/{index}', [JabatanController::class, 'tugasDestroy'])->name('jabatan.tugas.destroy');
 
     // DATA BAGIAN

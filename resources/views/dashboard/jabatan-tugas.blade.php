@@ -23,9 +23,10 @@
 			<div class="card">
 				<div class="card-header">
 					<h5>Data {{ $title }} :
-            <span class="text-primary">
-            {{ $data->nama }} | {{ $data->unit_organisasi->nama ?? '-' }} | {{ $data->unit_organisasi->bagian->nama ?? '' }}
-          </span></h5>
+						<span class="text-primary">
+							{{ $data->nama }} | {{ $data->unit_organisasi->nama ?? '-' }} | {{ $data->unit_organisasi->bagian->nama ?? '' }}
+						</span>
+					</h5>
 				</div>
 				<div class="card-body">
 					<div class="row gap-3">
@@ -45,14 +46,18 @@
 												<th scope="row">{{ $loop->iteration }}.</th>
 												<td>{{ $item }}</td>
 												<td>
-													{{-- <a href="{{ route('dashboard.jabatan.index') }}"
-														class="btn btn-sm btn-secondary badge">Edit</a> --}}
+													<a href="{{ route('dashboard.jabatan.tugas.index', [$data->id, 'no' => $i + 1]) }}"
+														class="btn btn-sm btn-secondary badge mb-1">
+														<i class="ti ti-edit"></i>
+													</a>
 													<form class="d-inline" action="{{ route('dashboard.jabatan.tugas.destroy', [$data->id, $i]) }}"
 														method="post">
 														@method('delete')
 														@csrf
 														<button onclick="return confirm('Hapus data ini?')" type="submit"
-															class="btn btn-sm btn-danger badge">Hapus</button>
+															class="btn btn-sm btn-danger badge">
+															<i class="ti ti-trash"></i>
+														</button>
 													</form>
 												</td>
 											</tr>
@@ -70,15 +75,20 @@
 							<hr>
 
 							@php
-								$routeSubmit = route('dashboard.jabatan.tugas.store', $data->id);
+								$routeSubmit = request()->has('no')
+                  ? route('dashboard.jabatan.tugas.update', [$data->id, request()->no])
+                  : route('dashboard.jabatan.tugas.store', $data->id);
 							@endphp
 							<form action="{{ $routeSubmit }}" method="post">
 								@csrf
+                @if (request()->has('no'))
+                  @method('patch')
+                @endif
 
 								<div class="form-group">
 									<label for="deskripsi_tugas" class="form-label">Deskripsi Tugas</label>
 									<textarea rows="4" type="text" name="deskripsi_tugas" id="deskripsi_tugas"
-									 class="form-control @error('deskripsi_tugas') is-invalid @enderror" required>{{ old('deskripsi_tugas', $dataEdit->deskripsi_tugas ?? '') }}</textarea>
+                    class="form-control @error('deskripsi_tugas') is-invalid @enderror" required>{{ old('deskripsi_tugas', $dataEdit ?? '') }}</textarea>
 									@error('deskripsi_tugas')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
@@ -86,9 +96,12 @@
 
 								<div class="d-grid mt-3">
 									<button type="submit" class="btn btn-primary">
-										Tambah
+										{{ request()->no ? 'Update' : 'Tambah' }}
 									</button>
-									<button type="reset" class="btn btn-light">Batal</button>
+									@if (request()->has('no'))
+										<a href="{{ route('dashboard.jabatan.tugas.index', $data->id) }}" type="reset"
+											class="btn btn-light">Batal</a>
+									@endif
 								</div>
 							</form>
 						</div>

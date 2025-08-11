@@ -30,7 +30,7 @@ const props = defineProps(['statistik_asn'])
         </div>
 
         <p class="text-base lg:text-lg text-gray-600">
-          📊 Data per <span class="font-semibold text-gray-800">
+          📊 Data ASN Kota Kendari per <span class="font-semibold text-gray-800">
             {{formatTanggalIndo(statistik_asn.find((item) => item.slug == 'tanggal_update')?.value)}}
           </span> berdasarkan
           <br class="md:hidden">

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-	@include('layouts.app.partials.loader')
+	{{-- @include('layouts.app.partials.loader') --}}
 	@include('layouts.app.partials.sidebar')
 	@include('layouts.app.partials.header')
 

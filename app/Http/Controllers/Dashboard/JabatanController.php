@@ -111,11 +111,23 @@ class JabatanController extends Controller
   {
     $title = 'Daftar Tugas';
     $data  = Jabatan::with('unit_organisasi.bagian')->findOrFail($id);
-    $tugas = $data->tugas;
-    // dd($tugas);
+    $tugas = $data->tugas; // array
 
-    return view('dashboard.jabatan-tugas', compact('title', 'data', 'tugas'));
+    $dataEdit = null;
+
+    if ($tugas && request()->has('no')) {
+      $index = request()->no - 1;
+
+      // cek apakah index ada di array
+      if (!isset($tugas[$index]))
+        abort(404);
+
+      $dataEdit = $tugas[$index];
+    }
+
+    return view('dashboard.jabatan-tugas', compact('title', 'data', 'tugas', 'dataEdit'));
   }
+
 
   /**
    * TUGAS STORE
@@ -139,11 +151,41 @@ class JabatanController extends Controller
   }
 
   /**
+   * TUGAS UPDATE
+   */
+  public function tugasUpdate(Request $request, $id, $index)
+  {
+    // dd($id, $index);
+    $this->rulesTugas($request);
+
+    $data      = Jabatan::findOrFail($id);
+    $tugas     = $data->tugas ?? [];
+
+    $index = $index - 1;
+
+    // cek apakah index ada
+    if (!isset($tugas[$index]))
+      abort(404);
+
+    // update nilai
+    $tugas[$index] = trim(ucfirst($request->deskripsi_tugas));
+
+    // simpan
+    $data->update([
+      'tugas' => $tugas,
+    ]);
+
+    return redirect()
+      ->route('dashboard.jabatan.tugas.index', $id)
+      ->with('success', 'Deskripsi tugas berhasil diperbarui.');
+  }
+
+  /**
    * TUGAS DESTROY
    */
   public function tugasDestroy($id, $index)
   {
-    $data = Jabatan::findOrFail($id);
+    $data  = Jabatan::findOrFail($id);
     $tugas = $data->tugas ?? [];
 
     if (!isset($tugas[$index])) {
