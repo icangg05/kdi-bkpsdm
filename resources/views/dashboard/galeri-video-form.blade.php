@@ -16,6 +16,10 @@
 	<div class="row" style="user-select: none">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
+      @if (session('success'))
+				<x-alert :message="session('success')" color="success" />
+			@endif
+
 			<div class="mb-3">
 				<a href="{{ route('dashboard.video.index') }}" class="btn btn-secondary">Kembali</a>
 			</div>

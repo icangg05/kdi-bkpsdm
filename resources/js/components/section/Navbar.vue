@@ -61,13 +61,13 @@ const yt              = pengaturan.find((item: any) => item.nama_pengaturan == '
 
     <!-- Navbar -->
     <nav class="mt-3 lg:mt-0 bg-black/15 backdrop-blur-md text-white/95">
-      <div class="px-5 py-2 lg:py-0 lg:px-6 flex items-center justify-between">
+      <div class="px-5 py-2 lg:py-1.5 lg:px-6 flex items-center justify-between">
         <!-- Logo -->
         <Link :href="route('beranda')" class="flex items-center gap-2">
-        <img :src="logo ? `/storage/${logo}` : ''" alt="Logo" class="size-10 w-auto" />
-        <div class="leading-0">
-          <h1 class="font-bold text-white text-xl">BKP<span class="text-sky-400">SDM</span></h1>
-          <span class="text-xs text-white/60">Kota Kendari</span>
+        <img :src="logo ? `/storage/${logo}` : ''" alt="Logo" class="size-10 lg:size-14 w-auto" />
+        <div class="flex flex-col">
+          <h1 class="font-bold text-white text-xl lg:text-2xl">BKP<span class="text-sky-400">SDM</span></h1>
+          <span class="-mt-1.5 text-xs lg:text-sm text-white/60 tracking-[0.09em] lg:tracking-[0.108em] font-medium">Kota Kendari</span>
         </div>
         </Link>
 

@@ -27,7 +27,7 @@
 
 						<div class="row">
 							<div class="col-md-10 mb-3">
-								@foreach ($data as $item)
+								@foreach ($data as $i => $item)
 									<div class="form-group mb-3">
 										<label for="slider_{{ $item->id }}" class="form-label">Upload Slider {{ $loop->iteration }}</label>
 										<input accept="image/*" type="file" name="slider_{{ $item->id }}" id="slider_{{ $item->id }}"
@@ -36,6 +36,12 @@
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
 										<small>Maksimal {{ config('app.size_img') / 1024 }} MB.</small>
+										@if ($i == 2)
+											<small class="d-block text-primary">
+												Catatan: Jika postingan memiliki gambar sampul, maka gambar slider ketiga akan diambil dari sampul tersebut.
+												Slider ini hanya digunakan jika sampul postingan kosong.
+											</small>
+										@endif
 									</div>
 									<input type="hidden" name="slider_ids[]" value="{{ $item->id }}">
 								@endforeach
@@ -44,7 +50,7 @@
 								</div>
 							</div>
 							<div class="col-md-2">
-								@foreach ($data as $item)
+								@foreach ($data as $i => $item)
 									<div class="mb-2">
 										<label>Slider {{ $loop->iteration }}</label>
 										<img class="img-thumbnail d-block" src="{{ asset("storage/$item->gambar") }}" alt="{{ $item->gambar }}">

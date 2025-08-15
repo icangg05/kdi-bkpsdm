@@ -81,22 +81,39 @@
 										<input type="hidden" name="role" value="{{ $data->role }}">
 									@endcan
 									<label for="role" class="form-label">Role</label>
-									<select name="role" class="form-select" id="tom-select" required @disabled(auth()->user()->role == 'pengelola-konten')>
-										<option value="">Pilih...</option>
-										@php
-											$roles = [
-											    ['label' => 'Admin', 'value' => 'admin'],
-											    ['label' => 'Pengelola Konten', 'value' => 'pengelola-konten'],
-											];
-										@endphp
-										@foreach ($roles as $item)
-											<option
-												@selected($item['value'] == old('role', $data->role ?? ''))
-												value="{{ $item['value'] }}">
-												{{ $item['label'] }}
-											</option>
-										@endforeach
-									</select>
+									@php
+                    $countJumlahAdmin = App\Models\User::where('role', 'admin')->count();
+
+                    // Cek apakah tombol harus disabled
+                    $disabledRole = false;
+
+                    // Jika role login 'pengelola-konten' → selalu disabled
+                    if (auth()->user()->role === 'pengelola-konten') {
+                        $disabledRole = true;
+                    }
+                    // Jika role login 'admin' dan hanya 1 admin → tidak boleh ubah role diri sendiri
+                    elseif (auth()->user()->role === 'admin' && $countJumlahAdmin == 1 && auth()->id() === $data->id) {
+                        $disabledRole = true;
+                    }
+                  @endphp
+
+                  <select name="role" class="form-select" id="tom-select" required @disabled($disabledRole)>
+                    <option value="">Pilih...</option>
+                    @php
+                      $roles = [
+                          ['label' => 'Admin', 'value' => 'admin'],
+                          ['label' => 'Pengelola Konten', 'value' => 'pengelola-konten'],
+                      ];
+                    @endphp
+                    @foreach ($roles as $item)
+                      <option
+                        @selected($item['value'] == old('role', $data->role ?? ''))
+                        value="{{ $item['value'] }}">
+                        {{ $item['label'] }}
+                      </option>
+                    @endforeach
+                  </select>
+
 									@error('role')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror

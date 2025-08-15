@@ -95,7 +95,7 @@ class PejabatController extends Controller
       'biografi'   => $request->biografi
     ]);
 
-    return redirect()->route('dashboard.pejabat.index')->with('success', 'Data berhasil diperbarui.');
+    return redirect()->route('dashboard.pejabat.edit', $id)->with('success', 'Data berhasil diperbarui.');
   }
 
   /**

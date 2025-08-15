@@ -106,7 +106,11 @@
 						role="button"
 						aria-haspopup="false"
 						aria-expanded="false">
-						<img src="{{ asset('') }}/img/default-user.jpg" alt="user-image" class="user-avtar" />
+            @php
+                $dataLogo = App\Models\Halaman::where('kategori', 'logo')->first();
+                $logo = $dataLogo && $dataLogo->gambar ? "storage/$dataLogo->gambar" : 'img/default-user.jpg';
+            @endphp
+						<img src="{{ asset($logo) }}" alt="user-image" class="user-avtar" />
 						<span>
 							<i class="ti ti-settings"></i>
 						</span>

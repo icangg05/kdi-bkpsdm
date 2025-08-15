@@ -95,7 +95,7 @@ class RegulasiController extends Controller
       'lampiran'             => $lampiran ?? $data->lampiran,
     ]);
 
-    return redirect()->route('dashboard.regulasi.index')->with('success', 'Data berhasil diperbarui.');
+    return redirect()->route('dashboard.regulasi.edit', $id)->with('success', 'Data berhasil diperbarui.');
   }
 
   /**

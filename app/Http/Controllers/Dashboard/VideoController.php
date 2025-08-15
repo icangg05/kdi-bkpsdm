@@ -90,7 +90,7 @@ class VideoController extends Controller
       'link'      => $request->link
     ]);
 
-    return redirect()->route('dashboard.video.index')->with('success', 'Data berhasil diperbarui.');
+    return redirect()->route('dashboard.video.edit', $id)->with('success', 'Data berhasil diperbarui.');
   }
 
   /**

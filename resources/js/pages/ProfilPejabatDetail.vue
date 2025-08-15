@@ -73,7 +73,7 @@ const data = props.data as any
           class="h-fit relative col-span-1 rounded-2xl overflow-hidden shadow-lg bg-white/60 backdrop-blur-sm border border-sky-100">
           <div class="relative">
             <img :src="data.foto ? `/storage/${data.foto}` : '/img/default-user.jpg'" alt="Foto {{ data.nama }}"
-              class="w-full h-80 object-cover object-top transition-transform duration-500 hover:scale-105" />
+              class="w-full transition-transform duration-500 hover:scale-105" />
             <div
               class="absolute top-4 left-4 bg-gradient-to-r from-sky-500 to-sky-600 text-white text-xs font-semibold flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg">
               <UserRound class="w-4 h-4" />

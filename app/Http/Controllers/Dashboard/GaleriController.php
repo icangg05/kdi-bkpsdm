@@ -94,7 +94,7 @@ class GaleriController extends Controller
       'gambar'    => $gambar ?? $data->gambar
     ]);
 
-    return redirect()->route('dashboard.galeri.foto.index')->with('success', 'Data berhasil diperbarui.');
+    return redirect()->route('dashboard.galeri.foto.edit', $id)->with('success', 'Data berhasil diperbarui.');
   }
 
   /**

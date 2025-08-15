@@ -49,21 +49,21 @@
 
 							<hr>
 
-              @php
-                  $dataTeksBerjalan = json_decode($data->where('nama_pengaturan', '=', 'teks_berjalan')->first()->value, true);
-                  // dd($dataTeksBerjalan['visibility']);
-              @endphp
+							@php
+								$dataTeksBerjalan = json_decode($data->where('nama_pengaturan', '=', 'teks_berjalan')->first()->value, true);
+								// dd($dataTeksBerjalan['visibility']);
+							@endphp
 							<div class="col-md-12">
 								<h5 class="text-primary">Pengaturan Teks Berjalan</h5>
 								<div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group mb-3">
+									<div class="col-md-6">
+										<div class="form-group mb-3">
 											<label for="teks_berjalan_visibility" class="form-label">Visibilitas</label>
 											<select name="teks_berjalan_visibility" id="teks_berjalan_visibility"
 												class="form-control @error('teks_berjalan_visibility') is-invalid @enderror"
 												required>
-												<option value="1" @selected(old('teks_berjalan_visibility', $dataTeksBerjalan['visibility']) == "1")>Tampilkan</option>
-												<option value="0" @selected(old('teks_berjalan_visibility', $dataTeksBerjalan['visibility']) == "0")>Sembunyikan
+												<option value="1" @selected(old('teks_berjalan_visibility', $dataTeksBerjalan['visibility']) == '1')>Tampilkan</option>
+												<option value="0" @selected(old('teks_berjalan_visibility', $dataTeksBerjalan['visibility']) == '0')>Sembunyikan
 												</option>
 											</select>
 											@error('teks_berjalan_visibility')
@@ -71,27 +71,36 @@
 											@enderror
 										</div>
 									</div>
-                  <div class="col-md-6">
-                    <div class="form-group mb-3">
-                      <label for="teks_berjalan_duration" class="form-label">Durasi (ms)</label>
-                      <input value="{{ old('teks_berjalan_duration', $dataTeksBerjalan['duration'] ?? '') }}" min="0" type="number" name="teks_berjalan_duration" id="teks_berjalan_duration"
-                        class="form-control @error('teks_berjalan_duration') is-invalid @enderror"
-                        required>
-                      @error('teks_berjalan_duration')
-                        <small class="text-danger">{{ $message }}</small>
-                      @enderror
-                    </div>
-                  </div>
+									<div class="col-md-6">
+										<div class="form-group mb-3">
+											<label for="teks_berjalan_duration" class="form-label">Kecepatan Teks (ms)</label>
+											<input value="{{ old('teks_berjalan_duration', $dataTeksBerjalan['duration'] ?? '') }}" min="0"
+												type="number" name="teks_berjalan_duration" id="teks_berjalan_duration"
+												class="form-control @error('teks_berjalan_duration') is-invalid @enderror"
+												required>
+											@error('teks_berjalan_duration')
+												<small class="text-danger">{{ $message }}</small>
+											@enderror
+										</div>
+									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
 											<label for="teks_berjalan_items" class="form-label">Isi Teks</label>
 											<textarea rows="4" type="text" name="teks_berjalan_items" id="teks_berjalan_items"
                         class="form-control @error('teks_berjalan_items') is-invalid @enderror"
                         required>{{ old('teks_berjalan_duration', $dataTeksBerjalan['items'] ?? '') }}"</textarea>
-                        <small>Pisahkan dengan simbol "###" untuk memulai kalimat baru.</small>
+											<small>Pisahkan dengan simbol "###" untuk memulai kalimat baru.</small>
 											@error('teks_berjalan_items')
 												<small class="text-danger">{{ $message }}</small>
 											@enderror
+											<script>
+												const el = document.getElementById('teks_berjalan_items');
+												if (el) {
+													let teks = el.value; // Ambil isi textarea
+													teks = teks.replace(/['"]/g, ''); // Hapus semua ' dan "
+													el.value = teks; // Masukkan kembali ke textarea
+												}
+											</script>
 										</div>
 									</div>
 								</div>

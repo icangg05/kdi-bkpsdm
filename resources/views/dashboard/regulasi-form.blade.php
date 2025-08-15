@@ -16,6 +16,10 @@
 	<div class="row">
 		<!-- [ sample-page ] start -->
 		<div class="col-sm-12">
+			@if (session('success'))
+				<x-alert :message="session('success')" color="success" />
+			@endif
+
 			<div class="mb-3">
 				<a href="{{ route('dashboard.regulasi.index') }}" class="btn btn-secondary">Kembali</a>
 			</div>
@@ -67,7 +71,7 @@
 								<div class="form-group mb-3">
 									<label for="deskripsi" class="form-label">Deskripsi</label>
 									<textarea rows="4" name="deskripsi" id="deskripsi"
-                  class="form-control @error('deskripsi') is-invalid @enderror" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
+									 class="form-control @error('deskripsi') is-invalid @enderror" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
 									@error('deskripsi')
 										<small class="text-danger">{{ $message }}</small>
 									@enderror
