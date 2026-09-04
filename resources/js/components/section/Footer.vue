@@ -1,0 +1,76 @@
+<script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
+import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from 'lucide-vue-next';
+import AppLogo from '../AppLogo.vue';
+
+const page = usePage()
+const pengaturan = page.props.pengaturan as any
+
+const email_dinas = pengaturan.find((item: any) => item.nama_pengaturan == 'email_dinas')?.value
+const no_hp = pengaturan.find((item: any) => item.nama_pengaturan == 'no_hp')?.value
+const alamat = pengaturan.find((item: any) => item.nama_pengaturan == 'alamat')?.value
+const fb = pengaturan.find((item: any) => item.nama_pengaturan == 'fb')?.value
+const ig = pengaturan.find((item: any) => item.nama_pengaturan == 'ig')?.value
+const tt = pengaturan.find((item: any) => item.nama_pengaturan == 'tt')?.value
+const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
+</script>
+
+<template>
+  <footer class="bg-gray-900 text-gray-400 pt-12 select-none">
+    <!-- Bagian Atas -->
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 border-b border-gray-700">
+      <!-- Logo dan Deskripsi -->
+      <div class="flex flex-col items-start gap-4">
+        <AppLogo />
+
+        <p class="text-sm leading-relaxed max-w-sm">
+          Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Kendari
+          berkomitmen pada pelayanan yang profesional dan transparan.
+        </p>
+      </div>
+
+      <!-- Alamat -->
+      <div>
+        <h3 class="text-white font-semibold mb-3">Alamat</h3>
+        <p class="text-sm leading-relaxed">
+          {{ alamat }}
+        </p>
+      </div>
+
+      <!-- Sosial Media -->
+      <div>
+        <h3 class="text-white font-semibold mb-3">Ikuti Kami</h3>
+        <div class="flex gap-4 text-white">
+          <a :href="fb" target="_blank" class="hover:text-yellow-400 transition">
+            <Facebook class="w-5 h-5" />
+          </a>
+          <a :href="tt" target="_blank" class="hover:text-yellow-400 transition">
+            <Twitter class="w-5 h-5" />
+          </a>
+          <a :href="yt" target="_blank" class="hover:text-yellow-400 transition">
+            <Youtube class="w-5 h-5" />
+          </a>
+          <a :href="ig" target="_blank" class="hover:text-yellow-400 transition">
+            <Instagram class="w-5 h-5" />
+          </a>
+        </div>
+
+        <div class="mt-5 text-sm">
+          <p class="inline-flex gap-1 items-center">
+            <Phone class="size-3.5" /> <span>Kontak: {{ no_hp }}</span>
+          </p> <br>
+          <p class="inline-flex gap-1 items-center">
+            <Mail class="size-3.5" /> <span>Email: <a :href="`mailto:${email_dinas}`"
+                class="text-sky-400 hover:underline">{{ email_dinas }}</a></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bagian Bawah -->
+    <div class="container text-center text-sm text-gray-400 py-6">
+      &copy; 2025 BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.<br />
+      <span class="text-xs text-gray-500">Dikembangkan oleh Dinas Kominfo Kota Kendari</span>
+    </div>
+  </footer>
+</template>

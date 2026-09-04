@@ -1,0 +1,48 @@
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: kdi-bkpsdm-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mariadb:11.4
+    container_name: kdi-bkpsdm-mysql
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootsecret
+      MARIADB_DATABASE: db_bkpsdm
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db_bkpsdm.sql:/docker-entrypoint-initdb.d/db_bkpsdm.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: kdi-bkpsdm-pma
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 256M
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:

@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+@import 'tw-animate-css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-roboto: "Roboto", sans-serif;
+  --font-lobster: "Lobster", sans-serif;
+}
+
+@utility container {
+  padding-inline: 14px;
+  margin-inline: auto;
+
+  @variant lg {
+    padding-inline: 30px;
+    width: 1200px;
+  }
+}
+
+@layer base {
+  .bline {
+    @apply !border !border-red-500;
+  }
+
+  .shadow-1 {
+    @apply shadow-[0px_0px_4px_0px_rgba(0,_0,_0,_0.1)];
+  }
+
+  .custom-prose {
+    @apply prose prose-sm lg:prose lg:max-w-none prose-li:my-0 [&>p>a]:text-blue-500 [&>p>a]:no-underline [&>p>a]:hover:underline [&>figure.image>img]:mx-auto [&>figure.image>img]:block [&>figure.image>img]:border [&>figure.image>img]:border-gray-200 !text-gray-800 [&>p>span.text-tiny]:text-[10px] [&>p>span.text-small]:text-xs [&>p>span.text-big]:text-lg [&>p>span.text-huge]:text-xl [&>p>span.text-tiny]:lg:text-xs [&>p>span.text-small]:lg:text-sm [&>p>span.text-big]:lg:text-xl [&>p>span.text-huge]:lg:text-2xl;
+  }
+}
+
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  @keyframes accordion-down {
+  from {
+    height: 0;
+    }
+  to {
+    height: var(--reka-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+  from {
+    height: var(--reka-accordion-content-height);
+    }
+  to {
+    height: 0;
+    }
+  }
+}
+
+/* @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */

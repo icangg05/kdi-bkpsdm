@@ -1,0 +1,10 @@
+{
+  "files": [
+    "resources/views/app.blade.php",
+    "resources/views/layouts/app/dashboard.blade.php",
+    "resources/views/layouts/auth/auth.blade.php"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}
