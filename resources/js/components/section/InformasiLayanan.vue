@@ -1,157 +1,183 @@
-<script setup>
-import { router } from '@inertiajs/vue3'
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3'
+import { useIntersectionObserver } from '@vueuse/core'
 import {
-  HeartCrack, TrendingUp, Briefcase, Shuffle, BookOpen,
-  Clock, FileBadge, ClipboardList, BadgePlus, Shield, Award,
-  CalendarCheck, Users, Home
+  ArrowRight,
+  ArrowUpRight,
+  Award,
+  BadgePlus,
+  BookOpen,
+  Briefcase,
+  CalendarCheck,
+  ClipboardList,
+  Clock,
+  FileBadge,
+  HeartCrack,
+  Home,
+  Shield,
+  Shuffle,
+  TrendingUp,
+  Users,
 } from 'lucide-vue-next'
+import { ref } from 'vue'
 
+// Pengelompokan mengikuti sifat tautannya, bukan kategori karangan:
+// halaman layanan dikelola di dashboard, aplikasi dikelola instansi lain.
 const layanan = [
-  {
-    label: 'My ASN',
-    desc: 'Portal ASN Digital BKN untuk data kepegawaian dan layanan personal',
-    link: 'https://asndigital.bkn.go.id/',
-    icon: Users,
-    is_blank: true
-  },
-  {
-    label: 'TAPERA',
-    desc: 'Tabungan Perumahan Rakyat untuk ASN',
-    link: 'https://sitara.tapera.go.id/peserta/login',
-    icon: Home,
-    is_blank: true
-  },
-  {
-    label: 'Pensiun',
-    desc: 'Informasi dan prosedur pengajuan pensiun ASN',
-    link: route('layanan.detail', 'pensiun'),
-    icon: CalendarCheck,
-    is_blank: false
-  },
-  {
-    label: 'Penghargaan',
-    desc: 'Pengajuan dan informasi penghargaan untuk ASN',
-    link: route('layanan.detail', 'penghargaan'),
-    icon: Award,
-    is_blank: false
-  },
-  {
-    label: 'Cuti ASN',
-    desc: 'Alur pengajuan cuti bagi PNS dan PPPK',
-    link: route('layanan.detail', 'cuti-asn'),
-    icon: CalendarCheck,
-    is_blank: false
-  },
-  {
-    label: 'Cerai',
-    desc: 'Pengurusan izin perceraian ASN sesuai peraturan',
-    link: route('layanan.detail', 'cerai'),
-    icon: HeartCrack,
-    is_blank: false
-  },
-  {
-    label: 'Kenaikan Pangkat',
-    desc: 'Layanan kenaikan pangkat dan inpassing pensiun',
-    link: route('layanan.detail', 'kenaikan-pangkat'),
-    icon: TrendingUp,
-    is_blank: false
-  },
-  {
-    label: 'Jabatan Fungsional',
-    desc: 'Informasi dan pembinaan jabatan fungsional ASN',
-    link: route('layanan.detail', 'jabatan-fungsional'),
-    icon: Briefcase,
-    is_blank: false
-  },
-  {
-    label: 'Mutasi Pegawai',
-    desc: 'Proses mutasi antar unit kerja atau instansi',
-    link: route('layanan.detail', 'mutasi-pegawai'),
-    icon: Shuffle,
-    is_blank: false
-  },
-  {
-    label: 'Tugas Belajar',
-    desc: 'Ketentuan dan proses pengajuan tugas belajar ASN',
-    link: route('layanan.detail', 'tugas-belajar'),
-    icon: BookOpen,
-    is_blank: false
-  },
-  {
-    label: 'Absensi Online',
-    desc: 'Sistem absensi digital ASN Kota Kendari',
-    link: 'https://asn.kendarikota.go.id',
-    icon: Clock,
-    is_blank: true
-  },
-  {
-    label: 'SI-TPPNS',
-    desc: 'Sistem Tambahan Penghasilan Pegawai ASN Kota Kendari',
-    link: 'https://sitppns.kendarikota.go.id',
-    icon: FileBadge,
-    is_blank: true
-  },
-  {
-    label: 'Konsultasi Kinerja',
-    desc: 'Evaluasi dan penyusunan SKP ASN yang efektif',
-    link: route('layanan.detail', 'konsultasi-kinerja'),
-    icon: ClipboardList,
-    is_blank: false
-  },
-  {
-    label: 'Disiplin',
-    desc: 'Informasi kewajiban, larangan, dan konsultasi disiplin ASN',
-    link: route('layanan.detail', 'disiplin'),
-    icon: Shield,
-    is_blank: false
-  },
-  {
-    label: 'COC Manajemen ASN',
-    desc: 'Manajemen kode etik dan perilaku ASN (COC)',
-    link: route('layanan.detail', 'coc-manajemen-asn'),
-    icon: BadgePlus,
-    is_blank: false
-  },
+  { label: 'Pensiun', desc: 'Prosedur dan syarat pengajuan pensiun ASN', slug: 'pensiun', icon: CalendarCheck },
+  { label: 'Kenaikan Pangkat', desc: 'Kenaikan pangkat dan inpassing pensiun', slug: 'kenaikan-pangkat', icon: TrendingUp },
+  { label: 'Cuti ASN', desc: 'Alur pengajuan cuti bagi PNS dan PPPK', slug: 'cuti-asn', icon: CalendarCheck },
+  { label: 'Mutasi Pegawai', desc: 'Mutasi antar unit kerja atau instansi', slug: 'mutasi-pegawai', icon: Shuffle },
+  { label: 'Jabatan Fungsional', desc: 'Informasi dan pembinaan jabatan fungsional', slug: 'jabatan-fungsional', icon: Briefcase },
+  { label: 'Tugas Belajar', desc: 'Ketentuan dan proses pengajuan tugas belajar', slug: 'tugas-belajar', icon: BookOpen },
+  { label: 'Penghargaan', desc: 'Pengajuan dan informasi penghargaan ASN', slug: 'penghargaan', icon: Award },
+  { label: 'Konsultasi Kinerja', desc: 'Evaluasi dan penyusunan SKP ASN', slug: 'konsultasi-kinerja', icon: ClipboardList },
+  { label: 'Disiplin', desc: 'Kewajiban, larangan, dan konsultasi disiplin', slug: 'disiplin', icon: Shield },
+  { label: 'COC Manajemen ASN', desc: 'Kode etik dan perilaku ASN', slug: 'coc-manajemen-asn', icon: BadgePlus },
+  { label: 'Cerai', desc: 'Pengurusan izin perceraian sesuai peraturan', slug: 'cerai', icon: HeartCrack },
 ]
 
-function toPage(link, isBlank) {
-  if (!isBlank)
-    return router.visit(link)
-  else
-    window.open(link, '_blank')
-}
+const aplikasi = [
+  { label: 'My ASN', desc: 'Portal ASN Digital BKN', link: 'https://asndigital.bkn.go.id/', icon: Users },
+  { label: 'Absensi Online', desc: 'Absensi digital ASN Kota Kendari', link: 'https://asn.kendarikota.go.id', icon: Clock },
+  { label: 'SI-TPPNS', desc: 'Tambahan penghasilan pegawai ASN', link: 'https://sitppns.kendarikota.go.id', icon: FileBadge },
+  { label: 'TAPERA', desc: 'Tabungan Perumahan Rakyat untuk ASN', link: 'https://sitara.tapera.go.id/peserta/login', icon: Home },
+]
+
+// Stagger dipicu saat seksi masuk viewport, bukan saat mount: seksi ini di
+// bawah lipatan, dan animasi yang selesai sebelum dilihat sama saja dengan
+// tidak ada animasi. IntersectionObserver, bukan listener scroll.
+const seksi = ref<HTMLElement | null>(null)
+const terlihat = ref(false)
+
+const { stop } = useIntersectionObserver(
+  seksi,
+  ([entry]) => {
+    if (!entry?.isIntersecting) return
+    terlihat.value = true
+    stop()
+  },
+  { rootMargin: '-10% 0px' },
+)
+
+// Kaca gelap: translusen + garis tepi terang di dalam, bukan sekadar blur.
+// Kelas `kartu-kaca` di <style> membawa sorotan tepi dan cadangan solid untuk
+// prefers-reduced-transparency, yang tidak punya utility Tailwind.
+const kartu =
+  'kartu-kaca group flex h-full items-start justify-between gap-4 rounded-card bg-white/10 p-5 ring-1 ring-white/15 backdrop-blur-md transition duration-300 hover:bg-white/[0.16] hover:ring-white/30 hover:scale-[1.02] active:scale-[0.99]'
 </script>
 
 <template>
-  <section id="layanan" class="relative bg-black/70 select-none">
-    <!-- Gambar background dengan filter grayscale -->
-    <div class="absolute inset-0">
-      <img
-        src="https://images.unsplash.com/photo-1669295384050-a1d4357bd1d7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        class="w-full h-full object-cover filter grayscale" alt="Background" />
-      <div class="absolute inset-0 bg-sky-700/40"></div>
-    </div>
+  <section id="layanan" ref="seksi" class="relative isolate overflow-hidden py-16 lg:py-24">
+    <!-- Latar dikembalikan seperti versi sebelumnya, tetapi memakai aset milik
+         instansi di public/img, bukan foto stok yang di-hotlink dari luar. -->
+    <img src="/img/bg-layanan.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"
+      class="absolute inset-0 -z-10 size-full object-cover" />
+    <div class="absolute inset-0 -z-10 bg-brand-900/80"></div>
 
-    <div class="relative z-10 container py-20 text-white/85">
-      <div>
-        <LayoutGrid class="size-10 lg:size-12" />
-        <h2 class="mt-3 mb-3 text-2xl lg:text-3xl font-bold">Informasi Layanan</h2>
-        <p class="text-sm mb-8 max-w-xl">
-          Temukan informasi lengkap tentang layanan kepegawaian yang disediakan oleh BKPSDM Kota Kendari. Setiap layanan
-          dirancang untuk mendukung transparansi, efisiensi, dan kemudahan akses bagi ASN.
-        </p>
-      </div>
+    <div class="container">
+      <h2 class="text-2xl font-bold text-white lg:text-3xl">Informasi Layanan</h2>
+      <p class="mt-2 max-w-2xl text-sm text-brand-200 lg:text-base">
+        Prosedur, syarat, dan tautan sistem untuk urusan kepegawaian ASN Kota Kendari.
+      </p>
 
-      <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        <span v-for="(item, index) in layanan" :key="index" @click="toPage(item.link, item.is_blank)"
-          class="cursor-pointer text-center p-6 bg-black/25 backdrop-blur-lg hover:bg-white/10 transition ease-in-out rounded-md">
-          <div class="flex justify-center mb-2">
-            <component :is="item.icon" class="text-sky-500 size-10" />
-          </div>
-          <p class="font-bold text-sm lg:text-lg">{{ item.label }}</p>
-          <p class="mt-1 text-xs lg:text-sm opacity-80">{{ item.desc }}</p>
-        </span>
-      </div>
+      <h3 class="mt-10 text-base font-semibold text-white">Layanan Kepegawaian</h3>
+      <ul class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <li v-for="(item, i) in layanan" :key="item.slug" :style="{ '--i': i }"
+          :class="terlihat && 'kartu-masuk'">
+          <Link :href="route('layanan.detail', item.slug)" :class="kartu">
+          <span class="flex items-center gap-4">
+            <span class="grid size-10 shrink-0 place-items-center rounded-control bg-white/10 ring-1 ring-white/15">
+              <component :is="item.icon" class="size-5 text-white" aria-hidden="true" />
+            </span>
+            <span class="min-w-0">
+              <span class="block font-semibold text-white">
+                {{ item.label }}
+              </span>
+              <span class="mt-0.5 block text-sm leading-snug text-brand-200">{{ item.desc }}</span>
+            </span>
+          </span>
+          <ArrowRight
+            class="mt-2.5 size-5 shrink-0 text-white/60 transition duration-300 group-hover:translate-x-1 group-hover:text-white"
+            aria-hidden="true" />
+          </Link>
+        </li>
+      </ul>
+
+      <h3 class="mt-12 text-base font-semibold text-white">Aplikasi dan Portal</h3>
+      <ul class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <li v-for="(item, i) in aplikasi" :key="item.link" :style="{ '--i': i }"
+          :class="terlihat && 'kartu-masuk'">
+          <a :href="item.link" target="_blank" rel="noopener noreferrer" :class="kartu">
+            <span class="flex items-center gap-4">
+              <span class="grid size-10 shrink-0 place-items-center rounded-control bg-white/10 ring-1 ring-white/15">
+                <component :is="item.icon" class="size-5 text-white" aria-hidden="true" />
+              </span>
+              <span class="min-w-0">
+                <span class="block font-semibold text-white">
+                  {{ item.label }}
+                  <span class="sr-only">(membuka situs lain di tab baru)</span>
+                </span>
+                <span class="mt-0.5 block text-sm leading-snug text-brand-200">{{ item.desc }}</span>
+              </span>
+            </span>
+            <!-- Panah serong khusus tautan keluar, panah lurus untuk halaman
+                 sendiri: bentuknya ikut memberi tahu ke mana perginya. -->
+            <ArrowUpRight
+              class="mt-2.5 size-5 shrink-0 text-white/60 transition duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
+              aria-hidden="true" />
+          </a>
+        </li>
+      </ul>
     </div>
   </section>
 </template>
+
+<style scoped>
+/* Sorotan tepi dalam: yang membuat kaca terbaca sebagai lempeng bening, bukan
+   sekadar kotak transparan. Tidak ada utility Tailwind untuk inset shadow ini. */
+.kartu-kaca {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 10px 30px rgb(20 33 61 / 0.35);
+}
+
+/* Sebagian pengguna mematikan efek transparan di setelan sistem. Untuk mereka
+   kartunya jadi bidang padat, bukan kaca yang blurnya hilang lalu teksnya
+   menumpuk di atas foto. */
+@media (prefers-reduced-transparency: reduce) {
+  .kartu-kaca {
+    background-color: var(--color-brand-800);
+    backdrop-filter: none;
+    box-shadow: 0 10px 30px rgb(20 33 61 / 0.35);
+  }
+}
+
+/* `backwards`, bukan `both`: `both` mengunci transform setelah animasi selesai
+   dan membuat hover:scale pada kartu tidak lagi berpengaruh. */
+.kartu-masuk {
+  animation: kartu-naik 0.5s cubic-bezier(0.22, 0.9, 0.3, 1) backwards;
+  /* Dibatasi enam langkah: tanpa itu kartu ke-15 baru mulai setelah 675 ms,
+     dan orang yang datang mencari satu layanan menunggu lebih dari sedetik
+     sebelum daftarnya lengkap. */
+  animation-delay: calc(min(var(--i, 0), 6) * 45ms);
+}
+
+@keyframes kartu-naik {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kartu-masuk {
+    animation: none;
+  }
+}
+</style>

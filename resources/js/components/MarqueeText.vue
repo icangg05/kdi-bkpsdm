@@ -1,7 +1,7 @@
 <template>
-  <div ref="container" class="overflow-hidden w-full" :class="containerClass" @mouseenter="handleMouseEnter"
+  <div ref="container" class="w-full overflow-hidden" :class="containerClass" @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave">
-    <div ref="track" class="inline-flex whitespace-nowrap will-change-transform" :style="trackStyle">
+    <div class="marquee-track inline-flex whitespace-nowrap" :style="trackStyle">
       <div class="marquee-item pr-8" ref="item">
         <slot>{{ text }}</slot>
       </div>
@@ -13,12 +13,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, nextTick, computed } from 'vue'
+import { useElementSize, usePreferredReducedMotion } from '@vueuse/core'
+import { computed, ref } from 'vue'
 
 interface Props {
   text?: string | number
-  speed?: number // pixels per second
+  speed?: number // piksel per detik
   pauseOnHover?: boolean
+  paused?: boolean
   className?: string
 }
 
@@ -26,60 +28,47 @@ const props = withDefaults(defineProps<Props>(), {
   text: '',
   speed: 100,
   pauseOnHover: true,
-  className: ''
+  paused: false,
+  className: '',
 })
 
 const container = ref<HTMLDivElement | null>(null)
-const track = ref<HTMLDivElement | null>(null)
 const item = ref<HTMLDivElement | null>(null)
-const animating = ref(true)
-const duration = ref(0)
+const hovered = ref(false)
+const reduced = usePreferredReducedMotion()
+
+// useElementSize memakai ResizeObserver, jadi lebar ikut terhitung ulang saat
+// font selesai dimuat atau layar berubah, tanpa listener resize manual.
+const { width: containerW } = useElementSize(container)
+const { width: itemW } = useElementSize(item)
 
 const containerClass = computed(() => props.className)
 
-function calc() {
-  if (!container.value || !item.value) return
-  const containerW = container.value.getBoundingClientRect().width
-  const itemW = item.value.getBoundingClientRect().width
-  const distance = Math.max(itemW, containerW)
-
-  // Deteksi mobile: kalau <= 768px lebar layar
-  const isMobile = window.innerWidth <= 768
-  const baseSpeed = props.speed > 0 ? props.speed : 100
-  const adjustedSpeed = isMobile ? baseSpeed / 2 : baseSpeed
-
-  duration.value = adjustedSpeed > 0 ? distance / adjustedSpeed : 0
-}
-
-// function calc() {
-//   if (!container.value || !item.value) return
-//   const containerW = container.value.getBoundingClientRect().width
-//   const itemW = item.value.getBoundingClientRect().width
-//   const distance = Math.max(itemW, containerW)
-//   duration.value = props.speed > 0 ? distance / props.speed : 0
-// }
-
-onMounted(async () => {
-  await nextTick()
-  calc()
-  window.addEventListener('resize', calc)
+const duration = computed(() => {
+  const distance = Math.max(itemW.value, containerW.value)
+  const isMobile = containerW.value <= 768
+  const base = props.speed > 0 ? props.speed : 100
+  const kecepatan = isMobile ? base / 2 : base
+  return kecepatan > 0 ? distance / kecepatan : 0
 })
 
-watch(() => props.text, async () => {
-  await nextTick()
-  calc()
-})
+const berhenti = computed(
+  () => reduced.value === 'reduce' || props.paused || (props.pauseOnHover && hovered.value),
+)
 
-const trackStyle = computed(() => ({
-  '--marquee-duration': `${duration.value}s`,
-  animationPlayState: animating.value ? 'running' : 'paused'
-} as Record<string, string>))
+const trackStyle = computed(
+  () =>
+    ({
+      '--marquee-duration': `${duration.value}s`,
+      animationPlayState: berhenti.value ? 'paused' : 'running',
+    }) as Record<string, string>,
+)
 
 function handleMouseEnter() {
-  if (props.pauseOnHover) animating.value = false
+  hovered.value = true
 }
 function handleMouseLeave() {
-  if (props.pauseOnHover) animating.value = true
+  hovered.value = false
 }
 </script>
 
@@ -98,11 +87,19 @@ function handleMouseLeave() {
   display: inline-block;
 }
 
-[ref="track"],
-.inline-flex {
+/* Selektor sebelumnya adalah `.inline-flex`, sehingga setiap elemen inline-flex
+   di dalam slot ikut dianimasikan. Sekarang dikunci ke kelas milik track. */
+.marquee-track {
   animation-name: marquee-scroll;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-duration: var(--marquee-duration, 10s);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 </style>

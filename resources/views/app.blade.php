@@ -24,12 +24,19 @@
 
 	<link rel="icon" href="{{ asset('img/logo-kendari.png') }}" type="image/x-icon" />
 
+	{{-- Font dimuat lewat <link> + preconnect, bukan @import di dalam CSS,
+	     agar unduhannya tidak menunggu stylesheet selesai diparsing. --}}
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
 	@routes
 	@vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
 	@inertiaHead
 </head>
 
-<body class="font-roboto antialiased">
+<body class="font-sans antialiased">
 	@inertia
 </body>
 

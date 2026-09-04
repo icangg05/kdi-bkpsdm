@@ -1,48 +1,53 @@
 <script setup lang="ts">
 import BgOverlay from '@/components/BgOverlay.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from 'lucide-vue-next';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { Head, usePage } from '@inertiajs/vue3';
+import {
+  Clock,
+  ExternalLink,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+} from 'lucide-vue-next';
+import { computed } from 'vue';
 
-const page = usePage();
-const title = page.props.title as string;
-const halaman = page.props.halaman
-// console.log(halaman)
+const page = usePage()
+const title = page.props.title as string
+const pengaturan = (page.props.pengaturan ?? []) as any[]
 
-const breadcrumbItems = [
-  {
-    label: 'Beranda',
-    link: route('beranda'),
-  },
-  {
-    label: halaman == 'hubungi-kami' ? 'Kontak' : 'Layanan',
-    link: halaman == 'hubungi-kami' ? '#' : route('layanan'),
-  },
-  {
-    label: title,
-    link: '#',
-  },
-];
+const nilai = (nama: string) => pengaturan.find((item: any) => item.nama_pengaturan == nama)?.value ?? null
 
-const props = page.props
-const data = props.data as any
+const alamat = nilai('alamat')
+const noHp = nilai('no_hp')
+const emailDinas = nilai('email_dinas')
+const jamOperasional = nilai('jam_operasional')
 
-const pengaturan = page.props.pengaturan as any
+const petaUrl = computed(() =>
+  alamat ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}` : null,
+)
 
-const email_dinas = pengaturan.find((item: any) => item.nama_pengaturan == 'email_dinas')?.value
-const no_hp = pengaturan.find((item: any) => item.nama_pengaturan == 'no_hp')?.value
-const alamat = pengaturan.find((item: any) => item.nama_pengaturan == 'alamat')?.value
-const fb = pengaturan.find((item: any) => item.nama_pengaturan == 'fb')?.value
-const ig = pengaturan.find((item: any) => item.nama_pengaturan == 'ig')?.value
-const tt = pengaturan.find((item: any) => item.nama_pengaturan == 'tt')?.value
-const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
+// Akun yang belum diisi admin disimpan sebagai '#'. Menampilkannya berarti
+// menjanjikan kanal yang tidak ada, jadi yang '#' atau kosong tidak dirender.
+const sosial = computed(() =>
+  [
+    { nama: 'Facebook', ikon: Facebook, url: nilai('fb') },
+    { nama: 'Instagram', ikon: Instagram, url: nilai('ig') },
+    { nama: 'YouTube', ikon: Youtube, url: nilai('yt') },
+    { nama: 'Twitter', ikon: Twitter, url: nilai('tt') },
+  ].filter((item) => item.url && item.url !== '#'),
+)
 </script>
 
 <template>
@@ -50,109 +55,133 @@ const yt = pengaturan.find((item: any) => item.nama_pengaturan == 'yt')?.value
   <Head :title="title" />
 
   <AppLayout>
-    <BgOverlay :src="halaman == 'hubungi-kami' ? '/img/bg-hubungi-kami.jpg' : '/img/bg-layanan.jpg'">
-      <div class="relative">
-        <h2 class="z-0 text-3xl lg:text-[36px] font-bold leading-tight tracking-wide text-white">
-          {{ title }}
-        </h2>
-        <span
-          class="pointer-events-none text-[3.5rem] lg:text-[7rem] text-white/10 font-bold z-[-1] top-3 lg:top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 absolute">
-          BKPSDM
-        </span>
-      </div>
-      <div class="flex">
-        <Breadcrumb class="mx-auto mt-4 lg:mt-5 text-white/85">
-          <BreadcrumbList>
-            <BreadcrumbItem v-for="(item, index) in breadcrumbItems" :key="index">
-              <BreadcrumbLink as-child class="hover:underline text-sm lg:text-base">
-                <Link :href="item.link">
-                {{ item.label }}
-                </Link>
-              </BreadcrumbLink>
-              <BreadcrumbSeparator v-if="breadcrumbItems.length - 1 != index" class="ml-0.5 text-sky-400" />
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <BgOverlay src="/img/bg-hubungi-kami.jpg">
+      <h1 class="text-2xl font-bold leading-[1.15] text-white sm:text-3xl lg:text-[2.6rem]">{{ title }}</h1>
+      <span class="mx-auto mt-4 block h-1 w-16 rounded-full bg-gold-500" aria-hidden="true"></span>
+
+      <Breadcrumb class="mt-5">
+        <BreadcrumbList class="justify-center text-brand-100">
+          <BreadcrumbItem>
+            <BreadcrumbLink :href="route('beranda')" class="text-sm hover:text-white hover:underline lg:text-base">
+              Beranda
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator class="text-brand-200/70" />
+          <BreadcrumbItem>
+            <BreadcrumbPage class="text-sm text-white lg:text-base">{{ title }}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
     </BgOverlay>
 
-    <!-- Konten Dinamis -->
-    <section v-if="data" class="py-12 px-4 max-w-6xl mx-auto">
-      <div class="bg-white shadow-lg rounded-xl p-8 lg:p-12">
-        <h3 class="text-2xl font-bold mb-8 border-b pb-4 text-center uppercase">{{ title }}</h3>
-
-        <div class="grid lg:grid-cols-2 gap-10">
-          <!-- Kolom Kiri -->
-          <div>
-            <h4 class="text-lg font-semibold mb-2">BKPSDM Kota Kendari</h4>
-            <p class="font-medium">Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Kendari</p>
-            <p class="mt-4">
-              {{ alamat ?? '-' }}<br />
-              Telp / Fax. {{ no_hp ?? '-' }}
-            </p>
-            <p class="mt-4">
-              <span class="font-semibold">E-Mail:</span>&nbsp;
-              <a :href="`mailto:${email_dinas}`" class="text-sky-700 hover:underline">
-                {{ email_dinas ?? '-' }}
-              </a>
-            </p>
-            <p>
-              <span class="font-semibold">Web:</span>&nbsp;
-              <a href="https://bkpsdm.kendarikota.go.id" target="_blank" class="text-sky-700 hover:underline">
-                bkpsdm.kendarikota.go.id
-              </a>
-            </p>
-          </div>
-
-          <!-- Kolom Kanan -->
-          <div class="flex flex-col justify-center">
-            <div>
-              <p class="font-semibold text-gray-700 mb-2">
-                Saran / Kritik / Pertanyaan silahkan disampaikan melalui E-Mail:
-              </p>
-              <a :href="`mailto:${email_dinas}`" class="text-lg font-bold text-sky-700 hover:underline">
-                {{ email_dinas ?? '-' }}
-              </a>
-            </div>
-            <div class="flex gap-6 mt-10">
-              <a :href="fb" target="_blank" class="text-sky-700 hover:text-sky-900">
-                <Facebook class="w-8 h-8" />
-              </a>
-              <a :href="tt" target="_blank" class="text-sky-400 hover:text-sky-600">
-                <Twitter class="w-8 h-8" />
-              </a>
-              <a :href="ig" target="_blank" class="text-pink-600 hover:text-pink-800">
-                <Instagram class="w-8 h-8" />
-              </a>
-              <a :href="yt" target="_blank" class="text-red-600 hover:text-red-800">
-                <Youtube class="w-8 h-8" />
-              </a>
-            </div>
-          </div>
-        </div>
+    <section class="relative isolate overflow-hidden bg-surface-2 py-12 lg:py-16">
+      <div aria-hidden="true"
+        class="absolute inset-0 -z-10 opacity-[0.35] [background-image:radial-gradient(var(--color-brand-200)_1px,transparent_1px)] [background-size:22px_22px]">
       </div>
-    </section>
-    <!-- <section v-if="data" class="py-12 px-4 max-w-6xl mx-auto">
-      <div class="bg-white shadow-lg rounded-xl p-6">
-        <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-center uppercase">{{ title }}</h3>
-        <div class="mb-6 custom-prose" v-html="convertOembed(refactorFormat(data.isi ?? ''))" />
+      <div aria-hidden="true" class="absolute -right-24 -top-24 -z-10 size-72 rounded-full bg-brand-200/40 blur-3xl"></div>
+      <div aria-hidden="true" class="absolute -bottom-32 -left-24 -z-10 size-80 rounded-full bg-gold-400/20 blur-3xl">
+      </div>
 
-        <div v-if="data.lampiran" class="flex flex-wrap gap-2">
-          <a :href="`/storage/${data.lampiran}`" target="_blank"
-            onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;"
-            class="inline-block bg-sky-700 text-white text-sm px-6 py-2 rounded-md shadow hover:bg-sky-800">
-            {{ getOriginalFilename(data.lampiran) }}
+      <div class="container grid gap-6 lg:grid-cols-12 lg:gap-8">
+        <!-- Informasi kontak datang dari tabel pengaturan, bukan dari record
+             Halaman. Dulu seluruh blok ini ada di balik `v-if="data"`, jadi
+             halaman kosong melompong bila admin belum membuat halamannya. -->
+        <div class="min-w-0 rounded-card bg-white p-6 ring-1 ring-line lg:col-span-7 lg:p-8">
+          <h2 class="text-lg font-bold text-ink lg:text-xl">Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h2>
+          <p class="mt-1 text-sm text-ink-soft">Pemerintah Kota Kendari</p>
+          <span class="mt-5 block h-1 w-12 rounded-full bg-gold-500" aria-hidden="true"></span>
+
+          <ul class="mt-6 flex flex-col divide-y divide-line">
+            <li v-if="alamat" class="flex items-start gap-4 py-4 first:pt-0">
+              <span class="grid size-11 shrink-0 place-items-center rounded-control bg-brand-50 text-brand-700">
+                <MapPin class="size-5" aria-hidden="true" />
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink">Alamat kantor</p>
+                <p class="mt-1 text-sm leading-relaxed text-ink-soft">{{ alamat }}</p>
+                <a v-if="petaUrl" :href="petaUrl" target="_blank" rel="noopener noreferrer"
+                  class="group mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition hover:text-brand-800">
+                  Buka di Google Maps
+                  <ExternalLink class="size-3.5" aria-hidden="true" />
+                  <span class="sr-only">(membuka situs lain di tab baru)</span>
+                </a>
+              </div>
+            </li>
+
+            <li v-if="noHp" class="flex items-start gap-4 py-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-control bg-brand-50 text-brand-700">
+                <Phone class="size-5" aria-hidden="true" />
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink">Telepon</p>
+                <a :href="`tel:${noHp}`"
+                  class="mt-1 inline-block text-sm font-semibold text-brand-700 transition hover:text-brand-800">
+                  {{ noHp }}
+                </a>
+              </div>
+            </li>
+
+            <li v-if="emailDinas" class="flex items-start gap-4 py-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-control bg-brand-50 text-brand-700">
+                <Mail class="size-5" aria-hidden="true" />
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink">Surel</p>
+                <a :href="`mailto:${emailDinas}`"
+                  class="mt-1 inline-block break-all text-sm font-semibold text-brand-700 transition hover:text-brand-800">
+                  {{ emailDinas }}
+                </a>
+              </div>
+            </li>
+
+            <li v-if="jamOperasional" class="flex items-start gap-4 py-4 last:pb-0">
+              <span class="grid size-11 shrink-0 place-items-center rounded-control bg-brand-50 text-brand-700">
+                <Clock class="size-5" aria-hidden="true" />
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink">Jam pelayanan</p>
+                <p class="mt-1 text-sm text-ink-soft">{{ jamOperasional }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Ajakan menyampaikan saran, di bidang gelap supaya jadi satu titik
+             aksi yang jelas, bukan paragraf yang tenggelam. -->
+        <div
+          class="relative isolate min-w-0 overflow-hidden rounded-card bg-brand-900 bg-cover bg-center p-6 text-white lg:col-span-5 lg:p-8"
+          style="background-image: url('/img/bg-hubungi-kami.jpg')">
+          <div class="absolute inset-0 -z-10 bg-brand-900/90" aria-hidden="true"></div>
+          <div aria-hidden="true" class="absolute -right-12 -top-12 -z-10 size-48 rounded-full bg-gold-400/20 blur-3xl">
+          </div>
+
+          <h2 class="text-lg font-bold lg:text-xl">Saran, kritik, atau pertanyaan</h2>
+          <p class="mt-2 text-sm leading-relaxed text-brand-100">
+            Sampaikan melalui surel resmi kami. Setiap pesan yang masuk ditindaklanjuti pada jam
+            pelayanan.
+          </p>
+
+          <a v-if="emailDinas" :href="`mailto:${emailDinas}`"
+            class="mt-6 inline-flex items-center gap-2 rounded-control bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 active:translate-y-px">
+            <Mail class="size-4" aria-hidden="true" />
+            Kirim surel
           </a>
+
+          <div v-if="sosial.length" class="mt-8 border-t border-white/15 pt-6">
+            <p class="text-sm font-semibold">Ikuti kanal resmi kami</p>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              <li v-for="item in sosial" :key="item.nama">
+                <a :href="item.url" target="_blank" rel="noopener noreferrer"
+                  class="grid size-11 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 motion-reduce:transition-none">
+                  <component :is="item.ikon" class="size-5" aria-hidden="true" />
+                  <span class="sr-only">{{ item.nama }} BKPSDM Kota Kendari (membuka situs lain di tab baru)</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+
       </div>
     </section>
-    <section v-else class="py-12 px-4 max-w-6xl mx-auto">
-      <div class="bg-white shadow-lg rounded-xl p-6">
-        <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-center uppercase">{{ title }}</h3>
-        <div class="mb-4 custom-prose">
-          <p class="text-center text-gray-600">Belum ada data</p>
-        </div>
-      </div>
-    </section> -->
   </AppLayout>
 </template>

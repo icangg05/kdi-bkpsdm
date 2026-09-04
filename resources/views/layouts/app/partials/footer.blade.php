@@ -33,7 +33,7 @@
 </script>
 
 <script>
-	font_change('Roboto');
+	font_change('IBM Plex Sans');
 </script>
 
 <script>

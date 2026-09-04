@@ -23,10 +23,15 @@ class RegulasiController extends Controller
         $query->where('slug', $kategori);
       });
 
-    $data = $data->paginate(6);
+    // withQueryString: tanpa ini kata kunci hilang begitu pengguna pindah ke
+    // halaman 2, dan hasil pencarian berubah jadi seluruh regulasi.
+    $data = $data->paginate(6)->withQueryString();
 
     // dd($kategoriRegulasi);
-    return Inertia::render('Regulasi', compact('data', 'kategoriRegulasi', 'kategori'));
+    return Inertia::render('Regulasi', [
+      ...compact('data', 'kategoriRegulasi', 'kategori'),
+      'q' => request()->q,
+    ]);
   }
 
   public function download($id)

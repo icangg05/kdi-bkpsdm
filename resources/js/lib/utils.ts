@@ -30,10 +30,27 @@ export function convertOembed(html: string) {
   );
 }
 
-export function getYoutubeId(url: string) {
-  const urlObj = new URL(url);
-  const videoId = urlObj.searchParams.get('v');
-  return videoId
+// Link diketik admin di dashboard, jadi bentuknya tidak dijamin.
+// Menangani watch?v=, youtu.be/, /embed/, /shorts/, dan mengembalikan null
+// (bukan melempar) untuk teks yang bukan URL.
+export function getYoutubeId(url: string): string | null {
+  try {
+    const urlObj = new URL(url);
+    const dariQuery = urlObj.searchParams.get('v');
+    if (dariQuery) return dariQuery;
+
+    const segmen = urlObj.pathname.split('/').filter(Boolean);
+    if (urlObj.hostname.includes('youtu.be')) return segmen[0] ?? null;
+    if (segmen[0] === 'embed' || segmen[0] === 'shorts') return segmen[1] ?? null;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function getYoutubeThumbnail(url: string) {
+  const id = getYoutubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '/img/default-publikasi.png';
 }
 
 export function getYoutubeEmbedUrl(url: string) {

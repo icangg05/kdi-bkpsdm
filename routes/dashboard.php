@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\BackupController;
 use App\Http\Controllers\Dashboard\BagianController;
 use App\Http\Controllers\Dashboard\BeritaController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -96,4 +97,10 @@ Route::middleware(['auth'])
     Route::resource('/unit-organisasi', UnitOranisasiController::class)->except(['show', 'put']);
 
     Route::resource('/user', UserController::class)->except(['show']);
+
+    // BACKUP DATABASE
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+    Route::post('/backup', [BackupController::class, 'store'])->name('backup.store');
+    Route::get('/backup/{file}/download', [BackupController::class, 'download'])->name('backup.download');
+    Route::delete('/backup/{file}', [BackupController::class, 'destroy'])->name('backup.destroy');
   });

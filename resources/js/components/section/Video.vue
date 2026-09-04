@@ -1,93 +1,101 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { PlayCircle } from 'lucide-vue-next'
+import ModalMedia from '@/components/ModalMedia.vue'
+import { getYoutubeEmbedUrl, getYoutubeThumbnail } from '@/lib/utils'
 import { Link } from '@inertiajs/vue3'
-import { getYoutubeEmbedUrl, getYoutubeId } from '@/lib/utils'
+import { ArrowRight, CalendarDays, Play } from 'lucide-vue-next'
+import { ref } from 'vue'
 
-const selectedVideo = ref<null | {
-  link: string
-  judul: string
-  deskripsi: string
-  tanggal: string
-}>(null)
+defineProps<{ data: any[] }>()
 
-const closeVideo = () => (selectedVideo.value = null)
-defineProps(['data'])
+const terpilih = ref<any | null>(null)
 
+// Kaca gelap yang sama dengan Informasi Layanan: translusen, garis tepi terang
+// di dalam, dan cadangan bidang padat untuk prefers-reduced-transparency.
+const kartu =
+  'kartu-kaca group flex w-full flex-col rounded-card bg-white/10 p-5 text-left ring-1 ring-white/15 backdrop-blur-md transition duration-300 hover:bg-white/[0.16] hover:ring-white/30'
 </script>
 
 <template>
-  <section class="relative overflow-hidden bg-fixed bg-cover bg-center select-none"
-    style="background-image: url('img/bg-galeri.jpg')">
-    <div class="bg-sky-700/40 backdrop-brightness-50 py-20 px-4">
-      <!-- Heading -->
-      <div class="text-center mb-12 text-white">
-        <h2 class="text-3xl font-bold">Video Kegiatan</h2>
-        <p class="mt-3 max-w-2xl mx-auto text-gray-300 text-sm lg:text-base">
-          Kumpulan video kegiatan, layanan, dan momen penting BKPSDM Kota Kendari sebagai bagian dari transparansi dan
-          profesionalisme tata kelola kepegawaian.
+  <section class="relative isolate overflow-hidden py-16 lg:py-24">
+    <img src="/img/bg-layanan.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"
+      class="absolute inset-0 -z-10 size-full object-cover" />
+    <div class="absolute inset-0 -z-10 bg-brand-900/80"></div>
+
+    <div class="container">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="text-3xl font-bold leading-tight tracking-tight text-white md:text-4xl lg:text-5xl">
+          Video Kegiatan
+        </h2>
+        <p class="mx-auto mt-5 max-w-xl text-base leading-relaxed text-brand-200 lg:text-lg">
+          Rekaman kegiatan dan sosialisasi layanan kepegawaian BKPSDM Kota Kendari.
         </p>
       </div>
 
-      <!-- Grid Video -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <div v-for="(video, index) in data" :key="index"
-          class="bg-black/40 rounded-lg backdrop-blur-sm p-5 text-white border border-white/20 hover:bg-white/20 transition-all duration-300">
-          <!-- Icon + Judul -->
-          <div class="flex items-center gap-3 mb-4">
-            <div class="flex flex-col items-center">
-              <div class="w-1 h-4 bg-sky-400 mb-1 rounded-sm"></div>
-              <PlayCircle class="size-7 text-sky-400" />
-            </div>
-            <h3 class="text-lg font-semibold cursor-pointer line-clamp-1 hover:underline"
-              @click="selectedVideo = video">
+      <!-- Kolom masoneri: tinggi kartu mengikuti panjang keterangannya sendiri,
+           seperti referensi, tanpa memotong teks agar barisnya rata. -->
+      <ul class="mt-12 gap-5 sm:columns-2 lg:columns-3">
+        <li v-for="video in data" :key="video.id" class="mb-5 break-inside-avoid">
+          <button type="button" @click="terpilih = video" :class="kartu">
+            <span class="font-semibold leading-snug text-white">
               {{ video.judul }}
-            </h3>
-          </div>
+            </span>
 
-          <!-- Deskripsi -->
-          <p class="text-gray-300 text-sm mb-4 line-clamp-2">{{ video.deskripsi }}</p>
+            <span v-if="video.deskripsi" class="mt-2 line-clamp-3 text-sm leading-relaxed text-brand-200">
+              {{ video.deskripsi }}
+            </span>
 
-          <!-- Thumbnail + Play -->
-          <div class="relative cursor-pointer group rounded-md overflow-hidden" @click="selectedVideo = video">
-            <img :src="`https://img.youtube.com/vi/${getYoutubeId(video.link)}/0.jpg`"
-              class="w-full h-48 object-cover group-hover:brightness-75 transition" alt="Video Thumbnail" />
-            <PlayCircle
-              class="absolute inset-0 m-auto size-14 text-white opacity-80 group-hover:scale-110 transition-transform" />
-          </div>
-        </div>
-      </div>
+            <span class="relative mt-4 block overflow-hidden rounded-control">
+              <img :src="getYoutubeThumbnail(video.link)" :alt="`Sampul video ${video.judul}`" loading="lazy"
+                decoding="async" class="aspect-video w-full bg-brand-800 object-cover" />
+              <span class="absolute inset-0 grid place-items-center bg-brand-900/15 transition group-hover:bg-brand-900/35">
+                <span
+                  class="grid size-16 place-items-center rounded-full bg-brand-900/45 text-white ring-1 ring-white/70 backdrop-blur-sm transition duration-300 group-hover:scale-105 group-hover:bg-brand-900/65">
+                  <Play class="size-7 translate-x-0.5 fill-current" aria-hidden="true" />
+                </span>
+              </span>
+            </span>
 
-      <!-- Bottom Section: Divider + Button -->
-      <div class="mt-16 text-center space-y-6">
-        <div class="h-1 w-24 bg-sky-400 mx-auto rounded-full"></div>
+            <span class="mt-5 flex items-center gap-2 border-t border-white/15 pt-4 text-xs text-brand-200">
+              <CalendarDays class="size-4 shrink-0" aria-hidden="true" />
+              {{ video.tanggal }}
+              <span class="sr-only">— buka pemutar video</span>
+            </span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="mt-6 flex justify-center">
         <Link :href="route('galeri-video')"
-          class="inline-flex items-center gap-2 px-6 py-2 bg-sky-400 hover:bg-sky-500 text-black font-semibold rounded-full transition">
-          <PlayCircle class="size-5" />
-          Lihat Video Lainnya
+          class="group inline-flex items-center gap-2 rounded-control bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur-md transition hover:bg-white/20 hover:ring-white/40">
+        Lihat semua video
+        <ArrowRight class="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
       </div>
     </div>
 
-    <!-- Video Popup Modal -->
-    <div v-if="selectedVideo" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center px-4">
-      <div class="relative w-full max-w-4xl space-y-4">
-        <iframe class="w-full aspect-video rounded-lg" :src="`${getYoutubeEmbedUrl(selectedVideo.link)}?autoplay=1&rel=0`" frameborder="0"
-          allowfullscreen></iframe>
-
-        <!-- Text info -->
-        <div class="text-white text-center space-y-1">
-          <h3 class="text-xl font-semibold">{{ selectedVideo.judul }}</h3>
-          <p class="text-sm text-gray-300">{{ selectedVideo.deskripsi }}</p>
-          <p class="text-xs text-gray-400">{{ selectedVideo.tanggal }}</p>
-        </div>
-
-        <!-- Close Button -->
-        <button class="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white rounded-full p-2"
-          @click="closeVideo">
-          ✕
-        </button>
-      </div>
-    </div>
+    <!-- iframe hanya dibuat saat modal terbuka, jadi tidak ada enam pemutar
+         YouTube yang ikut dimuat bersama halaman. -->
+    <ModalMedia :open="!!terpilih" @update:open="terpilih = null" :judul="terpilih?.judul"
+      :tanggal="terpilih?.tanggal" :keterangan="terpilih?.deskripsi">
+      <iframe v-if="terpilih" class="aspect-video w-full" :src="getYoutubeEmbedUrl(terpilih.link)"
+        :title="terpilih.judul" allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen></iframe>
+    </ModalMedia>
   </section>
 </template>
+
+<style scoped>
+.kartu-kaca {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 10px 30px rgb(20 33 61 / 0.35);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .kartu-kaca {
+    background-color: var(--color-brand-800);
+    backdrop-filter: none;
+    box-shadow: 0 10px 30px rgb(20 33 61 / 0.35);
+  }
+}
+</style>

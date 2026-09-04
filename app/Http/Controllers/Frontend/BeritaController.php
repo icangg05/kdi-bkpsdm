@@ -31,7 +31,9 @@ class BeritaController extends Controller
     if (request()->q)
       $data = $data->where('judul', 'like', '%' . request()->q. '%');
 
-    $data = $data->orderByDesc('tanggal')->paginate(6);
+    // withQueryString: tanpa ini kata kunci hilang saat pengguna pindah ke
+    // halaman 2, dan hasil pencarian berubah jadi seluruh terbitan.
+    $data = $data->orderByDesc('tanggal')->paginate(6)->withQueryString();
     $data->getCollection()->transform(function ($item) {
       $item->isi      = strip_tags($item->isi);                                    // tambahkan field baru jika ingin tetap simpan aslinya
       $item->tanggal  = Carbon::parse($item->tanggal)->translatedFormat('j F Y');
@@ -39,13 +41,16 @@ class BeritaController extends Controller
       return $item;
     });
 
-    $publikasiTerbaru = Berita::orderBy('tanggal')->limit(3)->get();
+    $publikasiTerbaru = Berita::orderByDesc('tanggal')->limit(3)->get();
     $publikasiTerbaru->transform(function ($item) {
       $item->tanggal = Carbon::parse($item->tanggal)->translatedFormat('j F Y');
       return $item;
     });
     // dd($data);
-    return Inertia::render('Berita', compact('data', 'title', 'publikasi', 'publikasiTerbaru'));
+    return Inertia::render('Berita', [
+      ...compact('data', 'title', 'publikasi', 'publikasiTerbaru'),
+      'q' => request()->q,
+    ]);
   }
 
   /**
@@ -58,7 +63,7 @@ class BeritaController extends Controller
     $data->tanggal = Carbon::parse($data->tanggal)->translatedFormat('j F Y');
     $data->kategori = str_replace('-', ' ', str()->title($data->kategori));
 
-    $publikasiTerbaru = Berita::orderBy('tanggal')->limit(3)->get();
+    $publikasiTerbaru = Berita::orderByDesc('tanggal')->limit(3)->get();
     $publikasiTerbaru->transform(function ($item) {
       $item->tanggal = Carbon::parse($item->tanggal)->translatedFormat('j F Y');
       return $item;

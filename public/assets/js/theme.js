@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function font_change(name) {
   const fontUrls = {
-    Roboto: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
+    'IBM Plex Sans': 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap',
     Poppins: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap',
     Inter: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap'
   };

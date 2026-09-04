@@ -3,12 +3,9 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
-import { createApp, h } from 'vue';
+import { createApp, defineAsyncComponent, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
-
-// ✅ Import ApexCharts
-import VueApexCharts from 'vue3-apexcharts';
 
 const appName = import.meta.env.VITE_APP_NAME || 'BKPSDM';
 
@@ -25,8 +22,12 @@ createInertiaApp({
     vueApp.use(plugin);
     vueApp.use(ZiggyVue);
 
-    // ✅ Register ApexCharts globally
-    vueApp.component('apexchart', VueApexCharts);
+    // ApexCharts (~130 KB gzip) hanya dipakai di grafik statistik, jadi
+    // dimuat terpisah dan tidak ikut menahan render halaman lain.
+    vueApp.component(
+      'apexchart',
+      defineAsyncComponent(() => import('vue3-apexcharts')),
+    );
 
     vueApp.mount(el);
   },

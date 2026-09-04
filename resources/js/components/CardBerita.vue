@@ -1,35 +1,41 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Calendar } from 'lucide-vue-next';
+import { ArrowRight, Calendar } from 'lucide-vue-next';
 
-const props = defineProps<{
-  data: any
-}>()
+defineProps<{ data: any }>()
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <img :src="data.sampul ? `/storage/${data.sampul}` : '/img/default-publikasi.png'" alt="Berita"
-      class="aspect-[16/10] w-full rounded-lg shadow-md object-cover" />
-    <div class="flex flex-col lg:flex-row justify-between mt-4 text-sm text-gray-500 uppercase">
-      <!-- <span class="">{{ data.kategori }}</span> -->
-      <span class="text-xs inline-flex gap-1">
-        <Calendar class="size-3" /> {{ data.tanggal }}
-      </span>
-    </div>
-    <Link :href="route('berita.show', data.slug)"
-      class=" mt-2 lg:mt-4 text-base lg:text-lg font-semibold hover:text-sky-600 cursor-pointer leading-tight line-clamp-2 transition ease-in-out">
-    {{ data.judul }}
-    </Link>
-    <p class="mt-2 lg:mt-4 text-black/55 text-sm lg:text-[15px] leading-snug line-clamp-3">
-      {{ data.isi }}
-    </p>
-    <Link :href="route('berita.show', data.slug)"
-      class="mt-3 lg:mt-4 text-sky-500 hover:underline font-medium flex items-center gap-1 text-sm">
-    Read More
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-    </svg>
-    </Link>
-  </div>
+  <!-- Satu Link membungkus seluruh kartu: sampul, judul, dan ringkasan semuanya
+       target yang sama, bukan tiga tautan kecil ke halaman yang sama. -->
+  <Link :href="route('berita.show', data.slug)"
+    class="group relative flex h-full flex-col overflow-hidden rounded-card bg-white ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:translate-y-0 motion-reduce:transition-none">
+  <span aria-hidden="true"
+    class="absolute left-0 top-0 z-10 h-1 w-0 bg-gold-500 transition-all duration-500 group-hover:w-full motion-reduce:transition-none"></span>
+
+  <span class="overflow-hidden bg-brand-50">
+    <img :src="data.sampul ? `/storage/${data.sampul}` : '/img/default-publikasi.png'" :alt="data.judul"
+      loading="lazy" decoding="async"
+      class="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100" />
+  </span>
+
+  <span class="flex flex-1 flex-col p-4 lg:p-5">
+    <span class="inline-flex items-center gap-1.5 text-xs text-ink-soft">
+      <Calendar class="size-3.5" aria-hidden="true" />
+      {{ data.tanggal }}
+    </span>
+
+    <span class="mt-2 line-clamp-2 text-base font-semibold leading-snug text-ink group-hover:text-brand-700 lg:text-lg">
+      {{ data.judul }}
+    </span>
+
+    <span class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-soft">{{ data.isi }}</span>
+
+    <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+      Baca selengkapnya
+      <ArrowRight class="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+        aria-hidden="true" />
+    </span>
+  </span>
+  </Link>
 </template>

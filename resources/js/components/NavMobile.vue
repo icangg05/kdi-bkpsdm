@@ -1,56 +1,50 @@
 <script setup lang="ts">
-// import { defineProps, defineEmits } from 'vue'
 import { menu } from '@/constant'
 import { Link } from '@inertiajs/vue3'
+import { onKeyStroke } from '@vueuse/core'
+import { X } from 'lucide-vue-next'
 
-const props = defineProps({
-  isOpen: Boolean
-})
+const props = defineProps({ isOpen: Boolean })
 const emit = defineEmits(['close'])
 
 function closeMenu() {
   emit('close')
 }
+
+// Esc menutup panel. Sebelumnya satu-satunya jalan keluar adalah menekan
+// backdrop, yang tidak terjangkau keyboard.
+onKeyStroke('Escape', () => {
+  if (props.isOpen) closeMenu()
+})
 </script>
 
 <template>
-  <!-- Animated backdrop -->
   <Transition name="fade">
-    <div
-      v-if="isOpen"
-      class="fixed inset-0 z-[99998] bg-black/80 backdrop-blur-md"
-      @click.self="closeMenu"
-    />
+    <div v-if="isOpen" class="fixed inset-0 z-[99998] bg-brand-900/80 backdrop-blur-sm" @click.self="closeMenu" />
   </Transition>
 
-  <!-- Animated sliding panel -->
   <Transition name="slide">
-    <div
-      v-if="isOpen"
-      class="fixed inset-y-0 right-0 w-4/5 max-w-sm z-[99999] bg-white/5 backdrop-blur-md text-white p-6 overflow-y-auto"
-    >
-      <!-- Close button -->
-      <div class="flex justify-end mb-4">
-        <button @click="closeMenu" class="text-white hover:text-sky-400 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
+    <div v-if="isOpen" id="menu-mobile" role="dialog" aria-modal="true" aria-label="Menu utama"
+      class="fixed inset-y-0 right-0 z-[99999] w-4/5 max-w-sm overflow-y-auto bg-brand-900 p-5 text-white">
+      <div class="flex justify-end">
+        <button type="button" @click="closeMenu"
+          class="grid size-11 place-items-center rounded-full transition hover:bg-white/10" aria-label="Tutup menu">
+          <X class="size-6" aria-hidden="true" />
         </button>
       </div>
 
-      <!-- Menu items -->
-      <ul class="space-y-6 text-base font-medium">
-        <li v-for="(item, index) in menu" :key="index">
-          <Link @click="closeMenu" :href="item.link" class="block hover:text-sky-400">
-            {{ item.label }}
+      <ul class="mt-2 space-y-1 text-base font-medium">
+        <li v-for="item in menu" :key="item.label">
+          <Link @click="closeMenu" :href="item.link"
+            class="block rounded-control px-3 py-3 transition hover:bg-white/10 hover:text-gold-400">
+          {{ item.label }}
           </Link>
 
-          <ul v-if="item.items" class="mt-2 pl-4 space-y-2 text-sm text-white/80">
-            <li v-for="(sub, subIndex) in item.items" :key="subIndex">
-              <Link @click="closeMenu" :href="sub.link" class="block hover:text-sky-400">
-                {{ sub.label }}
+          <ul v-if="item.items" class="mb-2 space-y-1 pl-3 text-sm text-brand-200">
+            <li v-for="sub in item.items" :key="sub.label">
+              <Link @click="closeMenu" :href="sub.link"
+                class="block rounded-control px-3 py-2.5 transition hover:bg-white/10 hover:text-gold-400">
+              {{ sub.label }}
               </Link>
             </li>
           </ul>
@@ -61,35 +55,31 @@ function closeMenu() {
 </template>
 
 <style scoped>
-/* Fade for backdrop */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
 
-/* Slide for panel */
 .slide-enter-active,
 .slide-leave-active {
-  transition: transform 0.4s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.3, 1);
 }
-.slide-enter-from {
-  transform: translateX(100%);
-}
-.slide-enter-to {
-  transform: translateX(0%);
-}
-.slide-leave-from {
-  transform: translateX(0%);
-}
+
+.slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: none;
+  }
 }
 </style>

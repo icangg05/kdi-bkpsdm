@@ -243,6 +243,17 @@
 					</a>
 				</li> --}}
 
+				<li class="pc-item pc-caption">
+					<label>Sistem</label>
+					<i class="ti ti-database"></i>
+				</li>
+				<li @class(['pc-item', 'active' => request()->is('dashboard/backup*')])>
+					<a href="{{ route('dashboard.backup.index') }}" class="pc-link">
+						<span class="pc-micon"><i class="ti ti-database"></i></span>
+						<span class="pc-mtext">Backup Database</span>
+					</a>
+				</li>
+
 				@can('admin')
 					<li class="pc-item pc-caption">
 						<label>Data Lainnya</label>
@@ -325,3 +336,16 @@
 		</div>
 	</div>
 </nav>
+
+<script>
+	// Ingat posisi scroll sidebar antar halaman (SimpleBar dipasang di footer, jadi tunggu load)
+	window.addEventListener('load', function () {
+		var el = document.querySelector('.navbar-content .simplebar-content-wrapper') || document.querySelector('.navbar-content');
+		if (!el) return;
+
+		el.scrollTop = sessionStorage.getItem('sidebarScroll') || 0;
+		el.addEventListener('scroll', function () {
+			sessionStorage.setItem('sidebarScroll', el.scrollTop);
+		}, { passive: true });
+	});
+</script>

@@ -1,57 +1,39 @@
 <script setup lang="ts">
+import KartuGrafik from '@/components/KartuGrafik.vue'
+import { opsiDasar } from '@/lib/chart'
+
 const props = defineProps(['data', 'tipe'])
 
-const slugLakiLaki = props.tipe == 'pns' ? 'pns_l' : 'pppk_l';
-const slugPerempuan = props.tipe == 'pns' ? 'pns_p' : 'pppk_p';
+const ringkasan = [
+  props.tipe == 'pns' ? 'pns_l' : 'pppk_l',
+  props.tipe == 'pns' ? 'pns_p' : 'pppk_p',
+]
+  .map((slug) => props.data.find((item: any) => item.slug == slug))
+  .filter(Boolean)
+  .map((item: any) => ({ label: item.label, value: parseInt(item.value) }))
 
-const lakiLaki = props.data.find((item: any) => item.slug == slugLakiLaki)
-const perempuan = props.data.find((item: any) => item.slug == slugPerempuan)
+const series = ringkasan.map((item) => item.value)
 
-
-// 🎯 Pie Chart - Pendidikan ASN (was bar)
-const jenisKelaminSeris = [
-  lakiLaki.value, perempuan.value,
-].map(item => parseInt(item))
-const jenisKelaminOptions = {
-  chart: { type: 'pie', height: 350 },
-  labels: [
-    lakiLaki.label, perempuan.label
-  ],
+const options = {
+  ...opsiDasar,
+  chart: { ...opsiDasar.chart, type: 'donut' },
+  labels: ringkasan.map((item) => item.label),
   dataLabels: {
     enabled: true,
-    formatter: function (val: any, opts: any) {
-      const total = opts.w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0)
-      const value = opts.w.globals.series[opts.seriesIndex]
-      return value < 10 ? `${value}` : `${val.toFixed(1)}%`
-    },
-    style: {
-      fontSize: '12px',
-      fontWeight: 'bold',
-      colors: ['#fff']
-    }
+    formatter: (val: number) => `${val.toFixed(0)}%`,
+    style: { fontSize: '13px', fontWeight: 600, colors: ['#ffffff', '#16202e'] },
+    dropShadow: { enabled: false },
   },
-  stroke: {
-    show: true, // 👈 hilangkan garis antar sektor
-    width: 1
-  },
-  tooltip: {
-    y: {
-      formatter: (val: any) => `${val} orang`
-    }
-  },
-  colors: ['#3b82f6', '#ec4899'],
-  legend: {
-    position: 'bottom',
-    labels: {
-      colors: '#374151'
-    }
-  }
+  stroke: { show: true, width: 2, colors: ['#ffffff'] },
+  plotOptions: { pie: { donut: { size: '55%' } } },
+  // Dua nilai saja: dua nada biru yang kontras, bukan biru lawan emas, agar
+  // aksen emas tetap jadi penanda kecil dan tidak mendominasi satu seksi penuh.
+  colors: ['#26407a', '#9db2da'],
 }
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition duration-300 p-6">
-    <h3 class="text-xl font-semibold mb-4 text-center text-emerald-700">Data Jenis Kelamin</h3>
-    <apexchart type="pie" height="350" :options="jenisKelaminOptions" :series="jenisKelaminSeris" />
-  </div>
+  <KartuGrafik judul="Jenis Kelamin" :ringkasan="ringkasan">
+    <apexchart type="donut" height="350" :options="options" :series="series" />
+  </KartuGrafik>
 </template>

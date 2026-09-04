@@ -1,213 +1,200 @@
 <script setup lang="ts">
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel'
 import { Link, usePage } from '@inertiajs/vue3'
-import Autoplay from 'embla-carousel-autoplay'
+import { usePreferredReducedMotion } from '@vueuse/core'
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, ref, watchEffect } from 'vue'
 
 const props = usePage().props
-const slider = props.slider as any
-const beritaHero = props.beritaHero as any
-// console.log(slider)
+
+const gambarSlider = computed<string[]>(() => (props.slider as string[] | undefined) ?? [])
+const beritaHero = computed<any[]>(() => (props.beritaHero as any[] | undefined) ?? [])
+
+// Jumlah gambar slider ditentukan admin. Jangan akses slider[1] atau slider[2]
+// langsung: kalau yang diunggah cuma satu, indeksnya kosong dan slide gagal.
+const gambarKe = (i: number) =>
+  gambarSlider.value[i] ?? gambarSlider.value[gambarSlider.value.length - 1] ?? null
+
+const slides = computed(() => {
+  const daftar: { tipe: 'instansi' | 'pejabat' | 'berita'; gambar: string | null }[] = [
+    { tipe: 'instansi', gambar: gambarKe(0) },
+    { tipe: 'pejabat', gambar: gambarKe(1) },
+  ]
+
+  if (beritaHero.value.length) {
+    daftar.push({ tipe: 'berita', gambar: beritaHero.value[0].sampul ?? gambarKe(2) })
+  }
+
+  return daftar
+})
+
+// Sudah diurut terbaru lebih dulu oleh BerandaController (orderBy tanggal desc).
+const beritaUtama = computed(() => beritaHero.value[0] ?? null)
+const beritaLain = computed(() => beritaHero.value.slice(1, 4))
+
+const index = ref(0)
+const berjalan = ref(true)
+const reduced = usePreferredReducedMotion()
+
+let timer: ReturnType<typeof setInterval> | undefined
+
+function ke(i: number) {
+  const n = slides.value.length
+  if (n > 0) index.value = (i + n) % n
+}
+
+watchEffect((onCleanup) => {
+  clearInterval(timer)
+  if (reduced.value === 'reduce' || !berjalan.value || slides.value.length < 2) return
+  timer = setInterval(() => ke(index.value + 1), 8000)
+  onCleanup(() => clearInterval(timer))
+})
+
+onBeforeUnmount(() => clearInterval(timer))
+
+const judulSlide: Record<string, string> = {
+  instansi: 'Profil instansi',
+  pejabat: 'Pejabat BKPSDM',
+  berita: 'Berita terbaru',
+}
 
 </script>
 
 <template>
-  <Carousel class="relative w-full select-none pointer-events-none" :plugins="[Autoplay({
-    delay: 5000,
-    stopOnInteraction: false, // jangan berhenti saat interaksi
-    stopOnMouseEnter: false,  // jangan berhenti saat hover
-    stopOnFocusIn: false,     // jangan berhenti saat fokus
-  })]">
-    <CarouselContent>
-      <!-- SLIDER KEDUA (Pejabat BKPSDM) -->
-      <CarouselItem>
-        <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center flex items-center justify-center"
-          :style="`background-image: url(storage/${slider[0]})`">
-          <div class="absolute inset-0 bg-gradient-to-t from-sky-950/95 via-sky-900/75 to-sky-800/55 overlay-anim">
-          </div>
+  <section class="relative isolate grid min-h-[38rem] overflow-hidden bg-brand-900 lg:min-h-[44rem]"
+    aria-roledescription="carousel" aria-label="Sorotan beranda">
+    <!-- Lapisan gambar. Gambar slider dekoratif: maknanya dibawa teks di atasnya
+         dan tabel Slider tidak punya kolom keterangan. -->
+    <div class="absolute inset-0 -z-10">
+      <template v-for="(slide, i) in slides" :key="`bg-${i}`">
+        <img v-if="slide.gambar" :src="`/storage/${slide.gambar}`" alt="" aria-hidden="true"
+          :fetchpriority="i === 0 ? 'high' : 'low'" :loading="i === 0 ? 'eager' : 'lazy'" decoding="async"
+          class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+          :class="i === index ? 'opacity-100' : 'opacity-0'" />
+      </template>
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-900 via-brand-900/85 to-brand-900/45"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-900 via-transparent to-brand-900/70"></div>
+      <div aria-hidden="true"
+        class="absolute -left-20 top-1/2 size-[34rem] -translate-y-1/2 rounded-full bg-brand-500/20 blur-3xl"></div>
+    </div>
 
-          <div class="ml-3.5 lg:ml-auto pt-[40px] lg:pt-[100px] px-8 lg:px-0 relative container z-20 text-center">
-            <div class="relative">
-              <h2 class="font-lobster z-0 text-xl lg:text-4xl font-bold leading-tight tracking-wide
-                bg-gradient-to-r from-sky-400 to-yellow-400 bg-clip-text text-transparent">
-                Selamat Datang Di Website Resmi
-              </h2>
+    <!-- Semua panel ditumpuk di sel grid yang sama supaya tinggi seksi tidak
+         melompat tiap pergantian. Panel non-aktif diberi `inert`: tidak bisa
+         di-tab dan tidak dibacakan pembaca layar. -->
+    <div v-for="(slide, i) in slides" :key="slide.tipe"
+      class="container col-start-1 row-start-1 w-full self-center pb-28 pt-32 transition-opacity duration-500 lg:pt-36"
+      :class="i === index ? 'opacity-100' : 'pointer-events-none opacity-0'" :inert="i !== index"
+      role="group" aria-roledescription="slide" :aria-label="`${judulSlide[slide.tipe]} (${i + 1} dari ${slides.length})`">
 
-              <h6 class="max-w-5xl mx-auto mt-2 lg:mt-1 z-0 text-xl lg:text-[36px] text-white font-bold leading-[1] tracking-wide">
-                BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA KOTA KENDARI</h6>
-              <span
-                class="pointer-events-none text-[4.5rem] lg:text-[12rem] text-white/10 font-bold z-[-1] top-3 lg:top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 absolute">BKPSDM</span>
-            </div>
-            <p class="mt-8 lg:mt-13 max-w-2xl mx-auto text-sm lg:text-base text-white/85">
-              BKPSDM berkomitmen mewujudkan tata kelola kepegawaian yang profesional dan transparan di lingkungan
-              Pemerintah Kota Kendari. Kami mendorong pengembangan kompetensi ASN melalui pelatihan dan pembinaan
-              berkelanjutan.
-            </p>
-            <div class="pointer-events-auto mt-10 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
-              <Link :href="route('profil', 'sejarah')"
-                class="rounded-3xl px-6 lg:px-8 py-3 lg:py-3.5 border border-sky-600 bg-sky-600 text-white text-sm lg:text-base font-semibold">
-              Tentang BKPSDM
-              </Link>
-              <a href="#layanan"
-                class="rounded-3xl px-6 lg:px-8 py-3 lg:py-3.5 border border-white bg-transparent text-white text-sm lg:text-base font-semibold">
-                Layanan Kepegawaian
-              </a>
-            </div>
+      <!-- Hiasan kecil di atas teks slide. Dekoratif, tidak dibacakan pembaca layar. -->
+      <span class="mb-6 flex items-center gap-2" aria-hidden="true">
+        <span class="h-px w-12 bg-gold-400"></span>
+        <span class="size-1.5 rotate-45 bg-gold-400"></span>
+        <span class="h-px w-6 bg-gold-400/50"></span>
+        <span class="size-1 rounded-full bg-gold-400/50"></span>
+      </span>
+
+      <!-- 1. Identitas instansi -->
+      <div v-if="slide.tipe === 'instansi'" class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">
+          Pemerintah Kota Kendari
+        </p>
+        <h1 class="mt-4 text-2xl font-bold leading-[1.15] text-white sm:text-3xl lg:text-[2.6rem]">
+          Badan Kepegawaian dan Pengembangan Sumber Daya Manusia
+        </h1>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-brand-100 lg:text-base">
+          Informasi kepegawaian, regulasi, dan layanan ASN Kota Kendari dalam satu pintu.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <Link :href="route('layanan')"
+            class="rounded-control bg-white px-6 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 active:translate-y-px lg:text-base">
+          Layanan Kepegawaian
+          </Link>
+          <Link :href="route('profil', 'sejarah')"
+            class="rounded-control border border-white/50 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10 active:translate-y-px lg:text-base">
+          Profil Instansi
+          </Link>
+        </div>
+      </div>
+
+      <!-- 2. Pejabat -->
+      <div v-else-if="slide.tipe === 'pejabat'" class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">Profil</p>
+        <h2 class="mt-4 text-2xl font-bold leading-[1.15] text-white sm:text-3xl lg:text-[2.6rem]">
+          Pejabat BKPSDM Kota Kendari
+        </h2>
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-brand-100 lg:text-base">
+          Jajaran pimpinan, pejabat struktural, dan pelaksana yang menangani urusan kepegawaian
+          Kota Kendari.
+        </p>
+        <div class="mt-8">
+          <Link :href="route('profil', 'pejabat')"
+            class="inline-block rounded-control bg-white px-6 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 active:translate-y-px lg:text-base">
+          Lihat Pejabat
+          </Link>
+        </div>
+      </div>
+
+      <!-- 3. Berita terbaru + tiga berita berikutnya -->
+      <div v-else-if="beritaUtama">
+        <div class="max-w-3xl">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">
+            {{ beritaUtama.kategori }}
+          </p>
+          <h2 class="mt-4 line-clamp-2 text-2xl font-bold leading-[1.15] text-white sm:text-3xl lg:text-[2.6rem]">
+            {{ beritaUtama.judul }}
+          </h2>
+          <p class="mt-3 text-sm text-brand-200">{{ beritaUtama.tanggal }}</p>
+          <p class="mt-4 line-clamp-2 max-w-xl text-sm leading-relaxed text-brand-100 lg:text-base">
+            {{ beritaUtama.isi }}
+          </p>
+          <div class="mt-7">
+            <Link :href="route('berita.show', beritaUtama.slug)"
+              class="inline-block rounded-control bg-white px-6 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 active:translate-y-px lg:text-base">
+            Baca Selengkapnya
+            </Link>
           </div>
         </div>
-      </CarouselItem>
-      <!-- SLIDER PERTAMA (Tetap) -->
 
-      <!-- SLIDER KEDUA (Pejabat BKPSDM) -->
-      <CarouselItem>
-        <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center flex items-center justify-center"
-          :style="`background-image: url(storage/${slider[1]})`">
-          <div class="absolute inset-0 bg-gradient-to-t from-sky-900/85 via-sky-800/60 to-sky-700/40 overlay-anim">
-          </div>
+        <ul v-if="beritaLain.length" class="mt-8 hidden gap-4 sm:grid sm:grid-cols-3">
+          <li v-for="item in beritaLain" :key="item.id">
+            <Link :href="route('berita.show', item.slug)"
+              class="block h-full rounded-card bg-brand-900/50 p-4 ring-1 ring-white/15 transition hover:bg-brand-900/70 hover:ring-white/40">
+            <span class="block text-xs uppercase tracking-wide text-gold-400">{{ item.kategori }}</span>
+            <span class="mt-2 line-clamp-2 text-sm font-semibold leading-snug text-white">
+              {{ item.judul }}
+            </span>
+            <span class="mt-2 block text-xs text-brand-200">{{ item.tanggal }}</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-          <div class="lg:pt-10 ml-3.5 lg:ml-2 relative z-20 text-center text-white px-6">
-            <h2 class="title-anim text-2xl lg:text-5xl font-extrabold leading-[1] tracking-wide drop-shadow-lg">
-              Pejabat BKPSDM Kota Kendari
-            </h2>
+    <!-- Kendali slider: jeda, mundur, maju, dan titik langsung. -->
+    <div v-if="slides.length > 1" class="container col-start-1 row-start-1 flex w-full items-center gap-2 self-end pb-10">
+      <button type="button" @click="berjalan = !berjalan"
+        class="grid size-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white/10"
+        :aria-label="berjalan ? 'Jeda pergantian slide' : 'Jalankan pergantian slide'">
+        <component :is="berjalan ? Pause : Play" class="size-4" />
+      </button>
+      <button type="button" @click="ke(index - 1)"
+        class="grid size-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white/10"
+        aria-label="Slide sebelumnya">
+        <ChevronLeft class="size-4" />
+      </button>
+      <button type="button" @click="ke(index + 1)"
+        class="grid size-11 place-items-center rounded-full border border-white/30 text-white transition hover:bg-white/10"
+        aria-label="Slide berikutnya">
+        <ChevronRight class="size-4" />
+      </button>
 
-            <div class="line-anim w-24 h-1 bg-sky-400 mx-auto my-4 rounded-full"></div>
-
-            <p class="subtitle-anim max-w-2xl mx-auto text-white/90 text-sm lg:text-lg leading-relaxed">
-              Mengenal lebih dekat jajaran pimpinan, pejabat struktural, dan staf yang berdedikasi
-              membangun tata kelola kepegawaian yang profesional dan transparan.
-            </p>
-
-            <div class="pointer-events-auto mt-8">
-              <Link :href="route('profil', 'pejabat')"
-                class="btn-anim rounded-3xl px-6 lg:px-8 py-3 lg:py-3.5 border border-sky-600 bg-sky-600 text-white text-sm lg:text-base font-semibold inline-block">
-              Lihat Pejabat
-              </Link>
-            </div>
-          </div>
-        </div>
-      </CarouselItem>
-
-
-      <!-- SLIDER KETIGA (Berita Terbaru) -->
-      <CarouselItem v-if="beritaHero.length > 0">
-        <div class="relative h-[40rem] lg:h-[100dvh] bg-cover bg-center flex items-center px-6 lg:px-0"
-          :style="`background-image: url(storage/${beritaHero[0].sampul ?? slider[2]})`">
-          <div class="absolute inset-0 bg-gradient-to-t from-sky-900/95 via-sky-900/85 to-sky-900/60"></div>
-
-          <div class="pt-10 lg:pt-28 translate-x-2 relative z-20 w-full max-w-6xl mx-auto text-white">
-            <div class="max-w-4xl">
-              <h1 class="text-2xl lg:text-4xl font-extrabold mb-4 drop-shadow-md line-clamp-2 leading-[1]">
-                {{ beritaHero[0].judul }}
-              </h1>
-              <p class="text-sm lg:text-base mb-4 text-white/80 font-medium">
-                {{ beritaHero[0].tanggal }} —
-                <span class="uppercase tracking-wide">{{ beritaHero[0].kategori }}</span>
-              </p>
-              <p class="text-base lg:text-lg text-white/90 mb-6 line-clamp-3 hidden lg:block">
-                {{ beritaHero[0].isi }}
-              </p>
-              <Link :href="route('berita.show', beritaHero[0].slug)"
-                class="pointer-events-auto inline-block text-sm lg:text-base rounded-full px-6 py-3 bg-sky-600 hover:bg-sky-700 border border-sky-500 font-semibold transition shadow-lg">
-              Selengkapnya
-              </Link>
-            </div>
-
-            <div v-if="beritaHero.length > 1" class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div v-for="(news, i) in beritaHero.slice(1, 4)" :key="news.id"
-                class="bg-white/10 hover:bg-white/15 rounded-xl p-4 backdrop-blur-sm transition">
-                <h3 class="font-semibold text-sm lg:text-lg text-white mb-2 line-clamp-1 lg:line-clamp-2">
-                  {{ news.judul }}
-                </h3>
-                <div class="flex justify-between gap-3 flex-row">
-                  <p class="text-xs text-white/70">
-                    {{ news.tanggal }} — {{ news.kategori }}
-                  </p>
-                  <Link :href="route('berita.show', news.slug)"
-                    class="pointer-events-auto text-sky-400 hover:underline text-xs lg:text-sm font-semibold">
-                  Baca Selengkapnya
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CarouselItem>
-
-    </CarouselContent>
-  </Carousel>
-
+      <div class="ml-3 flex items-center gap-2">
+        <button v-for="(slide, i) in slides" :key="`dot-${slide.tipe}`" type="button" @click="ke(i)"
+          class="grid h-11 w-5 place-items-center" :aria-label="judulSlide[slide.tipe]" :aria-current="i === index">
+          <span class="h-1.5 w-full rounded-full transition-colors"
+            :class="i === index ? 'bg-gold-400' : 'bg-white/40'"></span>
+        </button>
+      </div>
+    </div>
+  </section>
 </template>
-
-
-<style scoped>
-/* overlay fade + slight scale */
-.overlay-anim {
-  opacity: 0;
-  transform: scale(1.02);
-  animation: bgFade 0.9s ease-out 0.05s forwards;
-}
-
-@keyframes bgFade {
-  from {
-    opacity: 0;
-    transform: scale(1.02);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* fade + up */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* scale in horizontally */
-@keyframes scaleIn {
-  0% {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-}
-
-/* Apply to elements with staggered delays */
-.title-anim {
-  opacity: 0;
-  animation: fadeInUp 0.75s cubic-bezier(.22, .9, .3, 1) 0.18s forwards;
-}
-
-.line-anim {
-  transform-origin: left center;
-  opacity: 0;
-  animation: scaleIn 0.55s cubic-bezier(.22, .9, .3, 1) 0.5s forwards;
-}
-
-.subtitle-anim {
-  opacity: 0;
-  animation: fadeInUp 0.75s cubic-bezier(.22, .9, .3, 1) 0.7s forwards;
-}
-
-.btn-anim {
-  opacity: 0;
-  transform: translateY(8px);
-  animation: fadeInUp 0.7s cubic-bezier(.22, .9, .3, 1) 0.95s forwards;
-}
-</style>

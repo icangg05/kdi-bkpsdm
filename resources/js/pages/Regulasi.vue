@@ -1,156 +1,234 @@
 <script setup lang="ts">
 import BgOverlay from '@/components/BgOverlay.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import Pagination from '@/components/Pagination.vue';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Download, Search } from 'lucide-vue-next';
-import Pagination from '@/components/Pagination.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { Download, FileText, Search, X } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
-const breadcrumbItems = [
-  { label: 'Beranda', link: route('beranda') },
-  { label: 'Regulasi', link: '#' },
-];
+const props = usePage().props as any
 
+const paginator = props.data
+const kategoriList = (props.kategoriRegulasi ?? []) as any[]
+const kategori = props.kategori as string
+const kueri = (props.q ?? '') as string
 
-const props = usePage().props
-const data = props.data as any
+const cari = ref(kueri)
+const regulasiList = computed<any[]>(() => paginator?.data ?? [])
 
-const regulasiList = data.data as any
-const kategoriList = props.kategoriRegulasi as any
-const kategori = props.kategori as any
+const totalSemua = computed(() =>
+  kategoriList.reduce((jumlah, k: any) => jumlah + Number(k.regulasi_count ?? 0), 0),
+)
 
-const form = useForm({
-  search: '',
-})
+const kategoriAktif = computed(() => kategoriList.find((k: any) => k.slug === kategori) ?? null)
+const judulHalaman = computed(() =>
+  kategoriAktif.value ? `Regulasi ${kategoriAktif.value.nama}` : 'Regulasi',
+)
 
 function submitSearch() {
-  router.get(
-    route('regulasi', { kategori }),
-    { q: form.search },
-    {
-      preserveScroll: true,
-    }
-  );
+  router.get(route('regulasi', { kategori }), cari.value ? { q: cari.value } : {}, {
+    preserveScroll: true,
+  })
 }
 
-function toKategori(value: string) {
-  // alert(value); return
-  router.get(
-    route('regulasi', { kategori: value }),
-    {},
-    { preserveScroll: true }
-  );
+function bersihkan() {
+  cari.value = ''
+  submitSearch()
 }
-
 </script>
 
 <template>
 
-  <Head title="Regulasi" />
+  <Head :title="judulHalaman" />
 
   <AppLayout>
     <BgOverlay src="/img/bg-regulasi.jpg">
-      <div class="relative">
-        <h2 class="z-0 text-3xl lg:text-[36px] font-bold leading-tight tracking-wide">
-          Regulasi
-        </h2>
-        <span
-          class="pointer-events-none text-[3.5rem] lg:text-[7rem] text-white/10 font-bold z-[-1] top-3 lg:top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 absolute">BKPSDM</span>
-      </div>
-      <div class="flex">
-        <Breadcrumb class="mx-auto mt-4 lg:mt-5 text-white/85">
-          <BreadcrumbList>
-            <BreadcrumbItem v-for="(item, index) in breadcrumbItems" :key="index">
-              <BreadcrumbLink :href="item.link" class="hover:underline text-sm lg:text-base">
-                {{ item.label }}
-              </BreadcrumbLink>
-              <BreadcrumbSeparator v-if="breadcrumbItems.length - 1 != index" class="ml-0.5 text-sky-400" />
+      <h1 class="text-2xl font-bold leading-[1.15] text-white sm:text-3xl lg:text-[2.6rem]">Regulasi</h1>
+      <span class="mx-auto mt-4 block h-1 w-16 rounded-full bg-gold-500" aria-hidden="true"></span>
+
+      <Breadcrumb class="mt-5">
+        <BreadcrumbList class="justify-center text-brand-100">
+          <BreadcrumbItem>
+            <BreadcrumbLink :href="route('beranda')" class="text-sm hover:text-white hover:underline lg:text-base">
+              Beranda
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator class="text-brand-200/70" />
+          <BreadcrumbItem>
+            <BreadcrumbLink v-if="kategoriAktif" :href="route('regulasi', { kategori: 'all' })"
+              class="text-sm hover:text-white hover:underline lg:text-base">
+              Regulasi
+            </BreadcrumbLink>
+            <BreadcrumbPage v-else class="text-sm text-white lg:text-base">Regulasi</BreadcrumbPage>
+          </BreadcrumbItem>
+          <template v-if="kategoriAktif">
+            <BreadcrumbSeparator class="text-brand-200/70" />
+            <BreadcrumbItem>
+              <BreadcrumbPage class="line-clamp-1 max-w-[16rem] text-sm text-white lg:text-base">
+                {{ kategoriAktif.nama }}
+              </BreadcrumbPage>
             </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+          </template>
+        </BreadcrumbList>
+      </Breadcrumb>
     </BgOverlay>
 
-    <div class="mt-[4rem] container grid grid-cols-1 lg:grid-cols-4 gap-8">
-      <!-- Konten Regulasi -->
-      <div class="lg:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-x-0 gap-y-6 lg:gap-x-6 lg:gap-y-6 h-fit">
-        <form @submit.prevent="submitSearch" class="flex gap-2 col-span-2">
-          <!-- Input + Icon -->
-          <div class="relative flex-1">
-            <input v-model="form.search" type="seach" placeholder="Pencarian..."
-              class="w-full pl-10 pr-4 py-2 border border-gray-400 rounded focus:ring-2 focus:ring-sky-500 focus:outline-none" />
-            <Search class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
-          </div>
-
-          <!-- Tombol -->
-          <button type="submit" class="px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600 transition">
-            Cari
-          </button>
-        </form>
-
-        <div v-if="regulasiList.length > 0" class="col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
-          <div v-for="(regulasi, i) in regulasiList" :key="i">
-            <div class="bg-white rounded-lg shadow-md p-5 h-full">
-              <div>
-                <h3 class="text-base font-semibold text-gray-800 leading-snug">{{ regulasi.judul }}</h3>
-                <p class="text-sky-600 text-xs font-semibold uppercase mt-1">{{ regulasi.kategori_regulasi.nama }}</p>
-                <p class="text-sm text-gray-600 mt-2">{{ regulasi.deskripsi }}</p>
-              </div>
-
-              <div class="flex items-center justify-between mt-3">
-                <a :href="route('regulasi.download', regulasi.id)"
-                  class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-medium px-4 py-2 rounded transition ease-in-out flex items-center gap-2">
-                  <Download class="w-4 h-4" />
-                  <span>Unduh PDF</span>
-                </a>
-                <span class="text-xs text-gray-500 flex items-center gap-1">
-                  <Download class="w-3 h-3 text-gray-400" />
-                  <span>{{ regulasi.total_unduh }} kali</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="col-span-2 text-center text-gray-600 border border-gray-200 p-8 pb-6 rounded">
-          <p class="text-sm lg:text-base">Tidak ada data ditemukan.</p>
-        </div>
-
-        <!-- Pagination -->
-        <Pagination :data="data" />
+    <section class="relative isolate overflow-hidden bg-surface-2 py-12 lg:py-16">
+      <div aria-hidden="true"
+        class="absolute inset-0 -z-10 opacity-[0.35] [background-image:radial-gradient(var(--color-brand-200)_1px,transparent_1px)] [background-size:22px_22px]">
+      </div>
+      <div aria-hidden="true" class="absolute -right-24 -top-24 -z-10 size-72 rounded-full bg-brand-200/40 blur-3xl"></div>
+      <div aria-hidden="true" class="absolute -bottom-32 -left-24 -z-10 size-80 rounded-full bg-gold-400/20 blur-3xl">
       </div>
 
-      <!-- Sidebar Kategori -->
-      <aside class="bg-white rounded-lg shadow-md p-6 h-fit">
-        <h4 class="text-lg font-bold text-gray-800 mb-4">Kategori Regulasi</h4>
-        <ul class="space-y-3 select-none">
-          <li @click="toKategori('all')"
-            class="flex justify-between items-center text-sm text-gray-700 hover:text-sky-600 cursor-pointer">
-            <span>Semua Kategori</span>
-            <span class="bg-sky-100 text-sky-600 text-xs px-2 py-0.5 rounded-full">
-              {{kategoriList.reduce((sum: number, k: any) => sum + Number(k.regulasi_count), 0)}}
-            </span>
+      <div class="container grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <div class="min-w-0 lg:col-span-8">
+          <form @submit.prevent="submitSearch" class="flex flex-col gap-3 sm:flex-row" role="search">
+            <div class="relative flex-1">
+              <label for="cari-regulasi" class="sr-only">Cari judul regulasi</label>
+              <Search class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-soft"
+                aria-hidden="true" />
+              <input id="cari-regulasi" v-model="cari" type="search" placeholder="Cari judul regulasi..."
+                class="w-full rounded-control bg-white py-3 pl-10 pr-4 text-sm text-ink ring-1 ring-line transition placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <button type="submit"
+              class="rounded-control bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-800 active:translate-y-px">
+              Cari
+            </button>
+          </form>
 
-          </li>
-          <li @click="toKategori(kategori.slug)" v-for="(kategori, i) in kategoriList" :key="i"
-            class="flex justify-between items-center text-sm text-gray-700 hover:text-sky-600 cursor-pointer">
-            <span>{{ kategori.nama }}</span>
-            <span class="bg-sky-100 text-sky-600 text-xs px-2 py-0.5 rounded-full">{{ kategori.regulasi_count }}</span>
-          </li>
-        </ul>
-      </aside>
-    </div>
+          <p v-if="kueri || kategoriAktif" class="mt-4 flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+            <span v-if="kategoriAktif"
+              class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 font-semibold text-brand-800 ring-1 ring-line">
+              {{ kategoriAktif.nama }}
+              <Link :href="route('regulasi', { kategori: 'all' })" class="text-ink-soft transition hover:text-brand-700"
+                aria-label="Hapus tapis kategori">
+              <X class="size-3.5" aria-hidden="true" />
+              </Link>
+            </span>
+            <span v-if="kueri"
+              class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 font-semibold text-brand-800 ring-1 ring-line">
+              {{ kueri }}
+              <button type="button" @click="bersihkan" class="text-ink-soft transition hover:text-brand-700"
+                aria-label="Hapus pencarian">
+                <X class="size-3.5" aria-hidden="true" />
+              </button>
+            </span>
+            <span>{{ paginator?.total ?? 0 }} regulasi ditemukan</span>
+          </p>
+
+          <ul v-if="regulasiList.length" class="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <li v-for="(regulasi, i) in regulasiList" :key="regulasi.id"
+              class="animate-in fade-in slide-in-from-bottom-3 fill-mode-both duration-500 motion-reduce:animate-none"
+              :style="`animation-delay: ${Math.min(i, 8) * 60}ms`">
+              <article
+                class="group relative flex h-full flex-col overflow-hidden rounded-card bg-white p-5 ring-1 ring-line transition hover:ring-brand-300 motion-reduce:transition-none">
+                <span aria-hidden="true"
+                  class="absolute left-0 top-0 h-1 w-0 bg-gold-500 transition-all duration-500 group-hover:w-full motion-reduce:transition-none"></span>
+
+                <div class="flex items-start gap-3">
+                  <span class="grid size-11 shrink-0 place-items-center rounded-control bg-brand-50 text-brand-700">
+                    <FileText class="size-5" aria-hidden="true" />
+                  </span>
+                  <div class="min-w-0">
+                    <h2 class="text-base font-semibold leading-snug text-ink">{{ regulasi.judul }}</h2>
+                    <!-- Relasi kategori bisa kosong bila kategorinya dihapus admin. -->
+                    <p v-if="regulasi.kategori_regulasi?.nama" class="mt-1.5 text-xs font-semibold text-brand-700">
+                      {{ regulasi.kategori_regulasi.nama }}
+                    </p>
+                  </div>
+                </div>
+
+                <p v-if="regulasi.deskripsi" class="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-soft">
+                  {{ regulasi.deskripsi }}
+                </p>
+
+                <div class="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
+                  <a :href="route('regulasi.download', regulasi.id)"
+                    class="inline-flex items-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 active:translate-y-px">
+                    <Download class="size-4" aria-hidden="true" />
+                    Unduh berkas
+                    <span class="sr-only">{{ regulasi.judul }}</span>
+                  </a>
+                  <span class="text-xs text-ink-soft">Diunduh {{ regulasi.total_unduh ?? 0 }} kali</span>
+                </div>
+              </article>
+            </li>
+          </ul>
+
+          <div v-else class="mt-6 rounded-card bg-white p-8 text-center ring-1 ring-line">
+            <p class="text-base font-semibold text-ink">
+              {{ kueri ? `Tidak ada hasil untuk "${kueri}"` : 'Belum ada regulasi pada kategori ini' }}
+            </p>
+            <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ink-soft">
+              {{ kueri
+                ? 'Coba kata kunci lain, atau telusuri lewat daftar kategori di samping.'
+                : 'Silakan pilih kategori lain pada daftar kategori.' }}
+            </p>
+            <Link :href="route('regulasi', { kategori: 'all' })"
+              class="mt-5 inline-block rounded-control bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-800 active:translate-y-px">
+            Lihat semua regulasi
+            </Link>
+          </div>
+
+          <div v-if="paginator?.last_page > 1" class="mt-10">
+            <Pagination :data="paginator" />
+          </div>
+        </div>
+
+        <aside class="min-w-0 lg:col-span-4">
+          <!-- Kategori dulunya `<li @click>`: tidak bisa di-tab, tidak bisa
+               dibuka di tab baru, dan tidak dibacakan sebagai tautan. -->
+          <nav class="rounded-card bg-white p-5 ring-1 ring-line lg:sticky lg:top-24" aria-label="Kategori regulasi">
+            <h2 class="flex items-center gap-2.5 text-base font-semibold text-ink">
+              <span class="h-4 w-1 rounded-full bg-gold-500" aria-hidden="true"></span>
+              Kategori Regulasi
+            </h2>
+
+            <!-- "Semua Kategori" dipatok di luar area gulir supaya jalan
+                 keluar dari tapis selalu terlihat. -->
+            <Link :href="route('regulasi', { kategori: 'all' })"
+              class="mt-3 flex items-center justify-between gap-3 rounded-control px-3 py-2.5 text-sm transition"
+              :class="kategori === 'all'
+                ? 'bg-brand-50 font-semibold text-brand-800'
+                : 'text-ink-soft hover:bg-surface-2 hover:text-brand-700'"
+              :aria-current="kategori === 'all' ? 'page' : undefined">
+            <span>Semua Kategori</span>
+            <span class="shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-ink-soft">
+              {{ totalSemua }}
+            </span>
+            </Link>
+
+            <!-- Dua belas kategori terlalu panjang untuk kolom lengket, jadi
+                 daftarnya dibatasi tinggi dan digulir sendiri. -->
+            <ul
+              class="mt-1 flex max-h-[19rem] flex-col gap-1 overflow-y-auto pr-1 [scrollbar-color:var(--color-brand-300)_transparent] [scrollbar-width:thin]">
+              <li v-for="item in kategoriList" :key="item.slug">
+                <Link :href="route('regulasi', { kategori: item.slug })"
+                  class="flex items-center justify-between gap-3 rounded-control px-3 py-2.5 text-sm transition"
+                  :class="item.slug === kategori
+                    ? 'bg-brand-50 font-semibold text-brand-800'
+                    : 'text-ink-soft hover:bg-surface-2 hover:text-brand-700'"
+                  :aria-current="item.slug === kategori ? 'page' : undefined">
+                <span>{{ item.nama }}</span>
+                <span class="shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold"
+                  :class="item.slug === kategori ? 'bg-white text-brand-700' : 'bg-surface-2 text-ink-soft'">
+                  {{ item.regulasi_count }}
+                </span>
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </section>
   </AppLayout>
 </template>
-
-<style scoped>
-li:hover span:first-child {
-  text-decoration: underline;
-}
-</style>
