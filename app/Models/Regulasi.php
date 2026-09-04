@@ -2,13 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasHashid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Regulasi extends Model
 {
+  use HasHashid;
+
   protected $table = 'regulasi';
-  protected $guarded = [];
+  // total_unduh sengaja di luar: dinaikkan lewat increment().
+  protected $fillable = [
+    'kategori_regulasi_id',
+    'judul',
+    'deskripsi',
+    'lampiran',
+  ];
 
   protected static function booted()
   {

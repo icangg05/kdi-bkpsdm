@@ -1,90 +1,101 @@
 @extends('layouts.app.dashboard')
 
 @section('content')
-	<!-- [ breadcrumb ] start -->
 	<x-breadcrumb
 		:title="$title"
-		:list="[[$title, route('dashboard.regulasi.index')], ['Index']]" />
-	<!-- [ breadcrumb ] end -->
+		:list="[[$title, route('dashboard.regulasi.index')], ['Daftar']]" />
 
+	@if (session('success'))
+		<x-alert :message="session('success')" color="success" />
+	@endif
 
-	<!-- [ Main Content ] start -->
-	<div class="row">
-		<!-- [ sample-page ] start -->
-		<div class="col-sm-12">
-			<div class="mb-3">
-				<a href="{{ route('dashboard.regulasi.create') }}" class="btn btn-primary">Tambah Data</a>
-			</div>
+	<div class="card bk-rise bk-rise-1">
+		<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+			<h2 class="h5">Data {{ $title }}</h2>
+			<a href="{{ route('dashboard.regulasi.create') }}" class="btn btn-primary">
+				<i class="ti ti-plus" aria-hidden="true"></i> Tambah regulasi
+			</a>
+		</div>
 
-			@if (session('success'))
-				<x-alert :message="session('success')" color="success" />
-			@endif
-
-			<div class="card">
-				<div class="card-header">
-					<h5>Data {{ $title }}</h5>
+		<div class="card-body">
+			<form action="{{ route('dashboard.regulasi.index') }}" method="GET" class="bk-toolbar">
+				<div class="bk-search">
+					<label for="q" class="visually-hidden">Cari regulasi</label>
+					<i class="ti ti-search" aria-hidden="true"></i>
+					<input type="search" name="q" id="q" class="form-control" placeholder="Cari judul regulasi…"
+						value="{{ request()->q }}">
 				</div>
-				<div class="card-body table-responsive">
-					<form action="{{ route('dashboard.regulasi.index') }}" method="GET"
-						class="mb-4 col-md-4 d-flex gap-2">
-						<input type="text" name="q" id="q" placeholder="Pencarian..."
-							class="form-control"
-							value="{{ request()->q }}">
-						<button type="submit" class="btn btn-secondary">Cari</button>
-					</form>
+				<button type="submit" class="btn btn-secondary">Cari</button>
+				@if (request()->q)
+					<a href="{{ route('dashboard.regulasi.index') }}" class="btn btn-outline-secondary">Reset</a>
+				@endif
+			</form>
 
-					<table class="table table-bordered table-sm" style="border: 1px solid #b3b2b2">
+			<div class="bk-table-wrap">
+				<div class="table-responsive">
+					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">Judul</th>
 								<th scope="col">Deskripsi</th>
-								<th scope="col">Kategori Regulasi</th>
-								<th scope="col">Lampiran</th>
-								<th scope="col">Aksi</th>
+								<th scope="col">Kategori</th>
+								<th scope="col">Berkas</th>
+								<th scope="col"><span class="visually-hidden">Aksi</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							@forelse ($data as $item)
 								<tr>
-									<th scope="row">{{ $loop->iteration }}.</th>
+									<th scope="row">{{ $loop->iteration + $data->firstItem() - 1 }}</th>
 									<td>{{ $item->judul }}</td>
-									<td>{{ $item->deskripsi }}</td>
-									<td>{{ $item->kategori_regulasi?->nama ?? '-' }}</td>
+									<td>{{ str()->words($item->deskripsi, 18) }}</td>
+									<td class="text-nowrap">{{ $item->kategori_regulasi?->nama ?? '—' }}</td>
 									<td>
-										<a href="{{ asset("storage/$item->lampiran") }}"
-											class="badge text-bg-dark"
-											onclick="window.open(this.href, 'popup', 'width=800,height=600'); return false;">
-											Lampiran
-										</a>
+										@if ($item->lampiran)
+											<a href="{{ asset("storage/$item->lampiran") }}" class="bk-act" title="Buka berkas"
+												target="_blank" rel="noopener noreferrer">
+												<i class="ti ti-file-download" aria-hidden="true"></i>
+												<span class="visually-hidden">Buka berkas {{ $item->judul }} (tab baru)</span>
+											</a>
+										@else
+											—
+										@endif
 									</td>
-									<td class="text-nowrap">
-										<a href="{{ route('dashboard.regulasi.edit', $item->id) }}"
-											class="btn btn-sm btn-secondary badge">Edit</a>
-										<form class="d-inline" action="{{ route('dashboard.regulasi.destroy', $item->id) }}"
-											method="post">
-											@method('delete')
-											@csrf
-											<button onclick="return confirm('Hapus data ini?')" type="submit"
-												class="btn btn-sm btn-danger badge">Hapus</button>
-										</form>
+									<td>
+										<div class="bk-actions">
+											<a href="{{ route('dashboard.regulasi.edit', $item->id) }}" class="bk-act" title="Ubah">
+												<i class="ti ti-pencil" aria-hidden="true"></i>
+												<span class="visually-hidden">Ubah {{ $item->judul }}</span>
+											</a>
+											<form action="{{ route('dashboard.regulasi.destroy', $item->id) }}" method="post">
+												@method('delete')
+												@csrf
+												<button onclick="return confirm('Hapus {{ addslashes($item->judul) }}? Tindakan ini tidak bisa dibatalkan.')"
+													type="submit" class="bk-act bk-act--danger" title="Hapus">
+													<i class="ti ti-trash" aria-hidden="true"></i>
+													<span class="visually-hidden">Hapus {{ $item->judul }}</span>
+												</button>
+											</form>
+										</div>
 									</td>
 								</tr>
 							@empty
-								<tr class="text-center">
-									<td colspan="6">Tidak ada data ditemukan.</td>
+								<tr>
+									<td colspan="6">
+										<div class="bk-empty">
+											<i class="ti ti-file-off" aria-hidden="true"></i>
+											{{ request()->q ? 'Tidak ada hasil untuk pencarian itu.' : 'Belum ada regulasi yang tersimpan.' }}
+										</div>
+									</td>
 								</tr>
 							@endforelse
 						</tbody>
 					</table>
-
-					<div class="d-flex justify-content-center">
-						{{ $data->links() }}
-					</div>
 				</div>
 			</div>
-			<!-- [ sample-page ] end -->
+
+			<div class="d-flex justify-content-center mt-3">{{ $data->links() }}</div>
 		</div>
 	</div>
-	<!-- [ Main Content ] end -->
 @endsection

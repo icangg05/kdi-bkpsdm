@@ -64,7 +64,7 @@ const sosial = computed(() =>
 
     <nav class="mt-3 bg-brand-900/35 backdrop-blur-md xl:mt-0" aria-label="Menu utama">
       <div class="flex items-center justify-between px-4 py-2 xl:px-6">
-        <AppLogo />
+        <AppLogo ringkas />
 
         <ul class="hidden items-center gap-7 text-sm font-medium uppercase xl:flex">
           <!-- Submenu dulu berada di dalam elemen <a> induknya, yang tidak sah

@@ -1,3 +1,6 @@
+# Semua port diikat ke 127.0.0.1: layanan hanya bisa dijangkau dari mesin ini
+# sendiri, bukan dari jaringan. Tanpa itu phpMyAdmin dan MySQL terbuka ke
+# siapa pun yang tahu alamat IP server.
 services:
   apache:
     build:
@@ -7,7 +10,9 @@ services:
     restart: unless-stopped
     ports:
       - "8000:80"
-      - "5173:5173"
+      # Vite dev server. Jangan pernah dilayani ke jaringan: versi mana pun
+      # membuka pembacaan berkas sembarang lewat WebSocket-nya.
+      - "127.0.0.1:5173:5173"
     volumes:
       - ./:/var/www/html
     depends_on:
@@ -15,32 +20,38 @@ services:
         condition: service_healthy
 
   mysql:
-    image: mariadb:11.4
+    image: mysql:8.4
     container_name: kdi-bkpsdm-mysql
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: rootsecret
-      MARIADB_DATABASE: db_bkpsdm
+      # Diambil dari .env, tidak ditulis di berkas yang ikut ter-commit.
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD wajib diisi di .env}
+      MYSQL_DATABASE: ${DB_DATABASE:-db_bkpsdm}
+      # Pengguna khusus aplikasi. Laravel tidak pernah butuh hak root.
+      MYSQL_USER: ${DB_USERNAME:-bkpsdm_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD wajib diisi di .env}
     ports:
-      - "3307:3306"
+      - "127.0.0.1:3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./db_bkpsdm.sql:/docker-entrypoint-initdb.d/db_bkpsdm.sql:ro
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p$$MYSQL_ROOT_PASSWORD"]
       interval: 5s
       timeout: 5s
       retries: 20
 
+  # Alat pengembangan saja. Jangan jalankan di server produksi:
+  #   docker compose up -d apache mysql
   phpmyadmin:
     image: phpmyadmin:5
     container_name: kdi-bkpsdm-pma
     restart: unless-stopped
+    profiles: ["dev"]
     environment:
       PMA_HOST: mysql
       UPLOAD_LIMIT: 256M
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       - mysql
 

@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Storage;
 class Halaman extends Model
 {
   protected $table = 'halaman';
-  protected $guarded = [];
+  protected $fillable = [
+    'isi',
+    'kategori',
+    'gambar',
+    'link',
+    'lampiran',
+  ];
 
   protected static function booted()
   {

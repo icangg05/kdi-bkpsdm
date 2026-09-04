@@ -1,42 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3'
 import { useIntersectionObserver } from '@vueuse/core'
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Award,
-  BadgePlus,
-  BookOpen,
-  Briefcase,
-  CalendarCheck,
-  ClipboardList,
-  Clock,
-  FileBadge,
-  HeartCrack,
-  Home,
-  Shield,
-  Shuffle,
-  TrendingUp,
-  Users,
-} from 'lucide-vue-next'
+import { ArrowRight, ArrowUpRight, Clock, FileBadge, Home, Users } from 'lucide-vue-next'
+import { DAFTAR_LAYANAN } from '@/lib/layanan'
 import { ref } from 'vue'
 
-// Pengelompokan mengikuti sifat tautannya, bukan kategori karangan:
-// halaman layanan dikelola di dashboard, aplikasi dikelola instansi lain.
-const layanan = [
-  { label: 'Pensiun', desc: 'Prosedur dan syarat pengajuan pensiun ASN', slug: 'pensiun', icon: CalendarCheck },
-  { label: 'Kenaikan Pangkat', desc: 'Kenaikan pangkat dan inpassing pensiun', slug: 'kenaikan-pangkat', icon: TrendingUp },
-  { label: 'Cuti ASN', desc: 'Alur pengajuan cuti bagi PNS dan PPPK', slug: 'cuti-asn', icon: CalendarCheck },
-  { label: 'Mutasi Pegawai', desc: 'Mutasi antar unit kerja atau instansi', slug: 'mutasi-pegawai', icon: Shuffle },
-  { label: 'Jabatan Fungsional', desc: 'Informasi dan pembinaan jabatan fungsional', slug: 'jabatan-fungsional', icon: Briefcase },
-  { label: 'Tugas Belajar', desc: 'Ketentuan dan proses pengajuan tugas belajar', slug: 'tugas-belajar', icon: BookOpen },
-  { label: 'Penghargaan', desc: 'Pengajuan dan informasi penghargaan ASN', slug: 'penghargaan', icon: Award },
-  { label: 'Konsultasi Kinerja', desc: 'Evaluasi dan penyusunan SKP ASN', slug: 'konsultasi-kinerja', icon: ClipboardList },
-  { label: 'Disiplin', desc: 'Kewajiban, larangan, dan konsultasi disiplin', slug: 'disiplin', icon: Shield },
-  { label: 'COC Manajemen ASN', desc: 'Kode etik dan perilaku ASN', slug: 'coc-manajemen-asn', icon: BadgePlus },
-  { label: 'Cerai', desc: 'Pengurusan izin perceraian sesuai peraturan', slug: 'cerai', icon: HeartCrack },
-]
-
+// Daftar layanan dipakai bersama halaman detail lewat @/lib/layanan, supaya
+// tidak ada lagi dua daftar yang bisa berbeda isi.
+// Aplikasi tetap di sini: yang ini milik instansi lain, bukan halaman layanan.
 const aplikasi = [
   { label: 'My ASN', desc: 'Portal ASN Digital BKN', link: 'https://asndigital.bkn.go.id/', icon: Users },
   { label: 'Absensi Online', desc: 'Absensi digital ASN Kota Kendari', link: 'https://asn.kendarikota.go.id', icon: Clock },
@@ -83,7 +54,7 @@ const kartu =
 
       <h3 class="mt-10 text-base font-semibold text-white">Layanan Kepegawaian</h3>
       <ul class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        <li v-for="(item, i) in layanan" :key="item.slug" :style="{ '--i': i }"
+        <li v-for="(item, i) in DAFTAR_LAYANAN" :key="item.slug" :style="{ '--i': i }"
           :class="terlihat && 'kartu-masuk'">
           <Link :href="route('layanan.detail', item.slug)" :class="kartu">
           <span class="flex items-center gap-4">

@@ -22,3 +22,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Dump basis data tidak pernah masuk repositori: isinya hash password akun.
+*.sql

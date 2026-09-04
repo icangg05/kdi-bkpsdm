@@ -49,9 +49,12 @@ class ProfilController extends Controller
   /**
    * PEJABAT DETAIL
    */
-  public function pejabatDetail($id)
+  public function pejabatDetail(Pejabat $pejabat)
   {
-    $data = Pejabat::with('jabatan.unit_organisasi.bagian')->findOrFail($id);
+    // Route memakai hashid lewat HasHashid, jadi pencarian ID mentah tidak
+    // lagi bisa dilakukan dari URL. Model sudah diselesaikan oleh binding.
+    $data = $pejabat->load('jabatan.unit_organisasi.bagian');
+
     return Inertia::render('ProfilPejabatDetail', compact('data'));
   }
 }

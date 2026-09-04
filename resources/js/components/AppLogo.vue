@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+
+// `ringkas` dipakai navbar: di layar sempit nama instansi penuh memakan tiga
+// baris di samping tombol menu. Footer tetap menulis nama lengkapnya, di sana
+// ruangnya ada dan nama resmi memang tempatnya di situ.
+withDefaults(defineProps<{ ringkas?: boolean }>(), { ringkas: false });
 </script>
 
 <template>
@@ -12,7 +17,15 @@ import { Link } from '@inertiajs/vue3';
     <span class="text-[10px] font-medium uppercase text-white/80 lg:text-xs">
       Pemerintah Kota Kendari
     </span>
-    <span class="text-xs font-bold uppercase leading-tight text-white lg:text-[15px]">
+
+    <!-- Akronim untuk mata, nama lengkap tetap untuk pembaca layar. -->
+    <span v-if="ringkas" class="lg:hidden">
+      <span class="text-sm font-bold uppercase tracking-[0.2em] text-white" aria-hidden="true">BKPSDM</span>
+      <span class="sr-only">Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</span>
+    </span>
+
+    <span class="text-xs font-bold uppercase leading-tight text-white lg:text-[15px]"
+      :class="ringkas && 'hidden lg:block'">
       Badan Kepegawaian dan<br />Pengembangan Sumber Daya Manusia
     </span>
   </span>

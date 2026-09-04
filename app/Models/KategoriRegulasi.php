@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class KategoriRegulasi extends Model
 {
   protected $table = 'kategori_regulasi';
-  protected $guarded = [];
+  protected $fillable = [
+    'nama',
+    'slug',
+  ];
 
   public function regulasi()
   {

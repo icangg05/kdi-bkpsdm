@@ -99,7 +99,7 @@ const sisa = computed(() => data.value.filter((i) => i !== kepala.value))
             <p v-if="bagian(kepala)" class="text-sm text-ink-soft lg:text-base">{{ bagian(kepala) }}</p>
 
             <div class="mt-6">
-              <Link :href="route('profil.pejabat-detail', kepala.id)"
+              <Link :href="route('profil.pejabat-detail', kepala.hashid)"
                 class="inline-flex items-center gap-2 rounded-control bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-800 active:translate-y-px lg:text-base">
               Lihat profil
               <ArrowRight class="size-4" aria-hidden="true" />
@@ -114,7 +114,7 @@ const sisa = computed(() => data.value.filter((i) => i !== kepala.value))
           <li v-for="(item, i) in sisa" :key="item.id"
             class="animate-in fade-in slide-in-from-bottom-3 fill-mode-both duration-500 motion-reduce:animate-none"
             :style="`animation-delay: ${Math.min(i, 8) * 60}ms`">
-            <Link :href="route('profil.pejabat-detail', item.id)"
+            <Link :href="route('profil.pejabat-detail', item.hashid)"
               class="group relative flex h-full flex-col overflow-hidden rounded-card bg-white ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:translate-y-0 motion-reduce:transition-none">
             <!-- Garis emas menyapu dari kiri saat kartu disorot. -->
             <span aria-hidden="true"

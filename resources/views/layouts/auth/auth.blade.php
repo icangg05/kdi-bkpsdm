@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" data-pc-theme="light" data-pc-preset="preset-1">
 
 <head>
 	@include('layouts.auth.partials.head')
 </head>
 
 <body>
-	{{-- @php
-		$query = App\Models\Halaman::where('kategori', 'logo')->first();
-		$logo = $query && $query->gambar ? $query->gambar : null;
-	@endphp --}}
+	<div class="bk-auth">
+		<aside class="bk-auth__panel">
+			<div class="bk-auth__panel-inner">
+				<img src="{{ asset('img/logo-kendari.png') }}" alt="Lambang Kota Kendari" class="bk-auth__lambang" />
 
-	@include('layouts.auth.partials.loader')
+				<h1>Pengelolaan informasi kepegawaian Kota Kendari</h1>
+				<div class="bk-auth__rule"></div>
+				<p>
+					Berita, pengumuman, regulasi, profil pejabat, dan statistik ASN yang tampil di
+					bkpsdm.kendarikota.go.id dikelola dari ruang ini.
+				</p>
 
-	<div class="auth-main">
-		<div class="auth-wrapper v3">
-			<div class="auth-form">
-				<div class="card my-5">
-					<div class="card-body">
-						<a href="{{ route('beranda') }}" class="d-flex justify-content-center">
-							<img src="{{ asset("img/logo-bkpsdm.png") }}" alt="Logo" class="img-fluid" width="150" />
-						</a>
-						<div class="row">
-							<div class="d-flex justify-content-center" style="margin-top: -10px">
-								<div class="auth-header">
-									<h2 class="text-primary mt-5"><b>BKPSDM</b></h2>
-									<p style="margin-top: -10px">Kota Kendari</p>
-								</div>
-							</div>
-						</div>
-						@yield('content')
-						<hr />
-					</div>
-				</div>
+				<p class="bk-auth__foot">Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</p>
 			</div>
-		</div>
+		</aside>
+
+		<main class="bk-auth__form">
+			<div class="bk-auth__card bk-rise">
+				<a href="{{ route('beranda') }}" class="bk-auth__mark">
+					<img src="{{ asset('img/logo-bkpsdm.png') }}" alt="" aria-hidden="true" />
+					<div>
+						<strong>BKPSDM</strong>
+						<span>Kota Kendari</span>
+					</div>
+				</a>
+
+				@yield('content')
+
+				<p class="bk-auth__legal">
+					Akun dibuat oleh administrator. Belum punya akses? Hubungi pengelola situs di
+					Sekretariat BKPSDM Kota Kendari.
+				</p>
+			</div>
+		</main>
 	</div>
 
 	@include('layouts.auth.partials.footer')

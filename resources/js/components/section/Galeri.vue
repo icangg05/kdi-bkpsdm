@@ -63,7 +63,7 @@ const gambar = (item: any) => (item?.gambar ? `/storage/${item.gambar}` : '/img/
     <ModalMedia :open="!!terpilih" @update:open="terpilih = null" :judul="terpilih?.judul"
       :tanggal="terpilih?.tanggal" :keterangan="terpilih?.deskripsi">
       <img v-if="terpilih" :src="gambar(terpilih)" :alt="terpilih.judul"
-        class="max-h-[60dvh] w-full bg-brand-50 object-contain" />
+        class="mx-auto block max-h-[60dvh] w-full object-contain" />
     </ModalMedia>
   </section>
 </template>

@@ -128,6 +128,7 @@
 				table: {
 					contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"]
 				},
+				placeholder: "Tulis isi konten di sini…",
 			})
 			.then((editor) => {
 				window.editor = editor;
@@ -138,4 +139,4 @@
 	</script>
 @endpush
 
-<textarea name="{{ $name }}" id="{{ $name }}" class="form-control">{{ old($name, $value) }}</textarea>
+<textarea name="{{ $name }}" id="{{ $name }}" class="form-control" placeholder="Tulis isi konten di sini…">{{ old($name, $value) }}</textarea>

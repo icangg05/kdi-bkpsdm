@@ -1,60 +1,26 @@
-<footer class="pc-footer" style="user-select: none">
+<footer class="pc-footer">
 	<div class="footer-wrapper container-fluid">
-		<div class="row">
+		<div class="row align-items-center">
 			<div class="col-sm-6 my-1">
-				<p class="m-0">
-					© 2025 BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.
-				</p>
+				<p class="m-0">© {{ date('Y') }} BKPSDM Kota Kendari. Seluruh hak cipta dilindungi.</p>
 			</div>
 			<div class="col-sm-6 ms-auto my-1">
-				<ul class="list-inline footer-link mb-0 justify-content-sm-end d-flex">
-					<li class="list-inline-item">
-						Dikembangkan oleh Dinas Kominfo Kota Kendari
-					</li>
-				</ul>
+				<p class="m-0 text-sm-end">Dikembangkan oleh Dinas Kominfo Kota Kendari</p>
 			</div>
 		</div>
 	</div>
 </footer>
 
-<!-- Required Js -->
-<script src="{{ asset('') }}/assets/js/plugins/popper.min.js"></script>
-<script src="{{ asset('') }}/assets/js/plugins/simplebar.min.js"></script>
-<script src="{{ asset('') }}/assets/js/plugins/bootstrap.min.js"></script>
-<script src="{{ asset('') }}/assets/js/icon/custom-font.js"></script>
-<script src="{{ asset('') }}/assets/js/script.js"></script>
-<script src="{{ asset('') }}/assets/js/theme.js"></script>
-<script src="{{ asset('') }}/assets/js/plugins/feather.min.js"></script>
-{{-- <script defer src="https://fomo.codedthemes.com/pixel/jAgJNY0WuNyOO0aM7ql1AqLRKRH5d737"></script> --}}
+<script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
+<script src="{{ asset('assets/js/icon/custom-font.js') }}"></script>
+<script src="{{ asset('assets/js/script.js') }}"></script>
+<script src="{{ asset('assets/js/theme.js') }}"></script>
 
-
-<script>
-	layout_change('light');
-</script>
-
-<script>
-	font_change('IBM Plex Sans');
-</script>
-
-<script>
-	change_box_container('false');
-</script>
-
-<script>
-	layout_caption_change('true');
-</script>
-
-<script>
-	layout_rtl_change('false');
-</script>
-
-<script>
-	preset_change('preset-1');
-</script>
-
-
-<!-- [Page Specific JS] start -->
-<!-- Apex Chart -->
-<script src="{{ asset('') }}/assets/js/plugins/apexcharts.min.js"></script>
-<script src="{{ asset('') }}/assets/js/pages/dashboard-default.js"></script>
-<!-- [Page Specific JS] end -->
+{{-- Preset tema dipasang sebagai atribut di <body>/<html>, bukan lewat enam
+     pemanggilan skrip setelah muat: itu menyebabkan kedip tema, dan
+     layout_rtl_change('false') menghapus atribut lang dari <html>.
+     apexcharts.min.js + dashboard-default.js dilepas: tidak ada grafik di
+     dashboard ini, hanya 528 KB JS yang menargetkan elemen demo template. --}}

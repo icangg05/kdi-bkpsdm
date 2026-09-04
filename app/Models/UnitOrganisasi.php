@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class UnitOrganisasi extends Model
 {
   protected $table   = 'unit_organisasi';
-  protected $guarded = [];
+  protected $fillable = [
+    'bagian_id',
+    'nama',
+    'slug',
+  ];
 
   public function bagian()
   {

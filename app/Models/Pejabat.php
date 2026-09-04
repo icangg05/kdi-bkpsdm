@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasHashid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Pejabat extends Model
 {
+  use HasHashid;
+
   protected $table = 'pejabat';
-  protected $guarded = [];
+  protected $fillable = [
+    'nama',
+    'jabatan_id',
+    'biografi',
+    'foto',
+  ];
 
   protected static function booted()
   {

@@ -3,110 +3,104 @@
 @section('content')
 	@php
 		$routeSubmit = isset($data) ? route('dashboard.video.update', $data->id) : route('dashboard.video.store');
+		$idVideo = isset($data) ? youtube_id($data->link) : null;
 	@endphp
 
-	<!-- [ breadcrumb ] start -->
 	<x-breadcrumb
 		:title="$title"
-		:list="[['Galeri Video', route('dashboard.video.index')], ['Form']]" />
-	<!-- [ breadcrumb ] end -->
+		:list="[['Galeri Video', route('dashboard.video.index')], [isset($data) ? 'Ubah' : 'Tambah']]" />
 
+	@if (session('success'))
+		<x-alert :message="session('success')" color="success" />
+	@endif
 
-	<!-- [ Main Content ] start -->
-	<div class="row" style="user-select: none">
-		<!-- [ sample-page ] start -->
-		<div class="col-sm-12">
-      @if (session('success'))
-				<x-alert :message="session('success')" color="success" />
-			@endif
+	<div class="mb-3">
+		<a href="{{ route('dashboard.video.index') }}" class="btn btn-outline-secondary">
+			<i class="ti ti-arrow-left" aria-hidden="true"></i> Kembali ke daftar
+		</a>
+	</div>
 
-			<div class="mb-3">
-				<a href="{{ route('dashboard.video.index') }}" class="btn btn-secondary">Kembali</a>
-			</div>
-			<div class="card">
-				<div class="card-header">
-					<h5>Data {{ $title }}</h5>
-				</div>
-				<div class="card-body">
-					<form action="{{ $routeSubmit }}" method="POST" enctype="multipart/form-data">
-						@csrf
-						@if (isset($data))
-							@method('patch')
+	<div class="card bk-rise bk-rise-1">
+		<div class="card-header">
+			<h2 class="h5">{{ isset($data) ? 'Ubah' : 'Tambah' }} video</h2>
+		</div>
+		<div class="card-body">
+			<form action="{{ $routeSubmit }}" method="POST">
+				@csrf
+				@if (isset($data))
+					@method('patch')
+				@endif
+
+				<div class="row g-3">
+					<div class="col-lg-7">
+						<div class="form-group mb-3">
+							<label for="judul" class="form-label">Judul</label>
+							<input type="text" name="judul" id="judul" class="form-control @error('judul') is-invalid @enderror"
+								value="{{ old('judul', $data->judul ?? '') }}" placeholder="Judul video"
+								@error('judul') aria-invalid="true" aria-describedby="judul-error" @enderror required>
+							@error('judul')
+								<small class="bk-field-error" id="judul-error">{{ $message }}</small>
+							@enderror
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="tanggal" class="form-label">Tanggal</label>
+							<input type="date" name="tanggal" id="tanggal"
+								class="form-control @error('tanggal') is-invalid @enderror"
+								value="{{ old('tanggal', $data->tanggal ?? date('Y-m-d')) }}" required>
+							@error('tanggal')
+								<small class="bk-field-error">{{ $message }}</small>
+							@enderror
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="deskripsi" class="form-label">Deskripsi</label>
+							<textarea rows="5" name="deskripsi" id="deskripsi"
+								class="form-control @error('deskripsi') is-invalid @enderror"
+								placeholder="Keterangan singkat video…" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
+							@error('deskripsi')
+								<small class="bk-field-error">{{ $message }}</small>
+							@enderror
+						</div>
+					</div>
+
+					<div class="col-lg-5">
+						<div class="form-group mb-3">
+							{{-- type="link" bukan tipe input yang ada; peramban memperlakukannya
+							     sebagai teks biasa tanpa validasi apa pun. --}}
+							<label for="link" class="form-label">Tautan video YouTube</label>
+							<input type="url" name="link" id="link" inputmode="url"
+								placeholder="https://www.youtube.com/watch?v=…"
+								class="form-control @error('link') is-invalid @enderror"
+								value="{{ old('link', $data->link ?? '') }}" required>
+							@error('link')
+								<small class="bk-field-error">{{ $message }}</small>
+							@enderror
+						</div>
+
+						@if ($idVideo)
+							<div class="bk-preview">
+								<div class="video-wrapper">
+									<iframe
+										src="https://www.youtube-nocookie.com/embed/{{ $idVideo }}"
+										title="Pratinjau: {{ $data->judul }}"
+										loading="lazy"
+										allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+										allowfullscreen>
+									</iframe>
+								</div>
+							</div>
+						@elseif (isset($data) && $data->link)
+							<x-alert color="warning" message="Tautan tersimpan tidak dikenali sebagai video YouTube." />
 						@endif
-
-						<div class="row">
-							<div class="col-md-7 mb-3">
-								<div class="form-group mb-3">
-									<label for="judul" class="form-label">Judul</label>
-									<input type="text" name="judul" id="judul" class="form-control @error('judul') is-invalid @enderror"
-										value="{{ old('judul', $data->judul ?? '') }}" required>
-									@error('judul')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-								<div class="form-group mb-3">
-									<label for="tanggal" class="form-label">Tanggal</label>
-									<input value="{{ old('tanggal', $data->tanggal ?? date('Y-m-d')) }}" type="date" name="tanggal"
-										id="tanggal" class="form-control @error('tanggal') is-invalid @enderror"
-										value="{{ old('tanggal', $data->tanggal ?? '') }}" required>
-									@error('tanggal')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-								<div class="form-group mb-3">
-									<label for="deskripsi" class="form-label">Deskripsi</label>
-									<textarea rows="4" name="deskripsi" id="deskripsi"
-                    class="form-control @error('deskripsi') is-invalid @enderror" required>{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
-									@error('deskripsi')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-							</div>
-							<div class="col-md-5 mb-3">
-								<div class="form-group mb-3">
-									<label for="link" class="form-label">Link Video</label>
-									<input type="link" name="link" id="link" class="form-control @error('link') is-invalid @enderror"
-									value="{{ old('link', $data->link ?? '') }}"	required>
-									@error('link')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-
-									@if (isset($data) && $data->link)
-										@php
-											function getYoutubeId($url)
-											{
-                        preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $url, $matches);
-                        return $matches[1] ?? null;
-											}
-										@endphp
-
-										<div class="video-wrapper mt-3">
-											<iframe
-												src="https://www.youtube.com/embed/{{ getYoutubeId($data->link) }}"
-												title="YouTube video"
-												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-												allowfullscreen>
-											</iframe>
-										</div>
-									@endif
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-md-7">
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary">Simpan</button>
-									<button type="reset" class="btn btn-light">Reset</button>
-								</div>
-							</div>
-						</div>
-					</form>
+					</div>
 				</div>
 
-			</div>
-			<!-- [ sample-page ] end -->
+				<div class="bk-form-actions">
+					<button type="submit" class="btn btn-primary">Simpan</button>
+					<a href="{{ route('dashboard.video.index') }}" class="btn btn-outline-secondary">Batal</a>
+				</div>
+			</form>
 		</div>
 	</div>
-	<!-- [ Main Content ] end -->
 @endsection

@@ -169,7 +169,10 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // Default true di produksi: cookie sesi tidak boleh ikut terkirim lewat
+    // http. Isi SESSION_SECURE_COOKIE=false hanya kalau situs memang
+    // sengaja dilayani tanpa TLS.
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
 
     /*
     |--------------------------------------------------------------------------

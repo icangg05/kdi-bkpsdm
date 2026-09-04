@@ -9,12 +9,13 @@ export function convertOembed(html: string) {
   return html.replace(
     /<oembed\s+url="([^"]+)"><\/oembed>/g,
     (_match: string, url: string) => {
-      try {
-        const parsedUrl = new URL(url);
-        const videoId = parsedUrl.searchParams.get('v');
-        if (!videoId) return ''; // jika tidak ada parameter v, skip
+      // getYoutubeId() sudah menangani watch?v=, youtu.be/, /embed/ dan
+      // /shorts/. Regex-nya wajib: nilai ini ditempel ke atribut src, jadi
+      // satu tanda kutip di dalamnya cukup untuk keluar dari atribut.
+      const videoId = getYoutubeId(url);
+      if (!videoId || !/^[\w-]{11}$/.test(videoId)) return '';
 
-        return `
+      return `
           <iframe
             class="aspect-video w-full"
             src="https://www.youtube.com/embed/${videoId}"
@@ -23,9 +24,6 @@ export function convertOembed(html: string) {
             allowfullscreen
           ></iframe>
         `;
-      } catch {
-        return ''; // skip jika URL invalid
-      }
     }
   );
 }
@@ -88,6 +86,11 @@ export function formatTanggalIndo(tanggalString: string) {
 
 
 export function refactorFormat(value: string) {
+  // Dipanggil juga saat render SSR (resources/js/ssr.ts), di mana `window`
+  // tidak ada. Tanpa penjaga ini seluruh halaman berisi HTML CKEditor gagal
+  // dirender di server.
+  if (typeof window === 'undefined') return value;
+
   const currentOrigin = window.location.origin;
 
   value = value.replace(

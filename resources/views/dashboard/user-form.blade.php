@@ -3,115 +3,157 @@
 @section('content')
 	@php
 		$routeSubmit = isset($data) ? route('dashboard.user.update', $data->id) : route('dashboard.user.store');
+		$adalahAdmin = auth()->user()->can('admin');
 	@endphp
 
-	<!-- [ breadcrumb ] start -->
 	<x-breadcrumb
 		:title="$title"
 		:list="[
-		    [
-		        auth()->user()->can('admin') ? $title : 'Profil',
-		        auth()->user()->can('admin') ? route('dashboard.user.index') : '#',
-		    ],
-		    ['Form'],
+		    [$adalahAdmin ? 'User' : 'Profil', $adalahAdmin ? route('dashboard.user.index') : '#'],
+		    [isset($data) ? 'Ubah' : 'Tambah'],
 		]" />
-	<!-- [ breadcrumb ] end -->
 
+	@if (session('success'))
+		<x-alert :message="session('success')" color="success" />
+	@endif
 
-	<!-- [ Main Content ] start -->
-	<div class="row" style="user-select: none">
-		<!-- [ sample-page ] start -->
-		<div class="col-sm-12">
-			@can('admin')
-				<div class="mb-3">
-					<a href="{{ route('dashboard.user.index') }}" class="btn btn-secondary">Kembali</a>
-				</div>
-			@endcan
+	@can('admin')
+		<div class="mb-3">
+			<a href="{{ route('dashboard.user.index') }}" class="btn btn-outline-secondary">
+				<i class="ti ti-arrow-left" aria-hidden="true"></i> Kembali ke daftar
+			</a>
+		</div>
+	@endcan
 
-			@if (session('success'))
-				<x-alert :message="session('success')" color="success" />
-			@endif
+	<div class="card bk-rise bk-rise-1">
+		<div class="card-header">
+			<h2 class="h5">{{ isset($data) ? 'Ubah data akun' : 'Tambah user' }}</h2>
+		</div>
+		<div class="card-body">
+			<form action="{{ $routeSubmit }}" method="POST">
+				@csrf
+				@if (isset($data))
+					@method('patch')
+				@endif
 
-			<div class="card">
-				<div class="card-header">
-					<h5>Data {{ $title }}</h5>
-				</div>
-				<div class="card-body">
-					<form action="{{ $routeSubmit }}" method="POST" enctype="multipart/form-data">
-						@csrf
-						@if (isset($data))
-							@method('patch')
-						@endif
+				<fieldset class="bk-fieldset">
+					<legend><i class="ti ti-user" aria-hidden="true"></i>Identitas</legend>
 
-						<div class="row">
-							<div class="col-md-6 mb-3">
-								<div class="form-group mb-3">
-									<label for="name" class="form-label">Nama Lengkap</label>
-									<input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
-										value="{{ old('name', $data->name ?? '') }}" required>
-									@error('name')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-							</div>
-							<div class="col-md-6 mb-3">
-								<div class="form-group mb-3">
-									<label for="email" class="form-label">Email</label>
-									<input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-										value="{{ old('email', $data->email ?? '') }}" required>
-									@error('email')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-							</div>
-							<div class="col-md-6 mb-3">
-								<div class="form-group mb-3">
-									<label for="username" class="form-label">Username</label>
-									<input type="text" name="username" id="username"
-										class="form-control @error('username') is-invalid @enderror"
-										value="{{ old('username', $data->username ?? '') }}" required>
-									@error('username')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-							</div>
-							<div class="col-md-6 mb-3">
-								<div class="form-group mb-3">
-									<label for="password" class="form-label">Password</label>
-									<input type="password" name="password" id="password"
-										class="form-control @error('password') is-invalid @enderror" @required(!isset($data))>
-									@error('password')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
-							</div>
-							<div class="col-md-6 mb-3">
-								<div class="form-group mb-3">
-									<label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-									<input type="password" name="password_confirmation" id="password_confirmation"
-										class="form-control @error('password_confirmation') is-invalid @enderror"
-										@required(!isset($data))>
-									@error('password_confirmation')
-										<small class="text-danger">{{ $message }}</small>
-									@enderror
-								</div>
+					<div class="row g-3">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="name" class="form-label">Nama lengkap</label>
+								<input type="text" name="name" id="name" autocomplete="name"
+									class="form-control @error('name') is-invalid @enderror"
+									value="{{ old('name', $data->name ?? '') }}" placeholder="Nama lengkap pengguna" required>
+								@error('name')
+									<small class="bk-field-error">{{ $message }}</small>
+								@enderror
 							</div>
 						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="email" class="form-label">Email</label>
+								<input type="email" name="email" id="email" autocomplete="email"
+									class="form-control @error('email') is-invalid @enderror"
+									value="{{ old('email', $data->email ?? '') }}" placeholder="nama@email.com" required>
+								@error('email')
+									<small class="bk-field-error">{{ $message }}</small>
+								@enderror
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="username" class="form-label">Username</label>
+								<input type="text" name="username" id="username" autocomplete="username" autocapitalize="none"
+									spellcheck="false" class="form-control @error('username') is-invalid @enderror"
+									value="{{ old('username', $data->username ?? '') }}" placeholder="Contoh: admin.bkpsdm" required>
+								@error('username')
+									<small class="bk-field-error">{{ $message }}</small>
+								@enderror
+							</div>
+						</div>
+					</div>
+				</fieldset>
 
-						<div class="row">
+				@php
+					$akunSendiri = isset($data) && auth()->user()->id === $data->id;
+				@endphp
+
+				@if ($adalahAdmin && !$akunSendiri)
+					<fieldset class="bk-fieldset">
+						<legend><i class="ti ti-shield-lock" aria-hidden="true"></i>Hak akses</legend>
+
+						<div class="row g-3">
 							<div class="col-md-6">
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary">Simpan</button>
-									<button type="reset" class="btn btn-light">Reset</button>
+								<div class="form-group">
+									<label for="role" class="form-label">Peran</label>
+									<select name="role" id="role" class="form-select @error('role') is-invalid @enderror" required>
+										@foreach (\App\Models\User::ROLES as $nilai => $label)
+											<option value="{{ $nilai }}" @selected(old('role', $data->role ?? 'operator') === $nilai)>
+												{{ $label }}
+											</option>
+										@endforeach
+									</select>
+									@error('role')
+										<small class="bk-field-error">{{ $message }}</small>
+									@enderror
+									<small class="bk-hint">
+										Administrator bisa mengelola akun lain dan mengunduh backup basis data.
+										Operator hanya mengelola isi situs.
+									</small>
 								</div>
 							</div>
 						</div>
-					</form>
-				</div>
+					</fieldset>
+				@elseif (isset($data))
+					<p class="bk-hint mb-3">
+						Peran akun ini: <strong>{{ \App\Models\User::ROLES[$data->role] ?? $data->role }}</strong>.
+						Hanya administrator lain yang bisa mengubahnya.
+					</p>
+				@endif
 
-			</div>
-			<!-- [ sample-page ] end -->
+				<fieldset class="bk-fieldset">
+					<legend><i class="ti ti-lock" aria-hidden="true"></i>Password</legend>
+
+					@if (isset($data))
+						<p class="bk-hint mb-3">Kosongkan kedua kolom ini kalau password tidak diubah.</p>
+					@endif
+
+					<div class="row g-3">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="password" class="form-label">Password</label>
+								<input type="password" name="password" id="password" autocomplete="new-password"
+									class="form-control @error('password') is-invalid @enderror" placeholder="Minimal 8 karakter"
+									@required(!isset($data))>
+								@error('password')
+									<small class="bk-field-error">{{ $message }}</small>
+								@enderror
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="password_confirmation" class="form-label">Konfirmasi password</label>
+								<input type="password" name="password_confirmation" id="password_confirmation"
+									autocomplete="new-password"
+									class="form-control @error('password_confirmation') is-invalid @enderror"
+									placeholder="Ulangi password" @required(!isset($data))>
+								@error('password_confirmation')
+									<small class="bk-field-error">{{ $message }}</small>
+								@enderror
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="bk-form-actions">
+					<button type="submit" class="btn btn-primary">Simpan</button>
+					@can('admin')
+						<a href="{{ route('dashboard.user.index') }}" class="btn btn-outline-secondary">Batal</a>
+					@endcan
+				</div>
+			</form>
 		</div>
 	</div>
-	<!-- [ Main Content ] end -->
 @endsection

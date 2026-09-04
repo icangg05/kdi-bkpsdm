@@ -124,7 +124,7 @@ const terpilih = ref<any | null>(null)
       :tanggal="terpilih?.tanggal" :keterangan="terpilih?.deskripsi">
       <!-- getYoutubeEmbedUrl sudah membawa autoplay & rel; sebelumnya parameter
            itu ditempel dua kali sehingga query URL-nya rusak. -->
-      <iframe v-if="terpilih" :src="getYoutubeEmbedUrl(terpilih.link)" :title="terpilih.judul" class="aspect-video w-full"
+      <iframe v-if="terpilih" :src="getYoutubeEmbedUrl(terpilih.link)" :title="terpilih.judul" class="block aspect-video w-full"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen></iframe>
     </ModalMedia>

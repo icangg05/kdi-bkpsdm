@@ -34,11 +34,10 @@ class RegulasiController extends Controller
     ]);
   }
 
-  public function download($id)
+  public function download(Regulasi $regulasi)
   {
-    $data = Regulasi::findOrFail($id);
-    $data->increment('total_unduh');
+    $regulasi->increment('total_unduh');
 
-    return Storage::download($data->lampiran);
+    return Storage::download($regulasi->lampiran);
   }
 }

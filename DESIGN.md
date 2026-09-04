@@ -18,9 +18,18 @@ colors:
   gold-800: "#7a5200"
   ink: "#16202e"
   ink-soft: "#4a5768"
+  ink-disabled: "#7b8698"
   line: "#dde3ed"
   surface: "#ffffff"
   surface-2: "#f5f7fb"
+  danger: "#a4272b"
+  danger-soft: "#fbeced"
+  danger-line: "#e9c4c6"
+  success: "#1f6b48"
+  success-soft: "#e9f5ef"
+  success-line: "#c6e2d3"
+  warning-soft: "#fdf3e0"
+  warning-line: "#ecd7a8"
 typography:
   display:
     fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
@@ -67,7 +76,30 @@ typography:
     fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 600
+  dash-page-title:
+    fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.25rem"
+    fontWeight: 700
+    lineHeight: 1.25
+  dash-stat:
+    fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "2rem"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "-0.02em"
+  dash-label:
+    fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 600
+    lineHeight: 1.5
+  dash-micro:
+    fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.6875rem"
+    fontWeight: 700
+    letterSpacing: "0.09em"
 rounded:
+  hairline: "2px"
+  focus: "4px"
   control: "8px"
   card: "12px"
   pill: "9999px"

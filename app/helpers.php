@@ -4,7 +4,7 @@ if (! function_exists('generate_filename')) {
   function generate_filename($file)
   {
     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    $extension    = $file->getClientOriginalExtension();
+    $extension    = $file->extension();
     $timestamp    = date('s-d-m-Y'); // detik-hari-bulan-tahun
 
     // Hilangkan karakter tidak valid pada nama file
@@ -37,6 +37,24 @@ if (! function_exists('get_original_filename')) {
   }
 }
 
+if (! function_exists('youtube_id')) {
+  /**
+   * Ambil ID video dari sebuah URL YouTube. Null kalau tidak dikenali.
+   *
+   * Sebelumnya fungsi ini dideklarasikan di dalam blok @php pada view daftar
+   * video, yang fatal ("cannot redeclare") kalau view itu dirender dua kali
+   * dalam satu request.
+   */
+  function youtube_id(?string $url): ?string
+  {
+    if (! $url) {
+      return null;
+    }
+
+    return preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $url, $cocok) ? $cocok[1] : null;
+  }
+}
+
 if (! function_exists('refactor_format')) {
   function refactor_format(string $value): string
   {
@@ -47,5 +65,18 @@ if (! function_exists('refactor_format')) {
       'src="' . $currentOrigin,
       $value
     );
+  }
+}
+
+if (! function_exists('hashids')) {
+  /**
+   * Satu instance Hashids untuk seluruh aplikasi. Panjang minimal 8 karakter
+   * supaya ID kecil tidak menghasilkan hash sependek satu-dua huruf.
+   */
+  function hashids(): \Hashids\Hashids
+  {
+    static $hashids;
+
+    return $hashids ??= new \Hashids\Hashids((string) config('app.key'), 8);
   }
 }

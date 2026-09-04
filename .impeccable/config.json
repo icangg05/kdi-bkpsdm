@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "resources/js/pages/LayananDetail.vue"
+        ],
+        "createdAt": "2026-09-04T14:23:24.259Z",
+        "reason": "detector membaca string literal atribut di dalam String.replace() (siapkanIsi), bukan tag <img> yang dirender"
+      }
+    ]
+  }
+}

@@ -31,13 +31,13 @@ const breadcrumbItems = [
           class="pointer-events-none text-[3.5rem] lg:text-[7rem] text-white/10 font-bold z-[-1] top-3 lg:top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 absolute">BKPSDM</span>
       </div>
       <div class="flex">
-        <Breadcrumb class="mx-auto mt-4 lg:mt-5 text-white/85">
-          <BreadcrumbList>
+        <Breadcrumb class="mx-auto mt-4 lg:mt-5">
+          <BreadcrumbList class="justify-center text-brand-100">
             <BreadcrumbItem v-for="(item, index) in breadcrumbItems" :key="index">
               <BreadcrumbLink :href="item.link" class="hover:underline text-sm lg:text-base">
                 {{ item.label }}
               </BreadcrumbLink>
-              <BreadcrumbSeparator v-if="breadcrumbItems.length - 1 != index" class="ml-0.5 text-sky-400" />
+              <BreadcrumbSeparator v-if="breadcrumbItems.length - 1 != index" class="ml-0.5 text-brand-200/70" />
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

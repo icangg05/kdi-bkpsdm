@@ -96,11 +96,22 @@ Route::middleware(['auth'])
     // DATA UNIT ORGANISASI
     Route::resource('/unit-organisasi', UnitOranisasiController::class)->except(['show', 'put']);
 
-    Route::resource('/user', UserController::class)->except(['show']);
+    // DATA USER
+    // edit/update dibiarkan di luar `can:admin`: setiap operator memakai route
+    // ini untuk mengubah akunnya sendiri lewat menu profil di header.
+    // UserController yang memutuskan akun mana yang boleh disentuh.
+    Route::resource('/user', UserController::class)->only(['edit', 'update']);
+    Route::resource('/user', UserController::class)
+      ->only(['index', 'create', 'store', 'destroy'])
+      ->middleware('can:admin');
 
     // BACKUP DATABASE
-    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
-    Route::post('/backup', [BackupController::class, 'store'])->name('backup.store');
-    Route::get('/backup/{file}/download', [BackupController::class, 'download'])->name('backup.download');
-    Route::delete('/backup/{file}', [BackupController::class, 'destroy'])->name('backup.destroy');
+    // Berkas backup berisi seluruh isi basis data termasuk hash password,
+    // jadi seluruh menunya administrator saja.
+    Route::middleware('can:admin')->group(function () {
+      Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+      Route::post('/backup', [BackupController::class, 'store'])->name('backup.store');
+      Route::get('/backup/{file}/download', [BackupController::class, 'download'])->name('backup.download');
+      Route::delete('/backup/{file}', [BackupController::class, 'destroy'])->name('backup.destroy');
+    });
   });

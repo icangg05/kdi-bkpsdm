@@ -75,6 +75,10 @@ class BeritaController extends Controller
    */
   public function store(Request $request, $publikasi)
   {
+    // Kunci $publikasi ke empat kategori sah sebelum dipakai sebagai nama
+    // direktori storeAs(); tanpa ini nilai apa pun dari URL bikin folder baru.
+    $this->slugToTitle($publikasi);
+
     $this->rules($request);
 
     $sampul   = $request->file('sampul');
@@ -104,6 +108,10 @@ class BeritaController extends Controller
    */
   public function update(Request $request, $publikasi, $id)
   {
+    // Kunci $publikasi ke empat kategori sah sebelum dipakai sebagai nama
+    // direktori storeAs(); tanpa ini nilai apa pun dari URL bikin folder baru.
+    $this->slugToTitle($publikasi);
+
     $this->rules($request);
 
     $data = Berita::findOrFail($id);

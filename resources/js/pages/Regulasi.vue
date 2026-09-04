@@ -152,7 +152,7 @@ function bersihkan() {
                 </p>
 
                 <div class="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
-                  <a :href="route('regulasi.download', regulasi.id)"
+                  <a :href="route('regulasi.download', regulasi.hashid)"
                     class="inline-flex items-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 active:translate-y-px">
                     <Download class="size-4" aria-hidden="true" />
                     Unduh berkas

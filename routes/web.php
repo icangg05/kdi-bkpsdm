@@ -15,7 +15,7 @@ use Inertia\Inertia;
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 
 // PROFIL
-Route::get('/profil/pejabat/{id}', [ProfilController::class, 'pejabatDetail'])->name('profil.pejabat-detail');
+Route::get('/profil/pejabat/{pejabat}', [ProfilController::class, 'pejabatDetail'])->name('profil.pejabat-detail');
 Route::get('/profil/{slug}', [ProfilController::class, 'index'])->name('profil');
 
 // PUBLIKASI
@@ -31,7 +31,7 @@ Route::get('/layanan/{halaman}', [FrontendHalamanController::class, 'show'])->na
 
 // REGULASI
 Route::get('/regulasi/{kategori}', [ControllersRegulasiController::class, 'index'])->name('regulasi');
-Route::get('/regulasi/{id}/download', [ControllersRegulasiController::class, 'download'])->name('regulasi.download');
+Route::get('/regulasi/{regulasi}/download', [ControllersRegulasiController::class, 'download'])->name('regulasi.download');
 
 // GALERI
 Route::get('/galeri/foto', [ControllersGaleriController::class, 'fotoIndex'])->name('galeri-foto');
@@ -56,3 +56,16 @@ Route::get('/hubungi-kami', function () {
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/dashboard.php';
+
+// Alamat yang tidak cocok dengan satu route pun tidak pernah melewati grup
+// middleware `web`, sehingga HandleInertiaRequests belum sempat membagikan
+// ziggy dan pengaturan. Tanpa route ini halaman galat Inertia akan gagal
+// memanggil route() dan berakhir kosong. Harus tetap paling bawah.
+Route::fallback(function (Illuminate\Http\Request $request) {
+  // Klien yang meminta JSON diberi 404 JSON, bukan satu halaman HTML penuh.
+  abort_if($request->expectsJson(), 404);
+
+  return Inertia::render('Error', ['status' => 404])
+    ->toResponse($request)
+    ->setStatusCode(404);
+});

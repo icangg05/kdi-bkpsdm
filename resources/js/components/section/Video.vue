@@ -77,7 +77,7 @@ const kartu =
          YouTube yang ikut dimuat bersama halaman. -->
     <ModalMedia :open="!!terpilih" @update:open="terpilih = null" :judul="terpilih?.judul"
       :tanggal="terpilih?.tanggal" :keterangan="terpilih?.deskripsi">
-      <iframe v-if="terpilih" class="aspect-video w-full" :src="getYoutubeEmbedUrl(terpilih.link)"
+      <iframe v-if="terpilih" class="block aspect-video w-full" :src="getYoutubeEmbedUrl(terpilih.link)"
         :title="terpilih.judul" allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
         allowfullscreen></iframe>
     </ModalMedia>

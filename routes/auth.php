@@ -4,31 +4,19 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
   // Registrasi publik dimatikan: akun dibuat admin lewat dashboard.
+  // Pemulihan password lewat email juga dimatikan: reset password hanya
+  // dilakukan admin dari menu Data User, supaya tidak ada jalur masuk
+  // tanpa autentikasi yang mengirim tautan ke alamat email mana pun.
 
   Route::get('login', [AuthenticatedSessionController::class, 'create'])
     ->name('login');
 
   Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
-  Route::get('lupa-password', [PasswordResetLinkController::class, 'create'])
-    ->name('password.request');
-
-  Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-    ->name('password.email');
-
-  Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-    ->name('password.reset');
-
-  Route::post('reset-password', [NewPasswordController::class, 'store'])
-    ->name('password.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -48,6 +36,8 @@ Route::middleware('auth')->group(function () {
 
   Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
-  Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])
+  // POST, bukan GET: logout lewat GET bisa dipicu prefetch peramban atau
+  // gambar pihak ketiga dan mengeluarkan pengguna tanpa perbuatannya.
+  Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 });

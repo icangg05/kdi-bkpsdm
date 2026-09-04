@@ -8,7 +8,17 @@ use Illuminate\Support\Facades\Storage;
 class Berita extends Model
 {
   protected $table = 'berita';
-  protected $guarded = [];
+  // total_view sengaja di luar: dinaikkan lewat increment(), yang tidak
+  // lewat mass assignment.
+  protected $fillable = [
+    'judul',
+    'slug',
+    'tanggal',
+    'isi',
+    'sampul',
+    'lampiran',
+    'kategori',
+  ];
 
   protected static function booted()
   {

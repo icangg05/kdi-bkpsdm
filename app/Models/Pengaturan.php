@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Pengaturan extends Model
 {
   protected $table   = 'pengaturan';
-  protected $guarded = [];
+  protected $fillable = [
+    'nama_pengaturan',
+    'label',
+    'value',
+  ];
 }

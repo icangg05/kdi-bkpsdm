@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Jabatan extends Model
 {
   protected $table = 'jabatan';
-  protected $guarded = [];
+  protected $fillable = [
+    'unit_organisasi_id',
+    'nama',
+    'slug',
+    'tugas',
+  ];
 
   protected $casts = [
     'tugas' => 'array',

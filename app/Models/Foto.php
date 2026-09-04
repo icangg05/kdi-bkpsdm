@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Storage;
 class Foto extends Model
 {
   protected $table = 'foto';
-  protected $guarded = [];
+  protected $fillable = [
+    'judul',
+    'tanggal',
+    'deskripsi',
+    'gambar',
+  ];
 
   protected static function booted()
   {
